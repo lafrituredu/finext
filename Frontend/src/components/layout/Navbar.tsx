@@ -5,7 +5,7 @@ function Navbar() {
     <nav className="flex justify-between items-center fixed w-full bg-white dark:bg-[#040919] text-white h-18 shadow-md dark:shadow-gray-800 dark:shadow-md px-10">
         {/* --- Left --- */}
         <div className="flex flex-row">
-            <img src="finext.svg" alt="" className="w-12 h-12"/>
+            <img src="icons/finext.svg" alt="" className="w-12 h-12"/>
         </div>
         {/* --- Right --- */}
         <div className="flex flex-row justify-center items-center">
