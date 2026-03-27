@@ -4,7 +4,9 @@ import Home from './pages/Home'
 function App() {
   return (
     <>
-      <Home/>
+    <main className='bg-white dark:bg-[#040919]'>
+        <Home/>
+    </main>
     </>
   )
 }
