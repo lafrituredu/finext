@@ -14,13 +14,13 @@ function Navbar() {
     const currentLang = i18n.language.startsWith("en") ? "en" : "es";
 
     //Arrow function linkClass: Detecta la ruta que esta activa y le da un estilo diferente
-    const linkClass = ({ isActive }: { isActive: boolean }) => `cursor-pointer px-10 rounded transition ${isActive ? "text-[#84A2EB] drop-shadow-[0_0_6px_rgb(59,130,246,0.2)] font-bold" : "text-black dark:text-[#D8E0F9] hover:text-[#9bb3ef]"}`
+    const linkClass = ({ isActive }: { isActive: boolean }) => `cursor-pointer px-8 transition ${isActive ? "text-[#84A2EB] drop-shadow-[0_0_6px_rgb(59,130,246,0.2)] font-bold" : "text-black dark:text-[#D8E0F9] hover:text-[#9bb3ef]"}`
 
   return (
     <nav className="flex justify-between items-center fixed w-full bg-white dark:bg-[#040919] text-white h-20 dark:shadow-md px-10">
         {/* Left */}
         <div className="flex flex-row inter">
-            <img src="icons/finext.svg" alt="" className="w-10 h-10"/>
+            <img src="icons/finext.svg" alt="" className="w-10 h-10 min-w-10 mr-5"/>
             <div className="flex justify-center items-center text-black dark:text-[#D8E0F9]">
                 <NavLink to="/home" className={linkClass}>{t("home")}</NavLink>
                 <NavLink to="/about" className={linkClass}>{t("about_us")}</NavLink>
