@@ -3,10 +3,18 @@
 
 @font-face {
   font-family: 'Inter';
+  src: url('/fonts/Inter/Inter_18pt-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'InterLight';
   src: url('/fonts/Inter/Inter_18pt-Light.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Montserrat';
   src: url('/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
@@ -30,6 +38,10 @@
 
 .inter{
     font-family: "Inter";
+}
+
+.inter_light{
+    font-family: "InterLight";
 }
 
 .mont_semibold{

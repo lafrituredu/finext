@@ -18,9 +18,10 @@ function Navbar() {
         <div className="flex flex-row inter">
             <img src="icons/finext.svg" alt="" className="w-10 h-10"/>
             <div className="flex justify-center items-center text-black dark:text-[#D8E0F9]">
-                <div className="pl-10 pr-5"><p className="cursor-pointer">{t("home")}</p></div>
-                <div className="px-5"><p className="cursor-pointer">{t("about_us")}</p></div>
-                <div className="px-5"><p className="cursor-pointer">{t("contact_us")}</p></div>
+                <Link to="/home"><div className="pl-15 pr-10"><p className="cursor-pointer">{t("home")}</p></div></Link>
+                <Link to="/about"><div className="px-10"><p className="cursor-pointer">{t("about_us")}</p></div></Link>
+                <div className="px-10"><p className="cursor-pointer">{t("contact_us")}</p></div>
+                <div className="px-10"><p className="cursor-pointer">Something else</p></div>
             </div>
 
         </div>
@@ -33,7 +34,7 @@ function Navbar() {
             </select>
             <DarkButton/>
 
-            <div className="ring-2 ring-white dark:ring-[#0F1732] rounded-full shadow-lg">
+            <div className="ring-2 ring-white dark:ring-[#0F1732] rounded-full shadow-md">
                 <Link to="/login">
                     <button className="bg-linear-to-r from-[#B6C3F2] to-[#DC94EE] p-2 w-40 rounded-full cursor-pointer">
                         Sign in

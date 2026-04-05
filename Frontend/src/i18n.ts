@@ -11,16 +11,21 @@ import homeEN from "./language/en/home.json";
 import navES from "./language/es/nav.json";
 import navEN from "./language/en/nav.json";
 
+import error404ES from "./language/es/error404.json";
+import error404EN from "./language/en/error404.json";
+
 export const resources = {
   es: {
     common: es,
     home: homeES,
     nav: navES,
+    error404: error404ES,
   },
   en: {
     common: en,
     home: homeEN,
     nav: navEN,
+    error404: error404EN,
   },
 } as const;
 
@@ -28,7 +33,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: "es",
+    lng: "en",
     fallbackLng: "en",
     defaultNS: "common",
     interpolation: {
