@@ -10,12 +10,12 @@ function Navbar() {
         i18n.changeLanguage(e.target.value);
     };
 
-    const currentLang = i18n.language.startsWith("es") ? "es" : "en";
+    const currentLang = i18n.language.startsWith("en") ? "en" : "es";
 
   return (
-    <nav className="flex justify-between items-center fixed w-full bg-white dark:bg-[#040919] text-white h-18 shadow-md dark:shadow-gray-800 dark:shadow-md px-10">
+    <nav className="flex justify-between items-center fixed w-full bg-white dark:bg-[#040919] text-white h-20 dark:shadow-md px-10">
         {/* Left */}
-        <div className="flex flex-row">
+        <div className="flex flex-row inter">
             <img src="icons/finext.svg" alt="" className="w-10 h-10"/>
             <div className="flex justify-center items-center text-black dark:text-[#D8E0F9]">
                 <div className="pl-10 pr-5"><p className="cursor-pointer">{t("home")}</p></div>
@@ -26,10 +26,10 @@ function Navbar() {
         </div>
 
         {/* Right */}
-        <div className="flex flex-row justify-center items-center">
-            <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-[#D8E0F9]">
-            <option value="es" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("spanish")}</option>
+        <div className="flex flex-row justify-center items-center inter">
+            <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-[#D8E0F9]"> 
             <option value="en" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("english")}</option>
+            <option value="es" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("spanish")}</option>
             </select>
             <DarkButton/>
 

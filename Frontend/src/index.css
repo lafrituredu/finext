@@ -1,2 +1,45 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter/Inter_18pt-Light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MontSemiBold';
+  src: url('/fonts/Montserrat/Montserrat-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MontMedium';
+  src: url('/fonts/Montserrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.inter{
+    font-family: "Inter";
+}
+
+.mont_semibold{
+    font-family: "MontSemiBold";
+}
+
+.mont_mid{
+    font-family: "MontMedium";
+}
+
+.montserrat{
+    font-family: "Montserrat";
+}
