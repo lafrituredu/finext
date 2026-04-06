@@ -14,18 +14,23 @@ import navEN from "./language/en/nav.json";
 import error404ES from "./language/es/error404.json";
 import error404EN from "./language/en/error404.json";
 
+import footerES from "./language/es/footer.json";
+import footerEN from "./language/en/footer.json";
+
 export const resources = {
   es: {
     common: es,
     home: homeES,
     nav: navES,
     error404: error404ES,
+    footer: footerES,
   },
   en: {
     common: en,
     home: homeEN,
     nav: navEN,
     error404: error404EN,
+    footer: footerEN,
   },
 } as const;
 
