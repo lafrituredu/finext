@@ -7,10 +7,10 @@ import Dashboard from './pages/Dashboard'
 
 function App() {
   return (
-    <main className='bg-white dark:bg-[#040919]'>
+    <main className='bg-white dark:bg-[#040919] text-black dark:text-[#D8E0F9]'>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="*" element={<Error404 />} />
