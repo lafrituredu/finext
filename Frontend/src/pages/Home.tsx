@@ -137,8 +137,9 @@ function Home() {
       </div>
       
       {/* --- COINTAINER FOOTER --- */}
-      <div className="h-50"></div>
-      <Footer/>
+      <div className="h-50">
+        <Footer/>
+      </div>
     </>
   )
 }
