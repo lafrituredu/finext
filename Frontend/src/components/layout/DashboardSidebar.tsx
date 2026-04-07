@@ -75,7 +75,7 @@ const menuItems = [{
               lg:block h-full bg-[#FFF] px-5 py-10
               lg:relative fixed
               lg:transition-none overflow-hidden
-              border-r-1 border-[#0000001a]
+              border-r border-[#0000001a]
               ${open
                 ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
                 : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}

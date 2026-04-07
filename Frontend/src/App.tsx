@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Error404 from './pages/Error404'
 import Dashboard from './pages/Dashboard'
+import Transactions from './pages/Transactions'
+import Overview from './pages/Overview'
 
 function App() {
   return (
@@ -13,7 +15,8 @@ function App() {
         <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="*" element={<Error404 />} />
+          <Route path="" element={<Overview />} />
+          <Route path="transactions" element={<Transactions />} />
         </Route>
         {/* Ruta 404 */}
         <Route path="*" element={<Error404 />} />
