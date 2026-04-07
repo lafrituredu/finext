@@ -1,5 +1,5 @@
 {
-"welcome":"Bienvenido!",
+"start_now":"Empieza ahora",
 "next_step": "El siguiente paso en tus finanzas",
 "simplest_way":"La forma más sencilla de entender y administrar tu dinero",
 
@@ -7,5 +7,13 @@
 "bring_all":"Trae todos tus datos financieros en una vista clara y estructurada. Ve tu flujo de efectivo en tiempo real y conoce siempre cuánto gana, gasta y ahorra.",
 
 "built_for_you":"Diseñado para ti.",
-"built_to_simplify":"Diseñado para simplificar la gestión financiera, la plataforma te ofrece información clara y herramientas intuitivas para que mantengas el control sin complicaciones innecesarias"
+"built_to_simplify":"Diseñado para simplificar la gestión financiera, la plataforma te ofrece información clara y herramientas intuitivas para que mantengas el control sin complicaciones innecesarias",
+
+"take_controll":"Toma el control de tus ingresos y gastos",
+"intelligent_expense":"Gestión inteligente de gastos y objetivos",
+"smart_financial":"Control financiero inteligente",
+
+"take_controll_text":"Registra y gestiona todos tus ingresos y gastos en un solo lugar con total claridad. FiNext te ofrece una visión en tiempo real de tu flujo de caja, ayudándote a entender de dónde viene tu dinero, a dónde va y cuánto tienes realmente disponible",
+"intelligent_expense_text":"Gestiona fácilmente tus gastos fijos y variables, clasifícalos y controla cuáles son deducibles de impuestos. Establece objetivos financieros con plazos y cantidades, y FiNext te mostrará tu progreso y te indicará si son alcanzables según tu flujo de caja actual",
+"smart_financial_text":"FiNext te ayuda a tomar el control total de tus finanzas al registrar ingresos y gastos de forma sencilla. Calcula automáticamente tu flujo de caja y te ofrece una visión mensual clara, para que siempre sepas cuánto ganas, cuánto gastas y cuánto ahorras"
 }

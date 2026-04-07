@@ -1,5 +1,5 @@
 {
-"welcome":"Welcome!",
+"start_now":"Start Now",
 "next_step": "The next step at your finances",
 "simplest_way":"The simplest way to understand and manage your money",
 
@@ -7,6 +7,13 @@
 "bring_all":"Bring all your financial data together in a clear and structured view. See your cash flow in real time and always know how much you earn, spend, and save",
 
 "built_for_you":"Built for you",
-"built_to_simplify":"Built to simplify financial management, the platform gives you clear insights and intuitive tools so you can stay in control without unnecessary complexity"
+"built_to_simplify":"Built to simplify financial management, the platform gives you clear insights and intuitive tools so you can stay in control without unnecessary complexity",
 
+"take_controll":"Take controll of your incomes and exchanges",
+"intelligent_expense":"Intelligent Expense & Goal Management",
+"smart_financial":"Smart Financial Control",
+
+"take_controll_text":"Track and manage all your income and expenses in one place with complete clarity. FiNext gives you a real-time view of your cash flow, helping you understand where your money comes from, where it goes, and how much you truly have available",
+"intelligent_expense_text":"Easily manage fixed and variable expenses, categorize them, and track which ones are tax-deductible. Set financial goals with deadlines and amounts, and FiNext will show your progress and tell you if your goals are achievable based on your current cash flow",
+"smart_financial_text":"FiNext helps you take full control of your finances by tracking income and expenses in a simple way. It automatically calculates your cash flow and gives you a clear monthly overview, so you always know how much you earn, spend, and save"
 }
