@@ -1,6 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Login: React.FC = () => {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+  const res = await fetch("http://127.0.0.1:8000/api/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email,
+      password
+    })
+  });
+
+  const data = await res.json();
+  console.log(data);
+};
+
+
   return (
     <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg flex overflow-hidden">
@@ -29,8 +50,10 @@ const Login: React.FC = () => {
             <label className="text-sm text-gray-500">
               Correo electrónico
             </label>
-            <input
+           <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
@@ -43,6 +66,8 @@ const Login: React.FC = () => {
               </label>
               <input
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
@@ -63,7 +88,10 @@ const Login: React.FC = () => {
           </p>
 
           {/* Button */}
-          <button className="w-full bg-blue-300 hover:bg-blue-400 text-white py-2 rounded-full transition mb-4">
+          <button
+            onClick={handleLogin}
+            className="w-full bg-blue-300 hover:bg-blue-400 text-white py-2 rounded-full transition mb-4"
+          >
             Continua
           </button>
 
