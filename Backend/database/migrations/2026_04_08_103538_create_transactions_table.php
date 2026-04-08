@@ -13,6 +13,25 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained('transaction_categories')->cascadeOnDelete();
+
+            $table->string('name');
+            $table->date('date');
+            $table->enum('type', ['income', 'expense']);
+
+            $table->decimal('total_amount', 10, 2);
+            $table->decimal('iva_percent', 5, 2)->nullable();
+
+            $table->string('client')->nullable();
+            $table->text('description')->nullable();
+            $table->string('payment_method')->nullable();
+
+            $table->boolean('status')->default(true);
+            $table->boolean('recurrent')->default(false);
+            $table->string('recurrent_timer')->nullable();
+
             $table->timestamps();
         });
     }

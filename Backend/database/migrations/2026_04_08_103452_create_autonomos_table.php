@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('autonomos', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+       Schema::create('autonomos', function (Blueprint $table) {
+            $table->foreignId('user_id')->primary()->constrained()->cascadeOnDelete();
+            $table->date('birth_date')->nullable();
+            $table->decimal('modulo_iva', 5, 2)->nullable();
+            $table->enum('civil_state', ['soltero','casado','divorciado','separado','viudo','pareja_de_hecho'])->nullable();
+            $table->string('company')->nullable();
+            $table->decimal('irpf', 5, 2)->nullable();
         });
     }
 

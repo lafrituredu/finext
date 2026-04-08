@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaction_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

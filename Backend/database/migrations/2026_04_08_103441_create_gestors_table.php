@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gestors', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('gestores', function (Blueprint $table) {
+            $table->foreignId('user_id')->primary()->constrained()->cascadeOnDelete();
         });
     }
 

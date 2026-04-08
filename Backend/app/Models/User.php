@@ -19,9 +19,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+    'username',
+    'full_name',
+    'phone_number',
+    'rol',
+    'email',
+    'password'
     ];
 
     /**
@@ -46,4 +49,29 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function gestor()
+{
+    return $this->hasOne(Gestor::class);
+}
+
+public function autonomo()
+{
+    return $this->hasOne(Autonomo::class);
+}
+
+public function transactions()
+{
+    return $this->hasMany(Transaction::class);
+}
+
+public function goals()
+{
+    return $this->hasMany(Goal::class);
+}
+
+public function categories()
+{
+    return $this->hasMany(TransactionCategory::class);
+}
 }

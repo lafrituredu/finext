@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goals', function (Blueprint $table) {
+       Schema::create('goals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            $table->string('name');
+            $table->integer('target_amount');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('completed')->default(false);
+
             $table->timestamps();
         });
     }
