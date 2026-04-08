@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xxl: '1400px',
+      },
       colors: {
         text: '#000000',
         background: '#FBFBFE',
@@ -14,20 +17,19 @@ export default {
         secondary: '#641895',
         accent: '#D440E1',
         card: '#FFFFFF',
-        // Dark mode
         dark: {
           text: '#D8E0F9',
           background: '#040919',
           card: '#0F1732'
         },
-        animation: {
-          scroll: "scroll 20s linear infinite",
-        },
-        keyframes: {
-          scroll: {
-            "0%": { transform: "translateX(0)" },
-            "100%": { transform: "translateX(-50%)" },
-          },
+      },
+      animation: {
+        scroll: "scroll 20s linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
     },
