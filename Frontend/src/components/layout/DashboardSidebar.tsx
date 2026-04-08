@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import SidebarItem from './SidebarItem'
 
+//ICONOS
 import UsersIcon from '/src/assets/icons/Profile-icon.svg?react'
 import DashboardIcon from '/src/assets/icons/Dashboard-icon.svg?react'
 import GearIcon from '/src/assets/icons/Gear.svg?react'
@@ -9,8 +10,10 @@ import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
 import Goals from '/src/assets/icons/Goals.svg?react'
 import Calculator from '/src/assets/icons/Calculator.svg?react'
 import File from '/src/assets/icons/File.svg?react'
+import FinextIcon from '/src/assets/icons/finext.svg?react'
+
 function DashboardSidebar() {
-const [openId, setOpenId] = useState("");
+const [openId, setOpenId] = useState("dashboard");
 const [open,setOpen] = useState(false);
 const toggleOffCanvas = () => {
     setOpen(!open);
@@ -81,7 +84,11 @@ const menuItems = [{
                 : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
             `}>
                 
-                <a href="/dashboard" className=" text-4xl">Logo</a>
+                <a href="/dashboard" className='flex items-center'>
+                  <FinextIcon className='size-10 mb-2' /> 
+                  <span className='font-bold text-3xl bg-linear-to-br from-[#84A2EB] to-[#641895] bg-clip-text text-transparent'>FiNext</span>
+                </a>
+                <p className=''>Bienvenid@ {localStorage.getItem('username') ?? '[username]'}!</p>
 
                 {menuItems.map((item,key) => (
                 <div id={`${key}`} className=" pt-10">
@@ -101,6 +108,14 @@ const menuItems = [{
                 </div>
                 ))}
                 
+                <div className='absolute bottom-10'>
+                  <SidebarItem
+                    id={'logout'}
+                    icon={File}
+                    label={'Logout'}
+                    to='/'
+                    />
+                </div>
             </div>
     </>
   )
