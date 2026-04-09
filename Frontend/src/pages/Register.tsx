@@ -1,80 +1,378 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const Login: React.FC = () => {
+type FormDataType = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  username: string;
+  full_name: string;
+  phone_number: string;
+  rol: string;
+};
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Register: React.FC = () => {
+  const [step, setStep] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [isRolOpen, setIsRolOpen] = useState<boolean>(false);
+  const rolDropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleLogin = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
+  const [formData, setFormData] = useState<FormDataType>({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    username: "",
+    full_name: "",
+    phone_number: "",
+    rol: "autonomo"
+  });
+
+  const handleBackOrLogin = () => {
+        if (step === 2) {
+            prevStep();
+        } else {
+            window.location.href = "/login";
+        }
+    };
+
+  // Cerrar dropdown al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (rolDropdownRef.current && !rolDropdownRef.current.contains(event.target as Node)) {
+        setIsRolOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
-
-    const data = await res.json();
-    console.log(data);
   };
+
+  const nextStep = () => {
+    if (!formData.email || !formData.password || !formData.username || !formData.confirmPassword) {
+      setError("Completa todos los campos");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+    setError("");
+    setStep(2);
+  };
+
+  const prevStep = () => {
+    setStep(1);
+    setError("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    if (!formData.full_name || !formData.phone_number) {
+      setError("Completa todos los campos");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          username: formData.username,
+          full_name: formData.full_name,
+          phone_number: formData.phone_number,
+          rol: formData.rol
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Error al registrarse");
+      }
+
+      console.log("REGISTER OK:", data);
+      alert("Usuario registrado correctamente");
+
+      setFormData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        username: "",
+        full_name: "",
+        phone_number: "",
+        rol: "autonomo"
+      });
+
+      setStep(1);
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
+  const isStep1Complete = formData.email && formData.password && formData.username && formData.confirmPassword && passwordsMatch;
+  const isStep2Complete = formData.full_name && formData.phone_number;
 
   return (
     <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg flex overflow-hidden">
-        
+
         {/* LEFT SIDE */}
         <div className="w-1/2 p-10">
-          <button className="mb-6 text-gray-400 hover:text-gray-600">
+          <button
+            className="mb-6 text-gray-400 hover:text-gray-600"
+            onClick={() => step === 2 && prevStep()}
+          >
             ←
           </button>
 
           <h1 className="text-2xl font-semibold mb-6">
-            Inicia sesión en FiNext
+            Regístrate en FiNext
           </h1>
 
-          {/* Email */}
-          <div className="mb-4">
-            <label className="text-sm text-gray-500">
-              Correo electrónico
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
-          {/* Password */}
-          <div className="mb-2">
-            <label className="text-sm text-gray-500">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            {/* PASO 1 */}
+            {step === 1 && (
+              <>
+                {/* Username */}
+                <div className="mb-4">
+                  <label className="text-sm text-gray-500">
+                    Nombre de usuario
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
 
-          <p className="text-xs text-gray-400 mb-4 cursor-pointer hover:underline">
-            ¿Has olvidado tu contraseña?
-          </p>
+                {/* Email */}
+                <div className="mb-4">
+                  <label className="text-sm text-gray-500">
+                    Correo electrónico
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
 
-          {/* Button */}
-          <button
-            onClick={handleLogin}
-            className="w-full bg-blue-300 hover:bg-blue-400 text-white py-2 rounded-full transition mb-4"
-          >
-            Iniciar sesión
-          </button>
+                {/* Password y Confirm Password - lado a lado */}
+                <div className="mb-2 flex gap-3">
+                  {/* Password */}
+                  <div className="flex-1">
+                    <label className="text-sm text-gray-500">
+                      Contraseña
+                    </label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="flex-1">
+                    <label className="text-sm text-gray-500">
+                      Confirmar contraseña
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                          formData.confirmPassword === ""
+                            ? "border-gray-300 focus:ring-blue-400"
+                            : passwordsMatch
+                              ? "border-green-400 focus:ring-green-400"
+                              : "border-red-400 focus:ring-red-400"
+                        }`}
+                      />
+                      {formData.confirmPassword !== "" && (
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                          {passwordsMatch ? (
+                            <span className="text-green-500 text-xl">✓</span>
+                          ) : (
+                            <span className="text-red-500 text-xl">✗</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-400 mb-6">
+                  Mínimo 8 caracteres
+                </p>
+
+                {/* Button */}
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className={`w-full text-white py-2 rounded-full transition mb-4 ${
+                    isStep1Complete
+                      ? "bg-blue-400 hover:bg-blue-500"
+                      : "bg-blue-300 hover:bg-blue-400"
+                  }`}
+                >
+                  Siguiente
+                </button>
+              </>
+            )}
+
+            {/* PASO 2 */}
+            {step === 2 && (
+              <>
+                {/* Full Name */}
+                <div className="mb-4">
+                  <label className="text-sm text-gray-500">
+                    Nombre completo
+                  </label>
+                  <input
+                    type="text"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div className="mb-4">
+                  <label className="text-sm text-gray-500">
+                    Teléfono
+                  </label>
+                  <input
+                    type="text"
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+                {/* Rol - Select personalizado */}
+                <div className="mb-6">
+                  <label className="text-sm text-gray-500">
+                    Rol
+                  </label>
+                  <div className="relative" ref={rolDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsRolOpen(!isRolOpen)}
+                      className="w-full mt-1 px-4 py-2 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white cursor-pointer text-left"
+                    >
+                      {formData.rol === "autonomo" ? "Autónomo" : "Gestor"}
+                    </button>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5 pointer-events-none">
+                      <svg
+                        className={`w-4 h-4 text-gray-400 transition-transform ${isRolOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+
+                    {/* Dropdown menu */}
+                    {isRolOpen && (
+                      <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, rol: "autonomo" });
+                            setIsRolOpen(false);
+                          }}
+                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition ${
+                            formData.rol === "autonomo" ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                          }`}
+                        >
+                          Autónomo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, rol: "gestor" });
+                            setIsRolOpen(false);
+                          }}
+                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition ${
+                            formData.rol === "gestor" ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                          }`}
+                        >
+                          Gestor
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-full transition"
+                  >
+                    Atrás
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`flex-1 text-white py-2 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed ${
+                      isStep2Complete && !loading
+                        ? "bg-blue-400 hover:bg-blue-500"
+                        : "bg-blue-300 hover:bg-blue-400"
+                    }`}
+                  >
+                    {loading ? "Registrando..." : "Registrarse"}
+                  </button>
+                </div>
+              </>
+            )}
+          </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 my-4">
             <div className="flex-1 h-px bg-gray-300"></div>
             <span className="text-sm text-gray-400">O</span>
             <div className="flex-1 h-px bg-gray-300"></div>
@@ -93,21 +391,47 @@ const Login: React.FC = () => {
           <p className="text-[10px] text-gray-400 text-center mt-4">
             Al continuar, aceptas nuestros Términos y Política de Privacidad
           </p>
+
+          <p className="text-sm text-gray-600 text-center mt-6">
+            ¿Ya estás registrado?{" "}
+            <button
+              type="button"
+              onClick={handleBackOrLogin}
+              className="text-blue-500 hover:text-blue-600 font-medium hover:underline"
+            >
+              Inicia sesión
+            </button>
+          </p>
         </div>
 
         {/* RIGHT SIDE */}
         <div className="w-1/2 bg-gradient-to-br from-[#dfe6f3] to-[#cfd8ea] flex flex-col justify-center p-10">
           <h2 className="text-xl font-semibold mb-4">
-            Bienvenido de nuevo.
+            Únete a FiNext
           </h2>
 
           <p className="text-sm text-gray-600 max-w-sm">
-            Accede a tu cuenta y sigue controlando tus finanzas de forma inteligente con FiNext.
+            Crea tu cuenta y empieza a gestionar tus finanzas de forma inteligente con FiNext.
           </p>
+
+          <div className="mt-8 space-y-2">
+            <div className="flex items-center gap-3">
+              <div className={`w-2 h-2 rounded-full ${step >= 1 ? 'bg-blue-400' : 'bg-gray-300'}`}></div>
+              <span className={`text-sm ${step >= 1 ? 'text-gray-700' : 'text-gray-400'}`}>
+                Información de acceso
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className={`w-2 h-2 rounded-full ${step >= 2 ? 'bg-blue-400' : 'bg-gray-300'}`}></div>
+              <span className={`text-sm ${step >= 2 ? 'text-gray-700' : 'text-gray-400'}`}>
+                Datos personales
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;
