@@ -23,7 +23,7 @@ function Footer() {
                 <p>Lorem Ipsum</p>
               </div>
             </div>
-            <div className="flex justify-center items-center inter text-[#ffffff61]">
+            <div className="flex justify-center items-center inter text-[#ffffff61] text-center">
               <p>© 1996-2026 FiNext, Inc. or its affiliates. All rights reserved.</p>
             </div>
 
