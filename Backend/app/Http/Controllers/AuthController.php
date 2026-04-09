@@ -15,7 +15,11 @@ class AuthController extends Controller
             'username' => 'required|unique:users',
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/' // Al menos un carácter especial
+            ],
             'rol' => 'required|in:gestor,autonomo'
         ]);
 
@@ -53,6 +57,45 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login correcto',
             'user' => $user
+        ]);
+    }
+    public function checkEmail(Request $request)
+    {
+        $email = $request->query('email');
+
+        if (!$email) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Email is required'
+            ], 400);
+        }
+
+        $exists = User::where('email', $email)->exists();
+
+        return response()->json([
+            'available' => !$exists
+        ]);
+    }
+
+    /**
+     * Verificar si el username está disponible
+     * GET /api/check-username?username={username}
+     */
+    public function checkUsername(Request $request)
+    {
+        $username = $request->query('username');
+
+        if (!$username) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Username is required'
+            ], 400);
+        }
+
+        $exists = User::where('username', $username)->exists();
+
+        return response()->json([
+            'available' => !$exists
         ]);
     }
 }

@@ -15,6 +15,7 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [isRolOpen, setIsRolOpen] = useState<boolean>(false);
+  const [checkingAvailability, setCheckingAvailability] = useState<boolean>(false);
   const rolDropdownRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState<FormDataType>({
@@ -27,13 +28,13 @@ const Register: React.FC = () => {
     rol: "autonomo"
   });
 
-  const handleBackOrLogin = () => {
-        if (step === 2) {
-            prevStep();
-        } else {
-            window.location.href = "/login";
-        }
-    };
+  const [availability, setAvailability] = useState<{
+    email: boolean | null;
+    username: boolean | null;
+  }>({
+    email: null,
+    username: null
+  });
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -56,17 +57,91 @@ const Register: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+
+    // Resetear disponibilidad cuando cambia el valor
+    if (e.target.name === "email" || e.target.name === "username") {
+      setAvailability({
+        ...availability,
+        [e.target.name]: null
+      });
+    }
   };
 
-  const nextStep = () => {
+  const checkAvailability = async () => {
+    setCheckingAvailability(true);
+    setError("");
+
+    try {
+      // Verificar email
+      const emailRes = await fetch(`http://127.0.0.1:8000/api/check-email?email=${formData.email}`);
+      const emailData = await emailRes.json();
+
+      // Verificar username
+      const usernameRes = await fetch(`http://127.0.0.1:8000/api/check-username?username=${formData.username}`);
+      const usernameData = await usernameRes.json();
+
+      setAvailability({
+        email: emailData.available,
+        username: usernameData.available
+      });
+
+      // Retornar los valores directamente, no del estado
+      return {
+        isAvailable: emailData.available && usernameData.available,
+        emailAvailable: emailData.available,
+        usernameAvailable: usernameData.available
+      };
+    } catch (err) {
+      console.error("Error verificando disponibilidad:", err);
+      setError("Error al verificar disponibilidad");
+      return {
+        isAvailable: false,
+        emailAvailable: false,
+        usernameAvailable: false
+      };
+    } finally {
+      setCheckingAvailability(false);
+    }
+  };
+
+  const nextStep = async () => {
     if (!formData.email || !formData.password || !formData.username || !formData.confirmPassword) {
       setError("Completa todos los campos");
       return;
     }
+
+    // Validar longitud de contraseña
+    if (formData.password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    // Validar que incluya al menos un carácter especial
+    const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (!specialCharRegex.test(formData.password)) {
+      setError("La contraseña debe incluir al menos un carácter especial (!@#$%^&*...)");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Las contraseñas no coinciden");
       return;
     }
+
+    // Verificar disponibilidad de email y username
+    const result = await checkAvailability();
+
+    if (!result.isAvailable) {
+      if (!result.emailAvailable && !result.usernameAvailable) {
+        setError("El correo electrónico y el nombre de usuario ya están en uso");
+      } else if (!result.emailAvailable) {
+        setError("El correo electrónico ya está en uso");
+      } else if (!result.usernameAvailable) {
+        setError("El nombre de usuario ya está en uso");
+      }
+      return;
+    }
+
     setError("");
     setStep(2);
   };
@@ -74,6 +149,18 @@ const Register: React.FC = () => {
   const prevStep = () => {
     setStep(1);
     setError("");
+  };
+
+  const handleBackOrLogin = () => {
+    if (step === 2) {
+      prevStep();
+    } else {
+      window.location.href = "/login";
+    }
+  };
+
+  const onGoToHome = () => {
+    window.location.href = "/";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -145,7 +232,7 @@ const Register: React.FC = () => {
         <div className="w-1/2 p-10">
           <button
             className="mb-6 text-gray-400 hover:text-gray-600"
-            onClick={() => step === 2 && prevStep()}
+            onClick={onGoToHome}
           >
             ←
           </button>
@@ -169,13 +256,30 @@ const Register: React.FC = () => {
                   <label className="text-sm text-gray-500">
                     Nombre de usuario
                   </label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                        availability.username === null
+                          ? "border-gray-300 focus:ring-blue-400"
+                          : availability.username
+                            ? "border-green-400 focus:ring-green-400"
+                            : "border-red-400 focus:ring-red-400"
+                      }`}
+                    />
+                    {availability.username !== null && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                        {availability.username ? (
+                          <span className="text-green-500 text-xl">✓</span>
+                        ) : (
+                          <span className="text-red-500 text-xl">✗</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Email */}
@@ -183,13 +287,30 @@ const Register: React.FC = () => {
                   <label className="text-sm text-gray-500">
                     Correo electrónico
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                        availability.email === null
+                          ? "border-gray-300 focus:ring-blue-400"
+                          : availability.email
+                            ? "border-green-400 focus:ring-green-400"
+                            : "border-red-400 focus:ring-red-400"
+                      }`}
+                    />
+                    {availability.email !== null && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                        {availability.email ? (
+                          <span className="text-green-500 text-xl">✓</span>
+                        ) : (
+                          <span className="text-red-500 text-xl">✗</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Password y Confirm Password - lado a lado */}
@@ -199,13 +320,30 @@ const Register: React.FC = () => {
                     <label className="text-sm text-gray-500">
                       Contraseña
                     </label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
+                    <div className="relative">
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                          formData.password === "" || formData.confirmPassword === ""
+                            ? "border-gray-300 focus:ring-blue-400"
+                            : passwordsMatch
+                              ? "border-green-400 focus:ring-green-400"
+                              : "border-red-400 focus:ring-red-400"
+                        }`}
+                      />
+                      {formData.password !== "" && formData.confirmPassword !== "" && (
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                          {passwordsMatch ? (
+                            <span className="text-green-500 text-xl">✓</span>
+                          ) : (
+                            <span className="text-red-500 text-xl">✗</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Confirm Password */}
@@ -220,14 +358,14 @@ const Register: React.FC = () => {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
-                          formData.confirmPassword === ""
+                          formData.confirmPassword === "" || formData.password === ""
                             ? "border-gray-300 focus:ring-blue-400"
                             : passwordsMatch
                               ? "border-green-400 focus:ring-green-400"
                               : "border-red-400 focus:ring-red-400"
                         }`}
                       />
-                      {formData.confirmPassword !== "" && (
+                      {formData.confirmPassword !== "" && formData.password !== "" && (
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
                           {passwordsMatch ? (
                             <span className="text-green-500 text-xl">✓</span>
@@ -241,20 +379,21 @@ const Register: React.FC = () => {
                 </div>
 
                 <p className="text-xs text-gray-400 mb-6">
-                  Mínimo 8 caracteres
+                  Mínimo 8 caracteres e incluir al menos un carácter especial (!@#$%^&*...)
                 </p>
 
                 {/* Button */}
                 <button
                   type="button"
                   onClick={nextStep}
-                  className={`w-full text-white py-2 rounded-full transition mb-4 ${
+                  disabled={checkingAvailability}
+                  className={`w-full text-white py-2 rounded-full transition mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isStep1Complete
                       ? "bg-blue-400 hover:bg-blue-500"
                       : "bg-blue-300 hover:bg-blue-400"
                   }`}
                 >
-                  Siguiente
+                  {checkingAvailability ? "Verificando..." : "Siguiente"}
                 </button>
               </>
             )}

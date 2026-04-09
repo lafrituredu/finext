@@ -1,11 +1,26 @@
 import React, { useState } from "react";
 
-const Login: React.FC = () => {
+type LoginProps = {
+  onGoToRegister?: () => void;
+};
+
+const Login: React.FC<LoginProps> = ({ onGoToRegister }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const isFormComplete = email && password;
+
+  const onGoToHome = () => {
+    window.location.href = "/";
+  };
 
   const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+
     try {
       const res = await fetch("http://127.0.0.1:8000/api/login", {
         method: "POST",
@@ -21,31 +36,45 @@ const Login: React.FC = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Error al iniciar sesión");
+        setError(data.message || "Credenciales incorrectas");
+        setLoading(false);
         return;
       }
 
       console.log("Login OK:", data);
-      alert("Login correcto 🔥");
+
+      // Redirigir al home después de login exitoso
+      window.location.href = "/";
 
     } catch (error) {
       console.error("Error:", error);
+      setError("Error de conexión. Intenta nuevamente.");
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg flex overflow-hidden">
-        
+
         {/* LEFT SIDE */}
         <div className="w-1/2 p-10">
-          <button className="mb-6 text-gray-400 hover:text-gray-600">
+          <button
+            className="mb-6 text-gray-400 hover:text-gray-600"
+            onClick={onGoToHome}
+          >
             ←
           </button>
 
           <h1 className="text-2xl font-semibold mb-6">
             Inicia sesión en FiNext
           </h1>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
           {/* Email */}
           <div className="mb-4">
@@ -80,9 +109,14 @@ const Login: React.FC = () => {
           {/* Button */}
           <button
             onClick={handleLogin}
-            className="w-full bg-blue-300 hover:bg-blue-400 text-white py-2 rounded-full transition mb-4"
+            disabled={loading}
+            className={`w-full text-white py-2 rounded-full transition mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${
+              isFormComplete
+                ? "bg-blue-400 hover:bg-blue-500"
+                : "bg-blue-300 hover:bg-blue-400"
+            }`}
           >
-            Iniciar sesión
+            {loading ? "Iniciando sesión..." : "Iniciar sesión"}
           </button>
 
           {/* Divider */}
@@ -104,6 +138,17 @@ const Login: React.FC = () => {
 
           <p className="text-[10px] text-gray-400 text-center mt-4">
             Al continuar, aceptas nuestros Términos y Política de Privacidad
+          </p>
+
+          <p className="text-sm text-gray-600 text-center mt-6">
+            ¿No tienes cuenta?{" "}
+            <button
+              type="button"
+              onClick={onGoToRegister}
+              className="text-blue-500 hover:text-blue-600 font-medium hover:underline"
+            >
+              Regístrate
+            </button>
           </p>
         </div>
 
