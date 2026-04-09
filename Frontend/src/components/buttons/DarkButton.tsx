@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react"
 
 export default function DarkModeToggle() {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("DarkTheme") === "true";
+  });
 
   useEffect(() => {
     const root = window.document.documentElement
     darkMode ? root.classList.add("dark") : root.classList.remove("dark")
+    localStorage.setItem("DarkTheme", String(darkMode))
+    console.log(darkMode)
   }, [darkMode])
+
 
   return (
     <button
-      onClick={() => setDarkMode(!darkMode)}
+      onClick={() => setDarkMode(prev => !prev)}
       className="sm:px-6 cursor-pointer"
     >
       {darkMode ?
