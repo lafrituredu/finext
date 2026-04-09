@@ -12,6 +12,8 @@ import Calculator from '/src/assets/icons/Calculator.svg?react'
 import File from '/src/assets/icons/File.svg?react'
 import FinextIcon from '/src/assets/icons/finext.svg?react'
 import { useTranslation } from 'react-i18next'
+import Language from '../buttons/Lang'
+import DarkModeToggle from '../buttons/DarkButton'
 
 function DashboardSidebar() {
 const [openId, setOpenId] = useState("dashboard");
@@ -84,10 +86,12 @@ const menuItems = [{
   return (
     <>
                 <div id="sidebar" className={`
-              lg:block h-full bg-[#FFF] px-5 py-10
+              lg:block h-full bg-[#fafafa] px-5 py-10
               lg:relative fixed
               lg:transition-none overflow-hidden
               border-r border-[#0000001a]
+              dark:border-[#040919]
+              dark:bg-[#0F1732]
               ${open
                 ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
                 : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
@@ -97,11 +101,11 @@ const menuItems = [{
                   <FinextIcon className='size-10 mb-2' /> 
                   <span className='font-bold text-3xl bg-linear-to-br from-[#84A2EB] to-[#11386b] hover:from-[#11386b]  hover:to-[#84A2EB] hover:hue-rotate-0 duration-500 transition-colors ease-in-out bg-clip-text text-transparent'>FiNext</span>
                 </a>
-                <p className=''> {t('welcome')} Bienvenid@ {localStorage.getItem('username') ?? '[username]'}!</p>
+                <p className=''> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
 
                 {menuItems.map((item,key) => (
                 <div id={`${key}`} className=" pt-10">
-                    <p className="text-[#00000066] text-base">{item.name}</p>
+                    <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
                     <ul>
                         {item.items.map( (el,key)=> (
                             <SidebarItem
@@ -118,10 +122,8 @@ const menuItems = [{
                 ))}
                 
                 <div className='absolute bottom-10'>
-                  <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-[#D8E0F9] md:flex hidden outline-0"> 
-                      <option value="en" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("english")}</option>
-                      <option value="es" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("spanish")}</option>
-                  </select>
+                  <DarkModeToggle />
+                  <Language />
                   <SidebarItem
                     id={'logout'}
                     icon={File}
@@ -129,6 +131,7 @@ const menuItems = [{
                     to='/'
                     />
                 </div>
+                
             </div>
     </>
   )
