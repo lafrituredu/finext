@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, type ChangeEvent } from 'react'
 import SidebarItem from './SidebarItem'
 
 //ICONOS
@@ -11,6 +11,7 @@ import Goals from '/src/assets/icons/Goals.svg?react'
 import Calculator from '/src/assets/icons/Calculator.svg?react'
 import File from '/src/assets/icons/File.svg?react'
 import FinextIcon from '/src/assets/icons/finext.svg?react'
+import { useTranslation } from 'react-i18next'
 
 function DashboardSidebar() {
 const [openId, setOpenId] = useState("dashboard");
@@ -18,52 +19,60 @@ const [open,setOpen] = useState(false);
 const toggleOffCanvas = () => {
     setOpen(!open);
 }
+const { i18n, t } = useTranslation("sidebar");
+
+//Arrow function handleChangeLanguage: Detecta el "idioma" seleccionado
+const handleChangeLanguage = (e: ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
+};
+
+const currentLang = i18n.language.startsWith("en") ? "en" : "es";
 
 const menuItems = [{
-  name: 'Overview',
+  name: t('overview'),
   items: [{
     id: 'dashboard',
-    label: 'Dashboard',
+    label: t('dashboard'),
     icon: ChartPieSlice,
     to: '/dashboard',
   },
   {
     id: 'transactions',
-    label: 'Transactions',
+    label: t('transactions'),
     icon: ArrowsLeftRight,
     to: '/dashboard/transactions'
   },
   {
     id: 'goals',
-    label: 'Goals',
+    label: t('goals'),
     icon: Goals,
     to: '/dashboard/goals'
   },
     {
     id: 'taxes',
-    label: 'Taxes',
+    label: t('taxes'),
     icon: Calculator,
     to: '/dashboard/taxes'
   },
   {
     id: 'reports',
-    label: 'Reports',
+    label: t('reports'),
     icon: File,
     to: '/dashboard/reports'
   },
   ]},
   {
-    name: 'Utils',
+    name: t('utils'),
     items: [
         {
         id: 'config',
-        label: 'Config',
+        label: t('config'),
         icon: GearIcon,
         to: '/dashboard/comps',
         },
         {
-        id: 'users2',
-        label: 'Users',
+        id: 'profile',
+        label: t('profile'),
         icon: UsersIcon,
         children: [
         { label: 'List', to: '/dashboard/users' },{ label: 'Create', to: '/dashboard/users/create' }
@@ -84,11 +93,11 @@ const menuItems = [{
                 : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
             `}>
                 
-                <a href="/dashboard" className='flex items-center'>
+                <a href="/dashboard" className='flex content-center gap-2'>
                   <FinextIcon className='size-10 mb-2' /> 
-                  <span className='font-bold text-3xl bg-linear-to-br from-[#84A2EB] to-[#641895] bg-clip-text text-transparent'>FiNext</span>
+                  <span className='font-bold text-3xl bg-linear-to-br from-[#84A2EB] to-[#11386b] hover:from-[#11386b]  hover:to-[#84A2EB] hover:hue-rotate-0 duration-500 transition-colors ease-in-out bg-clip-text text-transparent'>FiNext</span>
                 </a>
-                <p className=''>Bienvenid@ {localStorage.getItem('username') ?? '[username]'}!</p>
+                <p className=''> {t('welcome')} Bienvenid@ {localStorage.getItem('username') ?? '[username]'}!</p>
 
                 {menuItems.map((item,key) => (
                 <div id={`${key}`} className=" pt-10">
@@ -109,10 +118,14 @@ const menuItems = [{
                 ))}
                 
                 <div className='absolute bottom-10'>
+                  <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-[#D8E0F9] md:flex hidden outline-0"> 
+                      <option value="en" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("english")}</option>
+                      <option value="es" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("spanish")}</option>
+                  </select>
                   <SidebarItem
                     id={'logout'}
                     icon={File}
-                    label={'Logout'}
+                    label={t('logout')}
                     to='/'
                     />
                 </div>

@@ -1,0 +1,13 @@
+{
+    "welcome":"Bienvenid@ ",
+    "logout":"Cerrar Sesión",
+    "overview":"Vista General",
+    "dashboard":"Panel de control",
+    "transactions":"Transacciones",
+    "goals":"Metas",
+    "taxes":"Impuestos",
+    "reports":"Informes",
+    "utils":"Utiles",
+    "config":"Configuración",
+    "profile":"Perfil"
+}

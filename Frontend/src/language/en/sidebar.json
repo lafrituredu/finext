@@ -1,0 +1,13 @@
+{
+    "welcome":"Welcome",
+    "logout":"Logout",
+    "overview":"Overview",
+    "dashboard":"Dashboard",
+    "transactions":"Transactions",
+    "goals":"Goals",
+    "taxes":"Taxes",
+    "reports":"Reports",
+    "utils":"Utils",
+    "config":"Config",
+    "profile":"Profile" 
+}

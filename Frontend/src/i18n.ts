@@ -17,6 +17,12 @@ import error404EN from "./language/en/error404.json";
 import footerES from "./language/es/footer.json";
 import footerEN from "./language/en/footer.json";
 
+import overviewES from "./language/es/overview.json";
+import overviewEN from "./language/en/overview.json";
+
+import sidebarES from "./language/es/sidebar.json";
+import sidebarEN from "./language/en/sidebar.json";
+
 export const resources = {
   es: {
     common: es,
@@ -24,6 +30,8 @@ export const resources = {
     nav: navES,
     error404: error404ES,
     footer: footerES,
+    overview: overviewES,
+    sidebar: sidebarES,
   },
   en: {
     common: en,
@@ -31,6 +39,8 @@ export const resources = {
     nav: navEN,
     error404: error404EN,
     footer: footerEN,
+    overview: overviewEN,
+    sidebar: sidebarEN
   },
 } as const;
 
