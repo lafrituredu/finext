@@ -9,7 +9,6 @@ export default function DarkModeToggle() {
     const root = window.document.documentElement
     darkMode ? root.classList.add("dark") : root.classList.remove("dark")
     localStorage.setItem("DarkTheme", String(darkMode))
-    console.log(darkMode)
   }, [darkMode])
 
 

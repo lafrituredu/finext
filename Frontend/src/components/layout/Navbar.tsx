@@ -55,7 +55,13 @@ function Navbar() {
         
     </nav>
     
-    <div className="md:hidden flex fixed z-2 w-full h-100 bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px]">
+    <div className="hidden flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center">
+        <div className="pt-30 pb-10">
+            <NavLink to="/" className={linkClass}>{t("home")}</NavLink>
+            <NavLink to="/about" className={linkClass}>{t("about_us")}</NavLink>
+            <NavLink to="/contact" className={linkClass}>{t("contact_us")}</NavLink>
+        </div>
+        <LanguageSelect/>
     </div>
     </>
   )

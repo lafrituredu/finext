@@ -2,6 +2,24 @@
 @tailwind utilities;
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  /* Breakpoint personalizado */
+  --breakpoint-xxl: 1400px;
+
+  /* Colores */
+  --color-text: #000000;
+  --color-background: #FBFBFE;
+  --color-primary: #84A2EB;
+  --color-secondary: #641895;
+  --color-accent: #D440E1;
+  --color-card: #FFFFFF;
+
+  /* Dark mode colors */
+  --color-dark-text: #D8E0F9;
+  --color-dark-background: #040919;
+  --color-dark-card: #0F1732;
+}
+
 @font-face {
   font-family: 'Inter';
   src: url('/fonts/Inter/Inter_18pt-Regular.ttf') format('truetype');
