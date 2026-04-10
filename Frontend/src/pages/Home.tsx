@@ -18,7 +18,7 @@ function Home() {
       {/* --- COINTAINER HERO --- */}
       <div className="bg-[url(/home/homebg.png)] w-full bg-no-repeat bg-cover xl:bg-[position:center_-120px] bg-[position:center]">
         {/* <div className="flex flex-row justify-between items-center mx-5 xxl:mx-[120px] xl:mx-[320px] pt-42 max-w-[1280px]"> */}
-        <div className="flex flex-row xl:justify-center justify-start items-arround mx-5 xxl:mx-[120px] pt-50 gap-56">
+        <div className="flex flex-row xl:justify-center justify-start items-around mx-5 xxl:mx-[120px] pt-50 gap-56">
           {/*Hero Left*/}
           <div className="flex flex-col justify-center text-dark-text gap-3">
             <p className="mont_mid text-xl">FiNext</p>
@@ -71,11 +71,11 @@ function Home() {
           <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
         </div>
         <div className="flex flex-row items-center justify-center pt-12 gap-3 w-full">
-          <div className="md:flex hidden bg-[#6483d2] w-80 h-100 rounded-3xl -translate-x-40 hover:-translate-x-52 duration-400 transition-all"></div>
+          <div className="lg:flex hidden bg-[#6483d2] w-80 h-100 rounded-3xl -translate-x-40 hover:-translate-x-52 duration-400 transition-all"></div>
           {/*Fix absolute card type shi*/}
-          <div className="bg-primary ring-5 ring-background dark:ring-dark-background md:absolute w-100 h-120 rounded-3xl z-1"></div>
+          <div className="bg-primary ring-5 ring-background dark:ring-dark-background lg:absolute w-100 h-120 rounded-3xl z-1"></div>
           {/*-------------------------*/}
-          <div className="md:flex relative hidden bg-[#6483d2] w-80 h-100 rounded-3xl translate-x-40 hover:translate-x-52 duration-400 transition-all "></div>
+          <div className="lg:flex relative hidden bg-[#6483d2] w-80 h-100 rounded-3xl translate-x-40 hover:translate-x-52 duration-400 transition-all "></div>
         </div>
       </div>
       {/* --- COINTAINER 2 --- */}
