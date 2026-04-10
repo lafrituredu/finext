@@ -5,6 +5,8 @@
     "dashboard":"Dashboard",
     "transactions":"Transactions",
     "goals":"Goals",
+    "recurrent":"Recurrent",
+    "categories":"Categories", 
     "taxes":"Taxes",
     "reports":"Reports",
     "utils":"Utils",

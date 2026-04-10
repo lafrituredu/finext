@@ -1,6 +1,10 @@
 import React, { useState, type ChangeEvent } from 'react'
 import SidebarItem from './SidebarItem'
 
+//i8n
+import { useTranslation } from 'react-i18next'
+import Language from '../buttons/Lang'
+
 //ICONOS
 import UsersIcon from '/src/assets/icons/Profile-icon.svg?react'
 import DashboardIcon from '/src/assets/icons/Dashboard-icon.svg?react'
@@ -11,13 +15,13 @@ import Goals from '/src/assets/icons/Goals.svg?react'
 import Calculator from '/src/assets/icons/Calculator.svg?react'
 import File from '/src/assets/icons/File.svg?react'
 import FinextIcon from '/src/assets/icons/finext.svg?react'
-import { useTranslation } from 'react-i18next'
-import Language from '../buttons/Lang'
 import DarkModeToggle from '../buttons/DarkButton'
 import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
+import Recurrent from '/src/assets/icons/Recurrent.svg?react'
+import Tag from '/src/assets/icons/Tag.svg?react'
 
 function DashboardSidebar() {
-const [openId, setOpenId] = useState("dashboard");
+const [openId, setOpenId] = useState();
 const [open,setOpen] = useState(false);
 const toggleOffCanvas = () => {
     setOpen(!open);
@@ -44,6 +48,18 @@ const menuItems = [{
     label: t('transactions'),
     icon: ArrowsLeftRight,
     to: '/dashboard/transactions'
+  },
+  {
+    id: 'recurrent',
+    label: t('recurrent'),
+    icon: Recurrent,
+    to: '/dashboard/recurrent'
+  },
+  {
+    id: 'categories',
+    label: t('categories'),
+    icon: Tag,
+    to: '/dashboard/categories'
   },
   {
     id: 'goals',
@@ -91,8 +107,8 @@ const menuItems = [{
               lg:relative fixed
               lg:transition-none overflow-hidden
               border-r border-[#0000001a]
-              dark:border-[#040919]
-              dark:bg-[#0F1732]
+              dark:border-dark-background
+              dark:bg-dark-card
               ${open
                 ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
                 : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}

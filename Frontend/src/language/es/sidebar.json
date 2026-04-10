@@ -5,6 +5,8 @@
     "dashboard":"Panel de control",
     "transactions":"Transacciones",
     "goals":"Metas",
+    "recurrent":"Recurrente",
+    "categories":"Categorias", 
     "taxes":"Impuestos",
     "reports":"Informes",
     "utils":"Utiles",

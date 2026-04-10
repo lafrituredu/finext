@@ -1,15 +1,15 @@
 import { useState, type ReactNode } from "react";
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ChevronIcon from '/src/assets/icons/Chevron-down.svg?react';
 type IconType = React.FC<React.SVGProps<SVGSVGElement>>
 
 function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = null}: {id:string,label:string,icon:IconType,to?:string,openId?:string,setOpenId?:any,children?:any}) {
   
-    const content = () =>{
+    const content = (isActive = false) =>{
         return (<>
         <div id={id} onClick={(e) => { openId != e.currentTarget.id ? setOpenId(e.currentTarget.id) : setOpenId("") } }
             className={`rounded-3xl flex items-center hover:bg-[#0000000a] transition ease-in 
-            px-5 py-2 justify-between hover:cursor-pointer ${openId == id ? 'bg-[#0000000a]' : ''} `}>
+            px-5 py-2 justify-between hover:cursor-pointer ${ isActive || openId == id ? 'bg-[#0000000a]' : ''} `}>
             <p className="flex gap-2 items-center">
                 {Icon && <Icon className="size-5" />}
                 {label}
@@ -29,9 +29,9 @@ function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = nu
     return (
     <>
     {to != "" ?
-        <Link to={to}>
-            {content()}
-        </Link>
+        <NavLink to={to} end>
+            {({ isActive }) => content(isActive)}
+        </NavLink>
     :
     <div>
         {content()}
