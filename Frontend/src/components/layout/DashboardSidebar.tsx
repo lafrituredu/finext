@@ -116,16 +116,17 @@ const menuItems = [{
                 
                 <a href="/dashboard" className='flex content-center gap-2'>
                   <FinextIcon className='size-10 mb-2' /> 
-                  <span className='font-bold text-3xl bg-linear-to-br from-[#84A2EB] to-[#11386b] hover:from-[#11386b]  hover:to-[#84A2EB] hover:hue-rotate-0 duration-500 transition-colors ease-in-out bg-clip-text text-transparent'>FiNext</span>
+                  <span className='font-bold text-3xl bg-linear-to-br  from-primaryto-[#11386b] hover:from-[#11386b]  hover:to-primary hover:hue-rotate-0 duration-500 transition-colors ease-in-out bg-clip-text text-transparent'>FiNext</span>
                 </a>
                 <p className=''> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
 
                 {menuItems.map((item,key) => (
-                <div id={`${key}`} className=" pt-10">
+                <div key={key} id={`${key}`} className=" pt-10">
                     <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
                     <ul>
                         {item.items.map( (el,key)=> (
                             <SidebarItem
+                            key={key}
                             id={el.id}
                             icon={el.icon}
                             label={el.label}

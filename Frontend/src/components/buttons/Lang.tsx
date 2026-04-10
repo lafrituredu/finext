@@ -23,9 +23,9 @@ export default function Language() {
 
 
   return (
-    <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-[#D8E0F9] md:flex hidden outline-0"> 
-        <option value="en" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("english")}</option>
-        <option value="es" className="text-black dark:text-[#D8E0F9] dark:bg-[#040919]">{t("spanish")}</option>
+    <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-dark-text md:flex hidden outline-0"> 
+        <option value="en" className="text-black dark:text-dark-text dark:bg-dark-background">{t("english")}</option>
+        <option value="es" className="text-black dark:text-dark-text dark:bg-dark-background">{t("spanish")}</option>
     </select>
   )
 }

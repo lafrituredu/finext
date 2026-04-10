@@ -5,7 +5,7 @@ function Footer() {
   return (
     <>
         <div className="bg-[#374161] w-full h-fit pb-10">
-            <div className="bg-white dark:bg-[#040919] w-full h-10 sm:h-20 xl:h-30 rounded-b-full"></div>
+            <div className="bg-white dark:bg-dark-background w-full h-10 sm:h-20 xl:h-30 rounded-b-full"></div>
             <div className="inter flex flex-row justify-center items-center text-white gap-30 py-[5%]">
               <div className="flex flex-col gap-2">
                 <strong>Legal Stuff</strong>

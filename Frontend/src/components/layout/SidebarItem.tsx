@@ -19,8 +19,8 @@ function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = nu
         
         
         <div className={`ms-5 dropdown transition-all duration-75 ease-in overflow-hidden ${openId == id ? "max-h-20" : "max-h-0"}`}>
-            {children != null && children.map((child: any) => (
-                <SidebarItem id="" label={child.label} icon={child.icon} to={child.to}></SidebarItem>
+            {children != null && children.map((child: any,key:any) => (
+                <SidebarItem key={key} id="" label={child.label} icon={child.icon} to={child.to}></SidebarItem>
             ))}
         </div>
         </>)
