@@ -6,6 +6,7 @@ import FiNextIcon from '/src/assets/icons/finext.svg?react'
 import HamburgerMenu from '/src/assets/icons/Hamburger-menu.svg?react'
 import DarkModeToggle from '../components/buttons/DarkButton'
 
+
 function Dashboard() {
 
   return (

@@ -14,6 +14,7 @@ import FinextIcon from '/src/assets/icons/finext.svg?react'
 import { useTranslation } from 'react-i18next'
 import Language from '../buttons/Lang'
 import DarkModeToggle from '../buttons/DarkButton'
+import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 
 function DashboardSidebar() {
 const [openId, setOpenId] = useState("dashboard");
@@ -126,7 +127,7 @@ const menuItems = [{
                   <Language />
                   <SidebarItem
                     id={'logout'}
-                    icon={File}
+                    icon={ExitIcon }
                     label={t('logout')}
                     to='/'
                     />
