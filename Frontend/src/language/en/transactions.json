@@ -1,5 +1,6 @@
 {
     "transactions": "Transactions",
     "new_transaction":"New Transaction",
-    "create":"Create"
+    "create":"Create",
+    "no_transaction":"There are no transactions"
 }

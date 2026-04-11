@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useState, type ChangeEvent } from "react";
 import FiNextIcon from '/src/assets/icons/finext.svg?react'
 import HamburgerMenu from '/src/assets/icons/Hamburger-menu.svg?react'
+import Close from '/src/assets/icons/Close.svg?react'
 
 function Navbar() {
     const { t } = useTranslation("nav");
@@ -15,12 +16,13 @@ function Navbar() {
     const [opened, setOpened] = useState(false);
     const toggleMenu = () => {
         setOpened(!opened);
-        console.log(opened)
+        console.log("Opened? "+ !opened)
     };
 
   return (
     <>
-    <nav className="flex justify-between items-center z-3 fixed w-full bg-background dark:bg-dark-background shadow-sm text-white dark:shadow-md px-10 py-5">
+    <nav className="flex justify-between items-center z-3 fixed w-full bg-background dark:bg-dark-background shadow-sm
+     text-white dark:shadow-md px-10 py-5">
         {/* Left */}
         <div className="md:flex flex-row inter hidden">
             <FiNextIcon className="w-10 h-10 min-w-10 mr-5"/>
@@ -33,7 +35,10 @@ function Navbar() {
         </div>
         {/* Middle */}
         <div className="md:hidden flex">
-            <HamburgerMenu onClick={toggleMenu} className="w-10 h-10 text-text dark:text-dark-text cursor-pointer"/>
+            { opened ?
+            (<Close onClick={toggleMenu} className="w-10 h-10 text-text dark:text-dark-text cursor-pointer"/>):
+            (<HamburgerMenu onClick={toggleMenu} className="w-10 h-10 text-text dark:text-dark-text cursor-pointer"/>)
+            }
         </div>
         <div className="md:hidden flex">
             <img src="icons/finext.svg" alt="" className="w-12 h-12 min-w-10"/>
@@ -41,7 +46,9 @@ function Navbar() {
 
         {/* Right */}
         <div className="flex flex-row justify-center items-center inter">
-            <LanguageSelect/>
+            <div className="md:flex hidden">
+                <LanguageSelect/>
+            </div>
             <DarkButton/>
             <div className="md:flex ring-2 ring-white dark:ring-[#0F1732] rounded-full shadow-md hidden">
                 <Link to="/login">
@@ -55,13 +62,16 @@ function Navbar() {
         
     </nav>
     
-    <div className="hidden flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center">
-        <div className="pt-30 pb-10">
+    <div className={`flex flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center
+      transition-transform duration-300 ease-in-out ${opened ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="pt-30 pb-5">
             <NavLink to="/" className={linkClass}>{t("home")}</NavLink>
             <NavLink to="/about" className={linkClass}>{t("about_us")}</NavLink>
             <NavLink to="/contact" className={linkClass}>{t("contact_us")}</NavLink>
         </div>
-        <LanguageSelect/>
+        <div className="md:hidden flex pb-5">
+            <LanguageSelect/>
+        </div>
     </div>
     </>
   )

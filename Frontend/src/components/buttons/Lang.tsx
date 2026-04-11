@@ -23,7 +23,7 @@ export default function Language() {
 
 
   return (
-    <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-dark-text md:flex hidden outline-0"> 
+    <select value={currentLang} onChange={handleChangeLanguage} className="text-black dark:text-dark-text outline-0"> 
         <option value="en" className="text-black dark:text-dark-text dark:bg-dark-background">{t("english")}</option>
         <option value="es" className="text-black dark:text-dark-text dark:bg-dark-background">{t("spanish")}</option>
     </select>

@@ -68,7 +68,7 @@ function Transactions() {
       transactions.length === 0 ? (
       <div className='flex flex-col justify-center items-center inter pt-40'>
         <ArrowsLeftRight className='w-24 h-24'/>
-        <p className='text-xl'>No hay transacciones</p>
+        <p className='text-xl'>{t('no_transactions')}</p>
       </div>
       
       ) : 

@@ -1,5 +1,6 @@
 {
     "transactions": "Transacciones",
     "new_transaction":"Nueva Transaccion",
-    "create":"Crear"
+    "create":"Crear",
+    "no_transaction":"No hay transacciones"
 }
