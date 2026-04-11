@@ -1,0 +1,30 @@
+import api from './axiosInstance'
+
+export interface Transaction {
+    id: number
+    user_id: number
+    category_id: number
+    name: string
+    date: string
+    type: 'income' | 'expense'
+    total_amount: number
+    iva_percent: number | null
+    client: string | null
+    description: string | null
+    payment_method: string | null
+    status: boolean | null
+    recurrent: boolean
+    recurrent_timer: string | null
+    created_at: string
+    user: {
+    id: number
+    username: string}
+    category: {
+    id: number
+    name: string}
+}
+
+export const getTransactions = async (): Promise<Transaction[]> => {
+    const response = await api.get<Transaction[]>('/transactions')
+    return response.data
+}

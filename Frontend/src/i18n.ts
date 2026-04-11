@@ -23,6 +23,9 @@ import overviewEN from "./language/en/overview.json";
 import sidebarES from "./language/es/sidebar.json";
 import sidebarEN from "./language/en/sidebar.json";
 
+import transactionsES from "./language/es/transactions.json";
+import transactionsEN from "./language/en/transactions.json";
+
 export const resources = {
   es: {
     common: es,
@@ -32,6 +35,7 @@ export const resources = {
     footer: footerES,
     overview: overviewES,
     sidebar: sidebarES,
+    transactions: transactionsES,
   },
   en: {
     common: en,
@@ -40,7 +44,8 @@ export const resources = {
     error404: error404EN,
     footer: footerEN,
     overview: overviewEN,
-    sidebar: sidebarEN
+    sidebar: sidebarEN,
+    transactions: transactionsEN,
   },
 } as const;
 
