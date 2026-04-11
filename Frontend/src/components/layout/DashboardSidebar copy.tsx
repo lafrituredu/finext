@@ -102,55 +102,55 @@ const menuItems = [{
 ];
   return (
     <>
-      <div id="sidebar" className={`
-        lg:block h-full bg-[#fafafa] px-5 py-10
-        lg:relative fixed
-        lg:transition-none overflow-hidden
-        border-r border-[#0000001a]
-        dark:border-dark-background
-        dark:bg-dark-card
-        ${open
-          ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
-          : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
-      `}>
-          <div className='fixed'><DarkModeToggle /></div>
-          <div className='flex flex-col items-center justify-center'>
-            <FinextIcon className='w-16 h-16 m-4' />
-            <p className='inter'> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
-          </div>
-          <div className='flex items-center justify-center py-2'>
-            <Language />
-          </div>
+                <div id="sidebar" className={`
+              lg:block h-full bg-[#fafafa] px-5 py-10
+              lg:relative fixed
+              lg:transition-none overflow-hidden
+              border-r border-[#0000001a]
+              dark:border-dark-background
+              dark:bg-dark-card
+              ${open
+                ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
+                : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
+            `}>
+                
+                <a href="/dashboard" className='flex content-center gap-2'>
+                  <FinextIcon className='size-10 mb-2' /> 
+                  <span className='font-bold text-3xl bg-linear-to-br  from-primary to-[#11386b] hover:from-[#11386b]  hover:to-primary hover:hue-rotate-0 duration-500 transition-colors ease-in-out bg-clip-text text-transparent'>FiNext</span>
+                </a>
+                <p className=''> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
 
-          {menuItems.map((item,key) => (
-          <div key={key} id={`${key}`} className=" pt-10">
-              <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
-              <ul>
-                  {item.items.map( (el,key)=> (
-                      <SidebarItem
-                      key={key}
-                      id={el.id}
-                      icon={el.icon}
-                      label={el.label}
-                      to={el.to}
-                      children={el.children}
-                      openId={openId}
-                      setOpenId={setOpenId}
-                  />))}
-              </ul>
-          </div>
-          ))}
-          
-          <div className='absolute bottom-10'>
-            <SidebarItem
-              id={'logout'}
-              icon={ExitIcon }
-              label={t('logout')}
-              to='/'
-              />
-          </div>
-          
-      </div>
+                {menuItems.map((item,key) => (
+                <div key={key} id={`${key}`} className=" pt-10">
+                    <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
+                    <ul>
+                        {item.items.map( (el,key)=> (
+                            <SidebarItem
+                            key={key}
+                            id={el.id}
+                            icon={el.icon}
+                            label={el.label}
+                            to={el.to}
+                            children={el.children}
+                            openId={openId}
+                            setOpenId={setOpenId}
+                        />))}
+                    </ul>
+                </div>
+                ))}
+                
+                <div className='absolute bottom-10'>
+                  <DarkModeToggle />
+                  <Language />
+                  <SidebarItem
+                    id={'logout'}
+                    icon={ExitIcon }
+                    label={t('logout')}
+                    to='/'
+                    />
+                </div>
+                
+            </div>
     </>
   )
 }

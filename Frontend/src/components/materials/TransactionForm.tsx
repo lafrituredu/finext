@@ -2,7 +2,7 @@ export function TransctionForm({ close }: any) {
   return (
     <div className="flex items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0"
       onClick={close}>
-      <div className="absolute w-[60vh] h-fit bg-background shadow-md rounded-2xl z-80 p-3 overflow-y-auto"
+      <div className="absolute w-[60vh] h-fit bg-background dark:bg-dark-background dark:ring-2 dark:ring-gray-800 shadow-md rounded-2xl z-80 p-3 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col p-2 gap-y-4">
             <p className="flex justify-center text-2xl font-bold">Añadir transacción</p>
@@ -43,7 +43,7 @@ export function TransctionForm({ close }: any) {
                 <option>Trueque</option>
             </select>
 
-            <button className="bg-primary py-2 px-6 rounded-full shadow-md text-white">Añadir</button>
+            <button className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer">Añadir</button>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import api from './axiosInstance'
 export interface Transaction {
     id: number
     user_id: number
-    category_id: number
+    category_id: number | null
     name: string
     date: string
     type: 'income' | 'expense'
