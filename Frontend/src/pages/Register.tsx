@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
+
+
 type FormDataType = {
   email: string;
   password: string;
@@ -27,6 +29,10 @@ const Register: React.FC = () => {
     phone_number: "",
     rol: "autonomo"
   });
+
+  if (localStorage.getItem("token")) {
+    window.location.href = "/dashboard";
+  }
 
   const [availability, setAvailability] = useState<{
     email: boolean | null;
@@ -198,27 +204,20 @@ const Register: React.FC = () => {
       }
 
       console.log("REGISTER OK:", data);
-      alert("Usuario registrado correctamente");
 
-      setFormData({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        username: "",
-        full_name: "",
-        phone_number: "",
-        rol: "autonomo"
-      });
+      //  guardar token
+    localStorage.setItem("token", data.token);
 
-      setStep(1);
+    //  redirigir directamente
+    window.location.href = "/dashboard";
 
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+        } catch (err: any) {
+          console.error(err);
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
   const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
   const isStep1Complete = formData.email && formData.password && formData.username && formData.confirmPassword && passwordsMatch;

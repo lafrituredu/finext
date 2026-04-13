@@ -10,55 +10,63 @@ class AuthController extends Controller
 {
     // REGISTER
     public function register(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|unique:users',
-            'full_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => [
-                'required',
-                'min:8',
-                'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/' // Al menos un carácter especial
-            ],
-            'rol' => 'required|in:gestor,autonomo'
-        ]);
+        {
+            $request->validate([
+                'username' => 'required|unique:users',
+                'full_name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => [
+                    'required',
+                    'min:8',
+                    'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
+                ],
+                'rol' => 'required|in:gestor,autonomo'
+            ]);
 
-        $user = User::create([
-            'username' => $request->username,
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'rol' => $request->rol,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            $user = User::create([
+                'username' => $request->username,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'rol' => $request->rol,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return response()->json([
-            'message' => 'Usuario registrado',
-            'user' => $user
-        ]);
-    }
+            // 🔥 CREAR TOKEN (igual que login)
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Usuario registrado',
+                'user' => $user,
+                'token' => $token
+            ]);
+        }
 
     // LOGIN
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Credenciales incorrectas'
-            ], 401);
-        }
-
+    if (!$user || !Hash::check($request->password, $user->password)) {
         return response()->json([
-            'message' => 'Login correcto',
-            'user' => $user
-        ]);
+            'message' => 'Credenciales incorrectas'
+        ], 401);
     }
+
+    // 🔥 CREAR TOKEN
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login correcto',
+        'user' => $user,
+        'token' => $token
+    ]);
+}
     public function checkEmail(Request $request)
     {
         $email = $request->query('email');

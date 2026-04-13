@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
-type LoginProps = {
-  onGoToRegister?: () => void;
-};
+  
 
-const Login: React.FC<LoginProps> = ({ onGoToRegister }) => {
+const Login: React.FC = () => {
+
+  if (localStorage.getItem("token")) {
+    window.location.href = "/dashboard";
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +15,14 @@ const Login: React.FC<LoginProps> = ({ onGoToRegister }) => {
 
   const isFormComplete = email && password;
 
+  
+
   const onGoToHome = () => {
     window.location.href = "/";
+  };
+
+  const onGoToRegister = () => {
+    window.location.href = "/register";
   };
 
   const handleLogin = async () => {
@@ -25,7 +33,8 @@ const Login: React.FC<LoginProps> = ({ onGoToRegister }) => {
       const res = await fetch("http://127.0.0.1:8000/api/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json" // 🔥 IMPORTANTE
         },
         body: JSON.stringify({
           email,
@@ -43,8 +52,14 @@ const Login: React.FC<LoginProps> = ({ onGoToRegister }) => {
 
       console.log("Login OK:", data);
 
-      // Redirigir al home después de login exitoso
-      window.location.href = "/";
+      // 🔥 GUARDAR TOKEN
+      localStorage.setItem("token", data.token);
+
+      // 🔥 GUARDAR USER (opcional)
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // 🔥 REDIRECCIÓN
+      window.location.href = "/dashboard";
 
     } catch (error) {
       console.error("Error:", error);
