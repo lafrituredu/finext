@@ -75,7 +75,8 @@ function Transactions() {
       (
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
-          <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800'>
+          <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
+            hover:scale-102 transition-transform ease-in-out'>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
               <div className={t.type == 'income' ?

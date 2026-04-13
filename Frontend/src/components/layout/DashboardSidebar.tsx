@@ -19,7 +19,11 @@ import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
 
-function DashboardSidebar() {
+interface DashboardSidebar {
+  opened?: boolean;
+}
+
+function DashboardSidebar({opened = true}:DashboardSidebar) {
 const [openId, setOpenId] = useState();
 const [open,setOpen] = useState(false);
 // const toggleOffCanvas = () => {
@@ -102,19 +106,19 @@ const menuItems = [{
         border-r border-[#0000001a]
         dark:border-dark-background
         dark:bg-dark-card
-        ${open
-          ? 'duration-150 z-50 sm:w-75 w-[90%] opacity-100 pointer-events-auto'
+        ${opened
+          ? 'duration-150 z-50 sm:w-75 w-2/3 opacity-100 pointer-events-auto'
           : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
       `}>
-          <div className='fixed'><DarkModeToggle /></div>
-          <div className='flex flex-col items-center justify-center'>
-            <FinextIcon className='w-16 h-16 m-4' />
-            <p className='inter'> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
+          <div>
+            <div className='lg:flex flex-col items-center justify-center hidden'>
+              <FinextIcon className='w-16 h-16 m-4' />
+              <p className='inter'> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
+            </div>
+            <div className='flex items-center justify-center py-2'>
+              <Language />
+            </div>
           </div>
-          <div className='flex items-center justify-center py-2'>
-            <Language />
-          </div>
-
           {menuItems.map((item,key) => (
           <div key={key} id={`${key}`} className=" pt-10">
               <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
@@ -133,14 +137,14 @@ const menuItems = [{
               </ul>
           </div>
           ))}
-          
-          <div className='absolute bottom-10'>
+          <div className='flex flex-row justify-between items-center pt-10'>
             <SidebarItem
               id={'logout'}
               icon={ExitIcon }
               label={t('logout')}
               to='/'
               />
+              <div className='lg:flex hidden'><DarkModeToggle /></div>
           </div>
           
       </div>

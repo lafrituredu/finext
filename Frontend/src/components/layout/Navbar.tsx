@@ -4,8 +4,7 @@ import LanguageSelect from '../buttons/Lang.tsx'
 import { useTranslation } from "react-i18next";
 import { useState, type ChangeEvent } from "react";
 import FiNextIcon from '/src/assets/icons/finext.svg?react'
-import HamburgerMenu from '/src/assets/icons/Hamburger-menu.svg?react'
-import Close from '/src/assets/icons/Close.svg?react'
+import HamburgerMenu from "../buttons/HamburgerMenu.tsx";
 
 function Navbar() {
     const { t } = useTranslation("nav");
@@ -35,10 +34,7 @@ function Navbar() {
         </div>
         {/* Middle */}
         <div className="md:hidden flex">
-            { opened ?
-            (<Close onClick={toggleMenu} className="w-10 h-10 text-text dark:text-dark-text cursor-pointer"/>):
-            (<HamburgerMenu onClick={toggleMenu} className="w-10 h-10 text-text dark:text-dark-text cursor-pointer"/>)
-            }
+            <HamburgerMenu opened={opened} onToggle={toggleMenu}/>
         </div>
         <div className="md:hidden flex">
             <img src="icons/finext.svg" alt="" className="w-12 h-12 min-w-10"/>
