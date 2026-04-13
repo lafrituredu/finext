@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from 'react'
+import { useState } from 'react'
 import SidebarItem from './SidebarItem'
 
 //i8n
@@ -7,7 +7,6 @@ import Language from '../buttons/Lang'
 
 //ICONOS
 import UsersIcon from '/src/assets/icons/Profile-icon.svg?react'
-import DashboardIcon from '/src/assets/icons/Dashboard-icon.svg?react'
 import GearIcon from '/src/assets/icons/Gear.svg?react'
 import ChartPieSlice from '/src/assets/icons/ChartPieSlice.svg?react'
 import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
@@ -23,17 +22,11 @@ import Tag from '/src/assets/icons/Tag.svg?react'
 function DashboardSidebar() {
 const [openId, setOpenId] = useState();
 const [open,setOpen] = useState(false);
-const toggleOffCanvas = () => {
-    setOpen(!open);
-}
-const { i18n, t } = useTranslation("sidebar");
+// const toggleOffCanvas = () => {
+//     setOpen(!open);
+// }
+const { t } = useTranslation("sidebar");
 
-//Arrow function handleChangeLanguage: Detecta el "idioma" seleccionado
-const handleChangeLanguage = (e: ChangeEvent<HTMLSelectElement>) => {
-    i18n.changeLanguage(e.target.value);
-};
-
-const currentLang = i18n.language.startsWith("en") ? "en" : "es";
 
 const menuItems = [{
   name: t('overview'),
