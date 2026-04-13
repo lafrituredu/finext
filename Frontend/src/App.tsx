@@ -7,7 +7,9 @@ import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Overview from './pages/Overview'
 import Register from './pages/Register'
-import ProtectedRoute from './components/ProtectedRoute' // 🔥 IMPORTANTE
+import ProtectedRoute from './components/ProtectedRoute'
+import Categories from './pages/Categories'
+
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
         >
           <Route path="" element={<Overview />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="categories" element={<Categories />} />
         </Route>
 
         {/* Ruta 404 */}

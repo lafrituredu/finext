@@ -10,11 +10,9 @@ class CategoryController extends Controller
     //
     public function index()
     {
-        $transactions = Category::with(['category' , 'user'])
-            ->orderBy('date', 'desc')
-            ->get();
+        $category = Category::with('user')->get();
 
-        return response()->json($transactions);
+        return response()->json($category);
     }
 
 }
