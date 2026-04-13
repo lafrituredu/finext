@@ -16,16 +16,16 @@ function Transactions() {
   const [error, setError] = useState<string | null>(null)
 
   const { t } = useTranslation("transactions")
-  const [select,setSeleceted] = useState<any>('full')
-
+  const [select,setSelected] = useState<any>('full')
   const [showTransactionForm, setShowTransactionForm] = useState(false)
 
   useEffect(() => {
     getTransactions()
       .then(data => setTransactions(data))
       .catch(() => setError('Error al cargar las transacciones'))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(false));
   }, [])
+
 
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
@@ -33,6 +33,7 @@ function Transactions() {
     if (select === 'expenses') return t.type === 'expense'
     return true //'full'
   })
+  
   return (
     <>
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)}/>}
@@ -53,10 +54,11 @@ function Transactions() {
       {transactions.length !== 0 ? (
       <div className='md:py-10 pt-10 pb-5'>
         <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
-              <div id='full' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'full' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Full</div>
-              <div id='incomes' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
-              <div id='expenses' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
+              <div id='full' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'full' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Full</div>
+              <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
+              <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
         </div>
+        <p>Historial ({filteredTransactions.length})</p>
       </div>):(<></>)}
       {/* TRANSACTIONS CARDS */}
       {loading ? (

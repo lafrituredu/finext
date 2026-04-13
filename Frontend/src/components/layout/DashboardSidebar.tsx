@@ -110,14 +110,10 @@ const menuItems = [{
           ? 'duration-150 z-50 sm:w-75 w-2/3 opacity-100 pointer-events-auto'
           : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
       `}>
-          <div>
-            <div className='lg:flex flex-col items-center justify-center hidden'>
-              <FinextIcon className='w-16 h-16 m-4' />
-              <p className='inter'> {t('welcome')} {localStorage.getItem('username') ?? '[username]'}!</p>
-            </div>
-            <div className='flex items-center justify-center py-2'>
-              <Language />
-            </div>
+          <div className='fixed'><DarkModeToggle /></div>
+          <div className='flex flex-col items-center justify-center'>
+            <FinextIcon className='w-16 h-16 m-4' />
+            <p className='inter'> {t('welcome')} {JSON.parse(localStorage.getItem('user')!)?.username ?? '[username]'}!</p>
           </div>
           {menuItems.map((item,key) => (
           <div key={key} id={`${key}`} className=" pt-10">
