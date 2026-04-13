@@ -62,7 +62,7 @@ function Navbar() {
         
     </nav>
     
-    <div className={`flex flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center
+    <div className={`md:hidden flex flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center
       transition-transform duration-300 ease-in-out ${opened ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="pt-30 pb-5">
             <NavLink to="/" className={linkClass}>{t("home")}</NavLink>
