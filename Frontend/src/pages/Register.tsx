@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { registerUser } from "../api/AuthServices";
 
 
 
@@ -170,54 +171,39 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    if (!formData.full_name || !formData.phone_number) {
-      setError("Completa todos los campos");
-      setLoading(false);
-      return;
-    }
+  if (!formData.full_name || !formData.phone_number) {
+    setError("Completa todos los campos");
+    setLoading(false);
+    return;
+  }
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          username: formData.username,
-          full_name: formData.full_name,
-          phone_number: formData.phone_number,
-          rol: formData.rol
-        })
-      });
+  try {
+    const data = await registerUser({
+      email: formData.email,
+      password: formData.password,
+      username: formData.username,
+      full_name: formData.full_name,
+      phone_number: formData.phone_number,
+      rol: formData.rol
+    });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Error al registrarse");
-      }
-
-      console.log("REGISTER OK:", data);
-
-      //  guardar token
     localStorage.setItem("token", data.token);
 
-    //  redirigir directamente
+    localStorage.setItem("user", data.user.username);
+
+
     window.location.href = "/dashboard";
 
-        } catch (err: any) {
-          console.error(err);
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
+  } catch (err: any) {
+    setError(err.response?.data?.message || "Error al registrarse");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
   const isStep1Complete = formData.email && formData.password && formData.username && formData.confirmPassword && passwordsMatch;

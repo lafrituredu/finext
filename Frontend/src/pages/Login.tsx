@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { loginUser } from "../api/AuthServices";
 
   
 
@@ -26,47 +27,23 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    setError("");
-    setLoading(true);
+  setError("");
+  setLoading(true);
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json" // 🔥 IMPORTANTE
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      });
+  try {
+  const data = await loginUser(email, password);
 
-      const data = await res.json();
+  localStorage.setItem("token", data.token);
 
-      if (!res.ok) {
-        setError(data.message || "Credenciales incorrectas");
-        setLoading(false);
-        return;
-      }
+  localStorage.setItem("user", data.user.username);
 
-      console.log("Login OK:", data);
+  window.location.href = "/dashboard";
 
-      // 🔥 GUARDAR TOKEN
-      localStorage.setItem("token", data.token);
-
-      // 🔥 GUARDAR USER (opcional)
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // 🔥 REDIRECCIÓN
-      window.location.href = "/dashboard";
-
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Error de conexión. Intenta nuevamente.");
-      setLoading(false);
-    }
-  };
+} catch (err: any) {
+  setError(err.response?.data?.message || "Error al iniciar sesión");
+  setLoading(false);
+}
+};
 
   return (
     <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
