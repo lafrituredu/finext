@@ -15,4 +15,14 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
+    public function store(Request $request) {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'user_id' => 'exists:users,id'
+        ]);
+
+        $category = Category::create($data);
+        return response()->json($category, 201);
+    }
+
 }
