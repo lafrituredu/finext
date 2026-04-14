@@ -113,7 +113,7 @@ const menuItems = [{
           <div className='fixed'><DarkModeToggle /></div>
           <div className='flex flex-col items-center justify-center'>
             <FinextIcon className='w-16 h-16 m-4' />
-            <p className='inter'> {t('welcome')} {JSON.parse(localStorage.getItem('user')!)?.username ?? '[username]'}!</p>
+            <p className='inter'> {t('welcome')} {localStorage.getItem('user') ?? '[username]'}!</p>
           </div>
           {menuItems.map((item,key) => (
           <div key={key} id={`${key}`} className=" pt-10">

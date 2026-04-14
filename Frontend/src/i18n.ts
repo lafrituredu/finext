@@ -8,6 +8,12 @@ import en from "./language/en/common.json";
 import homeES from "./language/es/home.json";
 import homeEN from "./language/en/home.json";
 
+import loginES from "./language/es/login.json";
+import loginEN from "./language/en/login.json";
+
+import registerES from "./language/es/register.json";
+import registerEN from "./language/en/register.json";
+
 import navES from "./language/es/nav.json";
 import navEN from "./language/en/nav.json";
 
@@ -26,6 +32,8 @@ import sidebarEN from "./language/en/sidebar.json";
 import transactionsES from "./language/es/transactions.json";
 import transactionsEN from "./language/en/transactions.json";
 
+
+
 export const resources = {
   es: {
     common: es,
@@ -36,6 +44,8 @@ export const resources = {
     overview: overviewES,
     sidebar: sidebarES,
     transactions: transactionsES,
+    login: loginES,
+    register: registerES,
   },
   en: {
     common: en,
@@ -46,6 +56,8 @@ export const resources = {
     overview: overviewEN,
     sidebar: sidebarEN,
     transactions: transactionsEN,
+    login: loginEN,
+    register: registerEN,
   },
 } as const;
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { registerUser } from "../api/AuthServices";
-
-
-
+import { useTranslation } from 'react-i18next';
+import FiNextIcon from '/src/assets/icons/finext.svg?react';
+import DarkButton from  "../components/buttons/DarkButton.tsx";
+import Language from '../components/buttons/Lang.tsx';
 type FormDataType = {
   email: string;
   password: string;
@@ -14,6 +15,8 @@ type FormDataType = {
 };
 
 const Register: React.FC = () => {
+  const { t } = useTranslation("register");
+
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -30,7 +33,7 @@ const Register: React.FC = () => {
     phone_number: "",
     rol: "autonomo"
   });
-
+  
   if (localStorage.getItem("token")) {
     window.location.href = "/dashboard";
   }
@@ -171,63 +174,64 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  if (!formData.full_name || !formData.phone_number) {
-    setError("Completa todos los campos");
-    setLoading(false);
-    return;
-  }
+    if (!formData.full_name || !formData.phone_number) {
+      setError("Completa todos los campos");
+      setLoading(false);
+      return;
+    }
 
-  try {
-    const data = await registerUser({
-      email: formData.email,
-      password: formData.password,
-      username: formData.username,
-      full_name: formData.full_name,
-      phone_number: formData.phone_number,
-      rol: formData.rol
-    });
+    try {
+      const data = await registerUser({
+        email: formData.email,
+        password: formData.password,
+        username: formData.username,
+        full_name: formData.full_name,
+        phone_number: formData.phone_number,
+        rol: formData.rol
+      });
 
-    localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", data.user.username);
 
-    localStorage.setItem("user", data.user.username);
+      window.location.href = "/dashboard";
 
-
-    window.location.href = "/dashboard";
-
-  } catch (err: any) {
-    setError(err.response?.data?.message || "Error al registrarse");
-  } finally {
-    setLoading(false);
-  }
-};
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Error al registrarse");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
   const isStep1Complete = formData.email && formData.password && formData.username && formData.confirmPassword && passwordsMatch;
   const isStep2Complete = formData.full_name && formData.phone_number;
 
-  return (
-    <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg flex overflow-hidden">
+  return (  
+    <div className="min-h-screen bg-[#bfc6d6] dark:bg-dark-background flex items-center justify-center p-6">
+      <div className="hidden"><DarkButton/><Language/></div>
+      <div className="w-full max-w-6xl bg-white dark:bg-dark-card rounded-3xl shadow-lg flex overflow-hidden">
 
-        {/* LEFT SIDE */}
-        <div className="w-1/2 p-10">
+        {/* LEFT SIDE - Formulario */}
+        <div className="lg:w-[45%] w-full p-10 lg:p-12">
           <button
-            className="mb-6 text-gray-400 hover:text-gray-600"
+            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
             onClick={onGoToHome}
           >
-            ←
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
           </button>
 
-          <h1 className="text-2xl font-semibold mb-6">
-            Regístrate en FiNext
+          <h1 className="mont_semibold text-3xl mb-8 text-black dark:text-white">
+            {t('register_title')}
           </h1>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
@@ -237,9 +241,9 @@ const Register: React.FC = () => {
             {step === 1 && (
               <>
                 {/* Username */}
-                <div className="mb-4">
-                  <label className="text-sm text-gray-500">
-                    Nombre de usuario
+                <div className="mb-5">
+                  <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                    {t('username_label')}
                   </label>
                   <div className="relative">
                     <input
@@ -247,16 +251,16 @@ const Register: React.FC = () => {
                       name="username"
                       value={formData.username}
                       onChange={handleChange}
-                      className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                      className={`w-full mt-2 px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 bg-white dark:bg-dark-background text-black dark:text-white transition-all ${
                         availability.username === null
-                          ? "border-gray-300 focus:ring-blue-400"
+                          ? "border-gray-300 dark:border-gray-600 focus:ring-blue-400 dark:focus:ring-blue-500"
                           : availability.username
-                            ? "border-green-400 focus:ring-green-400"
-                            : "border-red-400 focus:ring-red-400"
+                            ? "border-green-400 dark:border-green-600 focus:ring-green-400 dark:focus:ring-green-500"
+                            : "border-red-400 dark:border-red-600 focus:ring-red-400 dark:focus:ring-red-500"
                       }`}
                     />
                     {availability.username !== null && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1">
                         {availability.username ? (
                           <span className="text-green-500 text-xl">✓</span>
                         ) : (
@@ -268,9 +272,9 @@ const Register: React.FC = () => {
                 </div>
 
                 {/* Email */}
-                <div className="mb-4">
-                  <label className="text-sm text-gray-500">
-                    Correo electrónico
+                <div className="mb-5">
+                  <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                    {t('email_label')}
                   </label>
                   <div className="relative">
                     <input
@@ -278,16 +282,16 @@ const Register: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                      className={`w-full mt-2 px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 bg-white dark:bg-dark-background text-black dark:text-white transition-all ${
                         availability.email === null
-                          ? "border-gray-300 focus:ring-blue-400"
+                          ? "border-gray-300 dark:border-gray-600 focus:ring-blue-400 dark:focus:ring-blue-500"
                           : availability.email
-                            ? "border-green-400 focus:ring-green-400"
-                            : "border-red-400 focus:ring-red-400"
+                            ? "border-green-400 dark:border-green-600 focus:ring-green-400 dark:focus:ring-green-500"
+                            : "border-red-400 dark:border-red-600 focus:ring-red-400 dark:focus:ring-red-500"
                       }`}
                     />
                     {availability.email !== null && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1">
                         {availability.email ? (
                           <span className="text-green-500 text-xl">✓</span>
                         ) : (
@@ -302,8 +306,8 @@ const Register: React.FC = () => {
                 <div className="mb-2 flex gap-3">
                   {/* Password */}
                   <div className="flex-1">
-                    <label className="text-sm text-gray-500">
-                      Contraseña
+                    <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                      {t('password_label')}
                     </label>
                     <div className="relative">
                       <input
@@ -311,16 +315,16 @@ const Register: React.FC = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                        className={`w-full mt-2 px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 bg-white dark:bg-dark-background text-black dark:text-white transition-all ${
                           formData.password === "" || formData.confirmPassword === ""
-                            ? "border-gray-300 focus:ring-blue-400"
+                            ? "border-gray-300 dark:border-gray-600 focus:ring-blue-400 dark:focus:ring-blue-500"
                             : passwordsMatch
-                              ? "border-green-400 focus:ring-green-400"
-                              : "border-red-400 focus:ring-red-400"
+                              ? "border-green-400 dark:border-green-600 focus:ring-green-400 dark:focus:ring-green-500"
+                              : "border-red-400 dark:border-red-600 focus:ring-red-400 dark:focus:ring-red-500"
                         }`}
                       />
                       {formData.password !== "" && formData.confirmPassword !== "" && (
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1">
                           {passwordsMatch ? (
                             <span className="text-green-500 text-xl">✓</span>
                           ) : (
@@ -333,8 +337,8 @@ const Register: React.FC = () => {
 
                   {/* Confirm Password */}
                   <div className="flex-1">
-                    <label className="text-sm text-gray-500">
-                      Confirmar contraseña
+                    <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                      {t('confirm_password_label')}
                     </label>
                     <div className="relative">
                       <input
@@ -342,16 +346,16 @@ const Register: React.FC = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className={`w-full mt-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 ${
+                        className={`w-full mt-2 px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 bg-white dark:bg-dark-background text-black dark:text-white transition-all ${
                           formData.confirmPassword === "" || formData.password === ""
-                            ? "border-gray-300 focus:ring-blue-400"
+                            ? "border-gray-300 dark:border-gray-600 focus:ring-blue-400 dark:focus:ring-blue-500"
                             : passwordsMatch
-                              ? "border-green-400 focus:ring-green-400"
-                              : "border-red-400 focus:ring-red-400"
+                              ? "border-green-400 dark:border-green-600 focus:ring-green-400 dark:focus:ring-green-500"
+                              : "border-red-400 dark:border-red-600 focus:ring-red-400 dark:focus:ring-red-500"
                         }`}
                       />
                       {formData.confirmPassword !== "" && formData.password !== "" && (
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5">
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1">
                           {passwordsMatch ? (
                             <span className="text-green-500 text-xl">✓</span>
                           ) : (
@@ -363,8 +367,8 @@ const Register: React.FC = () => {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-400 mb-6">
-                  Mínimo 8 caracteres e incluir al menos un carácter especial (!@#$%^&*...)
+                <p className="text-xs text-gray-400 dark:text-gray-500 mb-6 inter">
+                  {t('password_requirements')}
                 </p>
 
                 {/* Button */}
@@ -372,13 +376,13 @@ const Register: React.FC = () => {
                   type="button"
                   onClick={nextStep}
                   disabled={checkingAvailability}
-                  className={`w-full text-white py-2 rounded-full transition mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
                     isStep1Complete
-                      ? "bg-blue-400 hover:bg-blue-500"
-                      : "bg-blue-300 hover:bg-blue-400"
+                      ? "bg-primary hover:bg-primary/90 shadow-md"
+                      : "bg-primary/60"
                   }`}
                 >
-                  {checkingAvailability ? "Verificando..." : "Siguiente"}
+                  {checkingAvailability ? t('verifying') : t('next')}
                 </button>
               </>
             )}
@@ -387,49 +391,49 @@ const Register: React.FC = () => {
             {step === 2 && (
               <>
                 {/* Full Name */}
-                <div className="mb-4">
-                  <label className="text-sm text-gray-500">
-                    Nombre completo
+                <div className="mb-5">
+                  <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                    {t('full_name_label')}
                   </label>
                   <input
                     type="text"
                     name="full_name"
                     value={formData.full_name}
                     onChange={handleChange}
-                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
                   />
                 </div>
 
                 {/* Phone */}
-                <div className="mb-4">
-                  <label className="text-sm text-gray-500">
-                    Teléfono
+                <div className="mb-5">
+                  <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                    {t('phone_label')}
                   </label>
                   <input
                     type="text"
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handleChange}
-                    className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
                   />
                 </div>
 
                 {/* Rol - Select personalizado */}
                 <div className="mb-6">
-                  <label className="text-sm text-gray-500">
-                    Rol
+                  <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+                    {t('role_label')}
                   </label>
                   <div className="relative" ref={rolDropdownRef}>
                     <button
                       type="button"
                       onClick={() => setIsRolOpen(!isRolOpen)}
-                      className="w-full mt-1 px-4 py-2 pr-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white cursor-pointer text-left"
+                      className="w-full mt-2 px-4 py-3 pr-10 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 cursor-pointer text-left transition-all inter"
                     >
-                      {formData.rol === "autonomo" ? "Autónomo" : "Gestor"}
+                      {formData.rol === "autonomo" ? t('role_autonomo') : t('role_gestor')}
                     </button>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-0.5 pointer-events-none">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1 pointer-events-none">
                       <svg
-                        className={`w-4 h-4 text-gray-400 transition-transform ${isRolOpen ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${isRolOpen ? 'rotate-180' : ''}`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -440,18 +444,18 @@ const Register: React.FC = () => {
 
                     {/* Dropdown menu */}
                     {isRolOpen && (
-                      <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+                      <div className="absolute z-10 w-full mt-2 bg-white dark:bg-dark-background border border-gray-200 dark:border-gray-600 rounded-2xl shadow-lg overflow-hidden">
                         <button
                           type="button"
                           onClick={() => {
                             setFormData({ ...formData, rol: "autonomo" });
                             setIsRolOpen(false);
                           }}
-                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition ${
-                            formData.rol === "autonomo" ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-blue-900/30 transition inter ${
+                            formData.rol === "autonomo" ? "bg-blue-50 dark:bg-blue-900/30 text-primary" : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
-                          Autónomo
+                          {t('role_autonomo')}
                         </button>
                         <button
                           type="button"
@@ -459,11 +463,11 @@ const Register: React.FC = () => {
                             setFormData({ ...formData, rol: "gestor" });
                             setIsRolOpen(false);
                           }}
-                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition ${
-                            formData.rol === "gestor" ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                          className={`w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-blue-900/30 transition inter ${
+                            formData.rol === "gestor" ? "bg-blue-50 dark:bg-blue-900/30 text-primary" : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
-                          Gestor
+                          {t('role_gestor')}
                         </button>
                       </div>
                     )}
@@ -475,20 +479,20 @@ const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-full transition"
+                    className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl transition-all inter font-medium"
                   >
-                    Atrás
+                    {t('back')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`flex-1 text-white py-2 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed ${
+                    className={`flex-1 text-white py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
                       isStep2Complete && !loading
-                        ? "bg-blue-400 hover:bg-blue-500"
-                        : "bg-blue-300 hover:bg-blue-400"
+                        ? "bg-primary hover:bg-primary/90 shadow-md"
+                        : "bg-primary/60"
                     }`}
                   >
-                    {loading ? "Registrando..." : "Registrarse"}
+                    {loading ? t('registering') : t('register_button')}
                   </button>
                 </div>
               </>
@@ -496,61 +500,82 @@ const Register: React.FC = () => {
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-2 my-4">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="text-sm text-gray-400">O</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+            <span className="text-sm text-gray-400 dark:text-gray-500 inter">{t('or')}</span>
+            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
 
           {/* Google */}
-          <button className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50">
+          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors">
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"
               className="w-5 h-5"
             />
-            <span className="text-sm">Continuar con Google</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300 inter">{t('continue_with_google')}</span>
           </button>
 
-          <p className="text-[10px] text-gray-400 text-center mt-4">
-            Al continuar, aceptas nuestros Términos y Política de Privacidad
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 text-center mt-6 inter">
+            {t('terms_text')}
           </p>
 
-          <p className="text-sm text-gray-600 text-center mt-6">
-            ¿Ya estás registrado?{" "}
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-6 inter">
+            {t('already_registered')}{" "}
             <button
               type="button"
               onClick={handleBackOrLogin}
-              className="text-blue-500 hover:text-blue-600 font-medium hover:underline"
+              className="text-primary hover:text-primary/80 font-medium hover:underline"
             >
-              Inicia sesión
+              {t('login')}
             </button>
           </p>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="w-1/2 bg-gradient-to-br from-[#dfe6f3] to-[#cfd8ea] flex flex-col justify-center p-10">
-          <h2 className="text-xl font-semibold mb-4">
-            Únete a FiNext
-          </h2>
+        {/* RIGHT SIDE - Hero con imagen de fondo */}
+        <div
+          className="lg:flex hidden lg:w-[55%] bg-cover bg-center bg-no-repeat relative rounded-r-3xl"
+          style={{ backgroundImage: "url('/loginregister/Rectangle.png')" }}
+        >
+          {/* Overlay para mejor legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-r-3xl"></div>
 
-          <p className="text-sm text-gray-600 max-w-sm">
-            Crea tu cuenta y empieza a gestionar tus finanzas de forma inteligente con FiNext.
-          </p>
+          {/* Contenido */}
+          <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+            {/* Logo arriba */}
+            <div className="flex items-center gap-3">
+              <FiNextIcon className="w-10 h-10 text-primary"/>
+              <span className="mont_semibold text-2xl text-black dark:text-white">FiNext</span>
+            </div>
 
-          <div className="mt-8 space-y-2">
-            <div className="flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full ${step >= 1 ? 'bg-blue-400' : 'bg-gray-300'}`}></div>
-              <span className={`text-sm ${step >= 1 ? 'text-gray-700' : 'text-gray-400'}`}>
-                Información de acceso
-              </span>
+            {/* Texto hero */}
+            <div className="space-y-4">
+              <h2 className="mont_semibold text-4xl text-black dark:text-white leading-tight">
+                {t('hero_title')}
+              </h2>
+              <p className="inter text-base text-black dark:text-gray-300 max-w-md">
+                {t('hero_description')}
+              </p>
+
+              {/* Indicadores de progreso */}
+              <div className="mt-8 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full transition-colors ${step >= 1 ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                  <span className={`text-sm inter transition-colors ${step >= 1 ? 'text-black dark:text-white font-medium' : 'text-gray-400 dark:text-gray-500'}`}>
+                    {t('step1_title')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full transition-colors ${step >= 2 ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                  <span className={`text-sm inter transition-colors ${step >= 2 ? 'text-black dark:text-white font-medium' : 'text-gray-400 dark:text-gray-500'}`}>
+                    {t('step2_title')}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full ${step >= 2 ? 'bg-blue-400' : 'bg-gray-300'}`}></div>
-              <span className={`text-sm ${step >= 2 ? 'text-gray-700' : 'text-gray-400'}`}>
-                Datos personales
-              </span>
-            </div>
+
+            {/* Espacio para estética */}
+            <div></div>
           </div>
         </div>
       </div>

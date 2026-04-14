@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/AuthServices";
+import { useTranslation } from 'react-i18next';
+import FiNextIcon from '/src/assets/icons/finext.svg?react';
+import DarkButton from  "../components/buttons/DarkButton.tsx";
+import Language from '../components/buttons/Lang.tsx';
 
-  
 
 const Login: React.FC = () => {
+  const { t } = useTranslation("login");
 
   if (localStorage.getItem("token")) {
     window.location.href = "/dashboard";
@@ -16,8 +20,6 @@ const Login: React.FC = () => {
 
   const isFormComplete = email && password;
 
-  
-
   const onGoToHome = () => {
     window.location.href = "/";
   };
@@ -27,132 +29,160 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
-  setError("");
-  setLoading(true);
+    setError("");
+    setLoading(true);
 
-  try {
-  const data = await loginUser(email, password);
+    try {
+      const data = await loginUser(email, password);
 
-  localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", data.user.username);
 
-  localStorage.setItem("user", data.user.username);
+      window.location.href = "/dashboard";
 
-  window.location.href = "/dashboard";
-
-} catch (err: any) {
-  setError(err.response?.data?.message || "Error al iniciar sesión");
-  setLoading(false);
-}
-};
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Error al iniciar sesión");
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#bfc6d6] flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg flex overflow-hidden">
+    
+    <div className="min-h-screen bg-[#bfc6d6] dark:bg-dark-background flex items-center justify-center p-6">
+      <div className="hidden"><DarkButton/><Language/></div>
+      <div className="w-full max-w-6xl bg-white dark:bg-dark-card rounded-3xl shadow-lg flex overflow-hidden">
 
-        {/* LEFT SIDE */}
-        <div className="w-1/2 p-10">
+        {/* LEFT SIDE - Formulario */}
+        <div className="lg:w-[45%] w-full p-10 lg:p-12">
           <button
-            className="mb-6 text-gray-400 hover:text-gray-600"
+            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
             onClick={onGoToHome}
           >
-            ←
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
           </button>
 
-          <h1 className="text-2xl font-semibold mb-6">
-            Inicia sesión en FiNext
+          <h1 className="mont_semibold text-3xl mb-2 text-black dark:text-white">
+            {t('welcome_back')}
+          </h1>
+          <h1 className="mont_semibold text-3xl mb-8 text-black dark:text-white">
+            {t('to_finext')}
           </h1>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
 
           {/* Email */}
-          <div className="mb-4">
-            <label className="text-sm text-gray-500">
-              Correo electrónico
+          <div className="mb-5">
+            <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+              {t('email_label')}
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
             />
           </div>
 
           {/* Password */}
-          <div className="mb-2">
-            <label className="text-sm text-gray-500">
-              Contraseña
+          <div className="mb-3">
+            <label className="text-sm text-gray-600 dark:text-gray-400 inter">
+              {t('password_label')}
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+            <div className="relative">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
+              />
+            </div>
           </div>
 
-          <p className="text-xs text-gray-400 mb-4 cursor-pointer hover:underline">
-            ¿Has olvidado tu contraseña?
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-6 cursor-pointer hover:underline inter">
+            {t('forgot_password')}
           </p>
 
           {/* Button */}
           <button
             onClick={handleLogin}
             disabled={loading}
-            className={`w-full text-white py-2 rounded-full transition mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
               isFormComplete
-                ? "bg-blue-400 hover:bg-blue-500"
-                : "bg-blue-300 hover:bg-blue-400"
+                ? "bg-primary hover:bg-primary/90 shadow-md"
+                : "bg-primary/60"
             }`}
           >
-            {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+            {loading ? t('logging_in') : t('continue')}
           </button>
 
           {/* Divider */}
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="text-sm text-gray-400">O</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+            <span className="text-sm text-gray-400 dark:text-gray-500 inter">{t('or')}</span>
+            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
 
           {/* Google */}
-          <button className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-50">
+          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors">
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"
               className="w-5 h-5"
             />
-            <span className="text-sm">Continuar con Google</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300 inter">{t('continue_with_google')}</span>
           </button>
 
-          <p className="text-[10px] text-gray-400 text-center mt-4">
-            Al continuar, aceptas nuestros Términos y Política de Privacidad
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 text-center mt-6 inter">
+            {t('terms_text')} <span className="underline cursor-pointer">{t('terms')}</span> {t('and')} <span className="underline cursor-pointer">{t('privacy')}</span>
           </p>
 
-          <p className="text-sm text-gray-600 text-center mt-6">
-            ¿No tienes cuenta?{" "}
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mt-6 inter">
+            {t('no_account')}{" "}
             <button
               type="button"
               onClick={onGoToRegister}
-              className="text-blue-500 hover:text-blue-600 font-medium hover:underline"
+              className="text-primary hover:text-primary/80 font-medium hover:underline"
             >
-              Regístrate
+              {t('register')}
             </button>
           </p>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="w-1/2 bg-gradient-to-br from-[#dfe6f3] to-[#cfd8ea] flex flex-col justify-center p-10">
-          <h2 className="text-xl font-semibold mb-4">
-            Bienvenido de nuevo.
-          </h2>
+        {/* RIGHT SIDE - Hero con imagen de fondo */}
+        <div
+          className="lg:flex hidden lg:w-[55%] bg-cover bg-center bg-no-repeat relative rounded-r-3xl"
+          style={{ backgroundImage: "url('/loginregister/Rectangle.png')" }}
+        >
+          {/* Overlay para mejor legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-r-3xl"></div>
 
-          <p className="text-sm text-gray-600 max-w-sm">
-            Accede a tu cuenta y sigue controlando tus finanzas de forma inteligente con FiNext.
-          </p>
+          {/* Contenido */}
+          <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+            {/* Logo arriba */}
+            <div className="flex items-center gap-3">
+              <FiNextIcon className="w-10 h-10 text-primary"/>
+              <span className="mont_semibold text-2xl text-black dark:text-white">FiNext</span>
+            </div>
+
+            {/* Texto hero */}
+            <div className="space-y-4">
+              <h2 className="mont_semibold text-4xl text-black dark:text-white leading-tight">
+                {t('hero_title')}
+              </h2>
+              <p className="inter text-base text-black dark:text-gray-300 max-w-md">
+                {t('hero_description')}
+              </p>
+            </div>
+
+            {/* Espacio para estética */}
+            <div></div>
+          </div>
         </div>
       </div>
     </div>
