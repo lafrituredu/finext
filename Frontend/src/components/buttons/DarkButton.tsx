@@ -7,10 +7,11 @@ export default function DarkModeToggle() {
 
   useEffect(() => {
     const root = window.document.documentElement
+    //Cambiar el root a dark
     darkMode ? root.classList.add("dark") : root.classList.remove("dark")
+    //Añade al localStorage el tema para que se guarde entre paginas.
     localStorage.setItem("DarkTheme", String(darkMode))
   }, [darkMode])
-
 
   return (
     <button

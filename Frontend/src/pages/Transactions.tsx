@@ -7,8 +7,8 @@ import dayjs from 'dayjs'
 import Trending_up from '/src/assets/icons/Trending-up.svg?react'
 import Trending_down from '/src/assets/icons/Trending-down.svg?react'
 import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
-
-import { getTransactions, type Transaction } from '../api/TransactionService'
+import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
+import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
 
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -26,7 +26,16 @@ function Transactions() {
       .finally(() => setLoading(false));
   }, [])
 
-
+  const handleDelete = async (id: number) => {
+      try {
+        await deleteTransaction(id)
+        setTransactions(prev => prev.filter(t => t.id !== id))
+      } catch (error: any) {
+        console.log('Status:', error.response?.status)
+        console.log('Mensaje:', error.response?.data)
+        setError('Error al eliminar la transacción')
+      }
+  }
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'
@@ -72,22 +81,25 @@ function Transactions() {
         <ArrowsLeftRight className='w-24 h-24'/>
         <p className='text-xl'>{t('no_transactions')}</p>
       </div>
-      
       ) : 
       (
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
-          <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
+          <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-[#101a3d]
             hover:scale-102 transition-transform ease-in-out'>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
-              <div className={t.type == 'income' ?
-                'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
-                'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
-                <p className='flex justify-center items-center capitalize'>
-                  {t.type == 'income'?<Trending_up className='mr-2 text-green-600 w-5'/>:
-                  <Trending_down className='mr-2 text-red-600 w-5'/>}{t.type}
-                </p>
+              <div className='flex flex-row gap-2'>
+                <div className={t.type == 'income' ?
+                  'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
+                  'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
+                  <p className='flex justify-center items-center capitalize'>
+                    {t.type == 'income'?<Trending_up className='mr-2 text-green-600 w-5'/>:
+                    <Trending_down className='mr-2 text-red-600 w-5'/>}{t.type}
+                  </p>
+                </div>
+                <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'
+                onClick={()=>handleDelete(t.id)}/>
               </div>
             </div>
             <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.total_amount}€</p></div>

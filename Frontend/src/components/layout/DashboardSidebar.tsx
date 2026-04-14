@@ -105,7 +105,7 @@ const menuItems = [{
         lg:transition-none overflow-hidden
         border-r border-[#0000001a]
         dark:border-dark-background
-        dark:bg-dark-card
+        dark:bg-[#070d22]
         ${opened
           ? 'duration-150 z-50 sm:w-75 w-2/3 opacity-100 pointer-events-auto'
           : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}

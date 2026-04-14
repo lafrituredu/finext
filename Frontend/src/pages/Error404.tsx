@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/layout/Navbar"
+
 import { useTranslation } from 'react-i18next';
 
 function Error404() {

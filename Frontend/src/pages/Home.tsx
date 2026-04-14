@@ -1,13 +1,16 @@
 import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
+import Sponsors from '../components/Sponsors'
+
 import { useTranslation } from 'react-i18next';
+
 import SentimentStressedIcon from '/src/assets/icons/Sentiment-stressed-icon.svg?react'
 import Heart from '/src/assets/icons/Heart.svg?react'
 import MoneyBag from '/src/assets/icons/Money-bag.svg?react'
 import Flag from '/src/assets/icons/Flag.svg?react'
 import PolyBrain from '/src/assets/icons/PolyBrain.svg?react'
 import FiNextIcon from '/src/assets/icons/finext.svg?react'
-import Sponsors from '../components/Sponsors'
+
 import { NavLink } from "react-router-dom";
 
 function Home() {
@@ -17,7 +20,6 @@ function Home() {
       <Navbar/>
       {/* --- COINTAINER HERO --- */}
       <div className="bg-[url(/home/homebg.png)] w-full bg-no-repeat bg-cover xl:bg-[position:center_-120px] bg-[position:center]">
-        {/* <div className="flex flex-row justify-between items-center mx-5 xxl:mx-[120px] xl:mx-[320px] pt-42 max-w-[1280px]"> */}
         <div className="flex flex-row xl:justify-center justify-start items-around mx-5 xxl:mx-[120px] pt-50 gap-56">
           {/*Hero Left*/}
           <div className="flex flex-col justify-center text-dark-text gap-3">
@@ -25,7 +27,6 @@ function Home() {
             <p className="mont_semibold md:text-6xl text-3xl max-w-160 uppercase">{t('next_step')}</p>
             <p className="inter text-lg">{t('simplest_way')}.</p>
             <div className="pt-12">
-              {/* <button className="bg-primary py-3 px-12 rounded-full text-shadow-white text-white shadow-md cursor-pointer">{t('start_now')}</button> */}
               <NavLink to="/dashboard">
                 <button className=" inter relative w-42 h-12 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
                   <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
@@ -43,7 +44,7 @@ function Home() {
             <FiNextIcon className="min-w-100"/>
           </div>
         </div>
-        {/*--- CARDS ---*/}
+        {/*--- CARDS HERO ---*/}
         <div className="flex justify-center mx-4 pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
           <div className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
@@ -51,20 +52,19 @@ function Home() {
           {/*--- Card Middle ---*/}
           <div className="flex flex-col bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform">
-            <div className="flex flex-row justify-between p-5">
-            </div>
           </div>
           {/*--- Card Right ---*/}
           <div className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform"></div>
         </div>
       </div>
+      {/* Dots */}
       <div className="flex flex-row justify-center items-center pt-5 gap-2 lg:hidden">
         <div className="bg-gray-700 rounded-full w-2 h-2"></div>
         <div className="bg-gray-700 rounded-full w-2 h-2"></div>
         <div className="bg-gray-700 rounded-full w-2 h-2"></div>
       </div>
-      {/* --- COINTAINER 1 --- */}
+      {/* --- COINTAINER 1 (Everything in one place) --- */}
       <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
         <div>
           <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
@@ -72,15 +72,15 @@ function Home() {
         </div>
         <div className="flex flex-row items-center justify-center pt-12 gap-3 w-full">
           <div className="lg:flex hidden bg-[#6483d2] w-80 h-100 rounded-3xl -translate-x-40 hover:-translate-x-52 duration-400 transition-all"></div>
-          {/*Fix absolute card type shi*/}
+          {/*Fix absolute card*/}
           <div className="bg-primary ring-5 ring-background dark:ring-dark-background lg:absolute w-100 h-120 rounded-3xl z-1"></div>
           {/*-------------------------*/}
           <div className="lg:flex relative hidden bg-[#6483d2] w-80 h-100 rounded-3xl translate-x-40 hover:translate-x-52 duration-400 transition-all "></div>
         </div>
       </div>
-      {/* --- COINTAINER 2 --- */}
+      {/* --- COINTAINER 2 (SPONSORS) --- */}
       {/* <Sponsors/> */}
-      {/* --- COINTAINER 3 --- */}
+      {/* --- COINTAINER 3 (INFO CARDS) --- */}
       <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
         <div>
           <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text">{t('built_for_you')}</h4>
@@ -130,15 +130,12 @@ function Home() {
           </div>
         </div>
       </div>
-      {/* --- COINTAINER 4 --- */}
+      {/* --- COINTAINER 4 (VIDEO) --- */}
       <div className="flex items-center justify-center mx-5 sm:py-20 py-15">
         <iframe src="https://www.youtube.com/embed/Xr032EhUDPw"  className="flex justify-center items-center w-full aspect-video bg-linear-to-br from-[#70A1FF] to-[#1E4CA3] md:rounded-4xl rounded-xl max-w-[1280px]">
         </iframe>
-        {/* <div className="w-full aspect-video bg-linear-to-br from-[#70A1FF] to-[#1E4CA3] md:rounded-4xl rounded-xl max-w-[1280px] flex justify-center items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" height="250px" viewBox="0 -960 960 960" width="250px" fill="#FFFFFF"><path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z"/></svg>
-        </div> */}
       </div>
-      {/* --- CONTAINER 5 --- */}
+      {/* --- CONTAINER 5 (INFO) --- */}
       <div className="flex flex-col justify-center items-center text-black dark:text-dark-text mx-4 sm:py-20 py-20">
         <div className="flex flex-col justify-center items-center">
           <SentimentStressedIcon className="w-24 h-24 text-black dark:text-dark-text hover:text-yellow-500 hover:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)] duration-500 ease-out transition-all"/>
@@ -155,8 +152,8 @@ function Home() {
           <p className="montserrat text-4xl text-center">{t('ready_try')}</p>
           <p className="inter text-lg max-w-140 text-center pt-5">{t('ready_try_text')}</p>
         </div>
+        {/* Start now button */}
         <div className="pt-12">
-          {/* <button className="bg-primary py-3 px-12 rounded-full text-shadow-white text-white shadow-md cursor-pointer">{t('start_now')}</button> */}    
           <NavLink to="/dashboard">
             <button className="relative overflow-hidden py-3 px-12 font-semibold bg-background dark:bg-dark-background group border-2
             border-primary rounded-full cursor-pointer">

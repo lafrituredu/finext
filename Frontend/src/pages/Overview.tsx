@@ -13,31 +13,31 @@ const { t } = useTranslation("overview");
 
 const [select,setSeleceted] = useState<any>('cashflow');
 
-    const config = {
-      options: {
+const config = {
+    options: {
 
-        chart: {
-          id: "basic-bar",
-          toolbar: { show: false },
-          zoom: { enabled: false }
-        },
-        markers: { size: 5 },
-        xaxis: {
-          categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November','December']
-        }
-        
-      },
-      series: [
-        {
-          name: t('incomes'),
-          data: [30, 40, 45, 50, 49, 60, 70, 91]
-        },
-        {
-          name: t('outcomes'),
-          data: [40, 50, 55, 60, 59, 70, 70, 23]
-        }
-      ],
-    };
+    chart: {
+        id: "basic-bar",
+        toolbar: { show: false },
+        zoom: { enabled: false }
+    },
+    markers: { size: 5 },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November','December']
+    }
+    
+    },
+    series: [
+    {
+        name: t('incomes'),
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+    },
+    {
+        name: t('outcomes'),
+        data: [40, 50, 55, 60, 59, 70, 70, 23]
+    }
+    ],
+};
 
   return (
     <div className='min-h-full w-full p-10 inter'>

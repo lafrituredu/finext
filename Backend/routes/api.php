@@ -11,7 +11,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/check-email', [AuthController::class, 'checkEmail']);
 Route::get('/check-username', [AuthController::class, 'checkUsername']);
 
-Route::apiResource('transactions', TransactionController::class);
+//Transaction Functionalities Routes.
+//middleware -> verificacion de usuario
+// Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
+// });
+
+Route::apiResource('categories', CategoryController::class);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
