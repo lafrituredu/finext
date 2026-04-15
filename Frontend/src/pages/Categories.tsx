@@ -54,13 +54,14 @@ function Categories() {
             </div>
           </div>
 
+          {/* CATEGORIAS */}
           <div className='inter'>
-            Historial ({categories.length})
-            {categories.map( (category,key) =>
+            <p className='mb-2'>Cateegorias propias ({categories.filter(categories => categories.user?.id != null).length})</p>
+            <div className='flex gap-5 mb-4'>
+            {categories.map( (category,key) => 
               <>
-                <div>
                   <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
-                    hover:scale-102 transition-transform ease-in-out max-w-60 gap-6'>
+                    hover:scale-102 transition-transform ease-in-out min-w-40 max-w-60 gap-6'>
                       <div className='flex justify-between'>
                         <p>icon</p>
                         <p><Trash /></p>
@@ -69,22 +70,19 @@ function Categories() {
                         {category.name}
                       </div>
                       <div className='flex justify-between'>
-                        {category.user?.id != null ? 
                           <>
                             <p>Own</p>
                             <p><EditIcon /> </p>
                           </>
-                        :
-                          <>
-                            <p>Propio</p>
-                            <p><EditIcon /> </p>
-                          </>
-                        }
                       </div>
                   </div>
-                </div>
               </>
               )}
+            </div>
+            <p className='mb-2'>Categorias por defecto ()</p>
+            <div className='flex gap-5'>
+
+            </div>
           </div>
         </>
         }
