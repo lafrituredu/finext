@@ -24,7 +24,7 @@ function Categories() {
 
     useEffect(() => {
         // getCurrentUser()
-        //   .then(value => setUserId(value.id))
+        //   .then(value => {setUserId(value.id);console.log(value)})
         //   .catch(err => setError(err))
         // getCategories()
         //     .then(data => setCategories(data))
@@ -34,13 +34,12 @@ function Categories() {
         try {
           const user = await getCurrentUser();
           const _categories = await getCategoriesPerUser(user.id);
-          console.log(user)
-          console.log(_categories)
 
           setUserId(user.id);
           setCategories(_categories);
         } catch (err) {
           console.log(err);
+          console.log('error')
         } finally {
           setLoading(false);
         }
@@ -49,8 +48,8 @@ function Categories() {
       fetchData();
     },[])
 
-    const categoriasPropias = categories.filter(c => c.user?.id != null);
-    const categoriasDefault = categories.filter(c => c.user?.id == null);
+    const categoriasPropias = categories.filter(c => c.user_id == userid);
+    const categoriasDefault = categories.filter(c => c.user_id == null);
   
     const handleDelete = async (id: number) => {
       try {
@@ -130,8 +129,8 @@ function Categories() {
           {categories.map( (category,key) => 
             <tr key={key} className='border-b border-gray-100 *:py-2'>
               <td className='capitalize'>{category.name}</td>
-              <td>{category.user?.id == null ? 'Default' : 'Own'}</td>
-              <td>{ category.user?.id != null ? <TrashcanIcon onClick={() => {setTransactionToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /> : <Padlock className='text-primary' /> }</td>
+              <td>{category.user_id == null ? 'Default' : 'Own'}</td>
+              <td>{ category.user_id != null ? <TrashcanIcon onClick={() => {setTransactionToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /> : <Padlock className='text-primary' /> }</td>
             </tr>
           )}
         </tbody>
@@ -187,7 +186,6 @@ function Categories() {
                 Estas seguro de que quieres eliminar <span className='font-semibold'>{transactionToDelete.name}</span>
               </Confirmation>)}
       </div>
-      <p>{userid}</p>
     </>
 
   )

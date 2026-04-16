@@ -145,9 +145,10 @@ const menuItems = [{
               <div className='lg:flex hidden'><DarkModeToggle /></div>
           </div>
           
+        </div>
       </div>
     </>
-  );
+  )
 }
 
 export default DashboardSidebar

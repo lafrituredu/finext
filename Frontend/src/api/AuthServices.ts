@@ -32,7 +32,7 @@ export const registerUser = async (data: {
 // GET CURRENT USER
 export const getCurrentUser = async (): Promise<any> => {
   const response = await api.get('/me');
-  return response.data.user;
+  return response.data;
 };
 
 // LOGOUT

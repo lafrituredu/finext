@@ -3,6 +3,7 @@ import api from './axiosInstance'
 export interface Category {
     id: number,
     name: string,
+    user_id: number,
     user: {
         id: number,
         username: string
