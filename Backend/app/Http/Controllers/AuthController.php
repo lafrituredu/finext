@@ -104,12 +104,10 @@ class AuthController extends Controller
             'available' => !$exists
         ]);
     }
-    public function me(Request $request)
-    {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    }
+ public function me(Request $request)
+{
+    return response()->json($request->user());
+}
 
     public function logout(Request $request)
     {
