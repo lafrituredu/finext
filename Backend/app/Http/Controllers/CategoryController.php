@@ -14,6 +14,11 @@ class CategoryController extends Controller
 
         return response()->json($category);
     }
+    
+    public function CategoriesPerId(int $id){
+        $category = Category::where('user_id', $id)->orWhereNull('user_id')->get();
+        return response()->json($category);
+    }
 
     public function store(Request $request) {
         $data = $request->validate([

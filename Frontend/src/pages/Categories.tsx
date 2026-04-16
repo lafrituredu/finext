@@ -8,7 +8,8 @@ import EditIcon from '/src/assets/icons/Edit-icon.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 
-import { getCategories, createCategory, deleteCategory, type Category } from '../api/CategoryService'
+import { getCategories, createCategory, deleteCategory, type Category, getCategoriesPerUser } from '../api/CategoryService'
+import { getCurrentUser } from '../api/AuthServices'
 import Confirmation from '../components/materials/Confirmation'
 
 function Categories() {
@@ -18,13 +19,34 @@ function Categories() {
     const [filter,setFilter] = useState('')
     const [order,setOrder] = useState('')
     const [error, setError] = useState<string | null>(null)
-    const [transactionToDelete, setTransactionToDelete] = useState<number | null>(null)
+    const [transactionToDelete, setTransactionToDelete] = useState<Category | null>(null)
+    const [userid,setUserId] = useState<number | undefined>();
 
     useEffect(() => {
-        getCategories()
-            .then(data => setCategories(data))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false))
+        // getCurrentUser()
+        //   .then(value => setUserId(value.id))
+        //   .catch(err => setError(err))
+        // getCategories()
+        //     .then(data => setCategories(data))
+        //     .catch(err => console.log(err))
+        //     .finally(() => setLoading(false))
+      const fetchData = async () => {
+        try {
+          const user = await getCurrentUser();
+          const _categories = await getCategoriesPerUser(user.id);
+          console.log(user)
+          console.log(_categories)
+
+          setUserId(user.id);
+          setCategories(_categories);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
     },[])
 
     const categoriasPropias = categories.filter(c => c.user?.id != null);
@@ -45,24 +67,22 @@ function Categories() {
             <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
             <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
             {categoriasPropias.map( (category,key) => 
-              <>
-                  <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
-                    hover:scale-102 transition-transform ease-in-out gap-6'>
-                      <div className='flex justify-between'>
-                        <p><TagIcon /></p>
-                        <p><TrashcanIcon onClick={() => {setTransactionToDelete(category.id)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /></p>
-                      </div>
-                      <div className='flex justify-center text-3xl'>
-                        {category.name}
-                      </div>
-                      <div className='flex justify-between'>
-                          <>
-                            <p>Own</p>
-                            <p><EditIcon /> </p>
-                          </>
-                      </div>
-                  </div>
-              </>
+                <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
+                  hover:scale-102 transition-transform ease-in-out gap-6'>
+                    <div className='flex justify-between'>
+                      <p><TagIcon /></p>
+                      <p><TrashcanIcon onClick={() => {setTransactionToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /></p>
+                    </div>
+                    <div className='flex justify-center text-3xl'>
+                      {category.name}
+                    </div>
+                    <div className='flex justify-between'>
+                        <>
+                          <p>Own</p>
+                          <p><EditIcon /> </p>
+                        </>
+                    </div>
+                </div>
               )}
               {/* <button className='flex justify-center items-center text-2xl bg-blue-200 ring-2 ring-blue-300 rounded-full w-20 h-20'> + </button> */}
               <div className='flex w-full h-full justify-center items-center'>
@@ -72,7 +92,7 @@ function Categories() {
             <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto → <span className='font-bold'>{categoriasDefault.length}</span></p>
             <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
               {categoriasDefault.map( (category,key) =>
-              <>
+              <div key={category.id}>
                   <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
                     hover:scale-102 transition-transform ease-in-out gap-6'>
                       <div className='flex justify-between'>
@@ -89,7 +109,7 @@ function Categories() {
                           </>
                       </div>
                   </div>
-              </>
+              </div>
               )}
             </div>
           </div>
@@ -111,7 +131,7 @@ function Categories() {
             <tr key={key} className='border-b border-gray-100 *:py-2'>
               <td className='capitalize'>{category.name}</td>
               <td>{category.user?.id == null ? 'Default' : 'Own'}</td>
-              <td>{ category.user?.id != null ? <TrashcanIcon onClick={() => {setTransactionToDelete(category.id)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /> : <Padlock className='text-primary' /> }</td>
+              <td>{ category.user?.id != null ? <TrashcanIcon onClick={() => {setTransactionToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /> : <Padlock className='text-primary' /> }</td>
             </tr>
           )}
         </tbody>
@@ -126,7 +146,7 @@ function Categories() {
           <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
               <p className='mont_semibold text-4xl'>Categorias</p>
               <button 
-              onClick={(e) => createCategory()}
+              onClick={(e) => createCategory('hola',userid)}
               className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
                 <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
                   Nueva categoria
@@ -163,10 +183,11 @@ function Categories() {
         {transactionToDelete !== null && (
               <Confirmation
                 close={() => setTransactionToDelete(null)}
-                onConfirm={() => {handleDelete(transactionToDelete!); setTransactionToDelete(null)}}>
-                Estas seguro de que quieres eliminar esta transaccion?
+                onConfirm={() => {handleDelete(transactionToDelete.id!); setTransactionToDelete(null)}}>
+                Estas seguro de que quieres eliminar <span className='font-semibold'>{transactionToDelete.name}</span>
               </Confirmation>)}
       </div>
+      <p>{userid}</p>
     </>
 
   )

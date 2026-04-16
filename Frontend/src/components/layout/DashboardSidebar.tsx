@@ -18,6 +18,7 @@ import DarkModeToggle from '../buttons/DarkButton'
 import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
+import { logout } from '../register/auth'
 
 interface DashboardSidebar {
   opened?: boolean;
@@ -135,13 +136,16 @@ const menuItems = [{
               </ul>
           </div>
           ))}
+<<<<<<< HEAD
           </div>
           <div className='flex flex-row justify-between items-center pt-10'>
+=======
+          <div className='flex flex-row justify-between items-center pt-10' onClick={() => logout()}>
+>>>>>>> 08edb63 (Haciendo el getCategorias por nombre de usuario, con errores por ahora)
             <SidebarItem
               id={'logout'}
               icon={ExitIcon }
               label={t('logout')}
-              to='/'
               />
               <div className='lg:flex hidden'><DarkModeToggle /></div>
           </div>

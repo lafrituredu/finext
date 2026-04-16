@@ -14,10 +14,19 @@ export const getCategories = async (): Promise<Category[]> => {
     return response.data
 }
 
+export const getCategoriesPerUser = async (paramId:number): Promise<Category[]> => {
+    const response = await api.get<Category[]>(`/categories/${paramId}`)
+    return response.data
+}
+
 // Devolvems el status para ver si es 201
-export const createCategory = async(): Promise<Number> => {
+export const createCategory = async(paramName:string,paramId:number | undefined): Promise<Number> => {
+    if (paramId == undefined) {
+        return 500;
+    }
     const response = await api.post<Category>('/categories', {
-        name: 'prueba'
+        name: paramName,
+        user_id: paramId 
     });
     return response.status;
 }

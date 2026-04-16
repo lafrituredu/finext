@@ -45,7 +45,7 @@ export const logout = async (): Promise<void> => {
   }
 
   // Limpiar localStorage
-  localStorage.removeItem("auth_token");
+  localStorage.removeItem("token");
   localStorage.removeItem("user");
 
   // Redirigir al login
