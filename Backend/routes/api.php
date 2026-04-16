@@ -11,6 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/check-email', [AuthController::class, 'checkEmail']);
 Route::get('/check-username', [AuthController::class, 'checkUsername']);
 Route::middleware('auth:sanctum')->get('/me', [AuthController::class, 'me']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 //Transaction Functionalities Routes.
 //middleware -> verificacion de usuario

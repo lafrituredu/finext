@@ -34,3 +34,8 @@ export const getCurrentUser = async (): Promise<any> => {
   const response = await api.get('/me');
   return response.data.user;
 };
+
+// LOGOUT
+export const logoutUser = async (): Promise<void> => {
+  await api.post('/logout');
+};
