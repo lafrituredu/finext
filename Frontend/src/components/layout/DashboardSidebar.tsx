@@ -136,12 +136,7 @@ const menuItems = [{
               </ul>
           </div>
           ))}
-<<<<<<< HEAD
-          </div>
-          <div className='flex flex-row justify-between items-center pt-10'>
-=======
           <div className='flex flex-row justify-between items-center pt-10' onClick={() => logout()}>
->>>>>>> 08edb63 (Haciendo el getCategorias por nombre de usuario, con errores por ahora)
             <SidebarItem
               id={'logout'}
               icon={ExitIcon }
@@ -152,7 +147,7 @@ const menuItems = [{
           
       </div>
     </>
-  )
+  );
 }
 
 export default DashboardSidebar
