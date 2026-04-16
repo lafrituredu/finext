@@ -22,7 +22,7 @@ function Transactions() {
   const [select,setSelected] = useState<any>('total')
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
-  const [transactionToDelete, setTransactionToDelete] = useState<number | null>(null)
+  const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
 
   useEffect(() => {
     getTransactions()
@@ -46,19 +46,19 @@ function Transactions() {
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'
     if (select === 'expenses') return t.type === 'expense'
-    return true //'full'
+    return true //'total'
   })
   
   return (
     <>
     <div className='flex justify-center items-center mt-10'>
-      <Notifications type="alert">Transaction successfully deleted!</Notifications>
+      {/* <Notifications type="alert">Transaction successfully deleted!</Notifications> */}
     </div>
     {transactionToDelete !== null && (
       <Confirmation
         close={() => setTransactionToDelete(null)}
-        onConfirm={() => {handleDelete(transactionToDelete!); setTransactionToDelete(null)}}>
-        Estas seguro de que quieres eliminar esta transaccion?
+        onConfirm={() => {handleDelete(transactionToDelete.id!); setTransactionToDelete(null)}}>
+        Estas seguro de que quieres eliminar <span className='font-bold'>{transactionToDelete.name}</span>?
       </Confirmation>)}
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)}/>}
     <div className='p-10'>
@@ -114,16 +114,17 @@ function Transactions() {
                   </p>
                 </div>
                 <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'
-                onClick={()=>setTransactionToDelete(t.id)}/>{/* ()=>handleDelete(t.id) */}
+                onClick={()=>setTransactionToDelete(t)}/>
               </div>
               
             </div>
             <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.total_amount}€</p></div>
             <div className='flex flex-row justify-between items-center w-full pt-1'>
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
+              {t.category !== null && (
               <div className='inter capitalize bg-blue-200 rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center'>
                 <TagIcon className='w-4 mr-1 h-4'/><p>{t.category.name}</p>
-              </div>
+              </div>)}
             </div>
           </div>
         ))}

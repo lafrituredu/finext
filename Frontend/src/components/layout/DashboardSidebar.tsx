@@ -105,18 +105,20 @@ const menuItems = [{
         lg:transition-none overflow-hidden
         border-r border-[#0000001a]
         dark:border-dark-background
-        dark:bg-[#070d22]
+        dark:bg-[#070d22] flex flex-col justify-between
         ${opened
           ? 'duration-150 z-50 sm:w-75 w-2/3 opacity-100 pointer-events-auto'
           : 'z-50 w-0 opacity-0 pointer-events-none lg:w-75 lg:opacity-100 lg:pointer-events-auto'}
       `}>
-          <div className='fixed'><DarkModeToggle /></div>
-          <div className='flex flex-col items-center justify-center'>
+          {/* <div className='fixed'><DarkModeToggle /></div> */}
+          <div>
+          <div className='lg:flex flex-col items-center justify-center hidden pt-4'>
             <FinextIcon className='w-16 h-16 m-4' />
             <p className='inter'> {t('welcome')} {localStorage.getItem('user') ?? '[username]'}!</p>
+            <Language/>
           </div>
           {menuItems.map((item,key) => (
-          <div key={key} id={`${key}`} className=" pt-10">
+          <div key={key} id={`${key}`} className=" pt-14">
               <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
               <ul>
                   {item.items.map( (el,key)=> (
@@ -133,6 +135,7 @@ const menuItems = [{
               </ul>
           </div>
           ))}
+          </div>
           <div className='flex flex-row justify-between items-center pt-10'>
             <SidebarItem
               id={'logout'}

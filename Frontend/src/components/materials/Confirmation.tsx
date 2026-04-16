@@ -18,8 +18,8 @@ export function Confirmation({children, close, onConfirm}:ConfirmationProps) {
             <div className="inter bg-white shadow-md rounded-xl p-6">
                 {children}
                 <div className="flex justify-between mx-20 pt-5">
-                    <button className="bg-red-200 rounded-full py-1 px-2 ring-2 ring-red-400 cursor-pointer select-none" onClick={close}>Cancel</button>
-                    <button className="bg-green-200 rounded-full py-1 px-2 ring-2 ring-green-400 cursor-pointer select-none" onClick={onConfirm}>Confirm</button>
+                    <button className="bg-red-200 rounded-md py-1 px-2 ring-2 ring-red-400 cursor-pointer select-none" onClick={close}>Cancel</button>
+                    <button className="bg-green-200 rounded-md py-1 px-2 ring-2 ring-green-400 cursor-pointer select-none" onClick={onConfirm}>Confirm</button>
                 </div>
             </div>
 

@@ -12,8 +12,8 @@ function DashboardNavbar({ opened, onToggle }: DashboardNavbar){
 
     return(
         <>
-            <nav className='sticky top-0 lg:hidden flex justify-between items-center w-full bg-white dark:bg-[#040919] shadow-sm text-white dark:shadow-sm dark:shadow-[#0F1732] px-10 py-5 z-60 '>
-            <div className="lg:hidden flex">
+            <nav className='sticky top-0 lg:hidden flex justify-center items-center w-full bg-white dark:bg-[#040919] shadow-sm text-white dark:shadow-sm dark:shadow-[#0F1732] px-10 py-5 z-60 '>
+            <div className="lg:hidden absolute left-10">
                 <HamburgerMenu opened={opened} onToggle={onToggle}/>
             </div>
             <div className="lg:hidden flex">
@@ -21,7 +21,7 @@ function DashboardNavbar({ opened, onToggle }: DashboardNavbar){
             </div>
 
                 <div className="lg:hidden flex">
-                    <DarkModeToggle />
+                    {/* <DarkModeToggle /> */}
                 </div>
             </nav>
         </>
