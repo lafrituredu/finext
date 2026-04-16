@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 
 export function TransctionForm({ close }: any) {
-  const [select,setSeleceted] = useState<any>('income');
+  const [select, setSeleceted] = useState<any>('income');
+  useEffect(()=>{
+    console.log(select)
+  },[select])
 
   return (
     <div className="flex items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0">

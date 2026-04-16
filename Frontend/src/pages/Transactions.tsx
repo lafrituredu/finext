@@ -8,7 +8,10 @@ import Trending_up from '/src/assets/icons/Trending-up.svg?react'
 import Trending_down from '/src/assets/icons/Trending-down.svg?react'
 import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
+import TagIcon from '/src/assets/icons/Tag.svg?react'
 import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
+import Notifications from '../components/materials/Notifications'
+import Confirmation from '../components/materials/Confirmation'
 
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -16,8 +19,10 @@ function Transactions() {
   const [error, setError] = useState<string | null>(null)
 
   const { t } = useTranslation("transactions")
-  const [select,setSelected] = useState<any>('full')
+  const [select,setSelected] = useState<any>('total')
   const [showTransactionForm, setShowTransactionForm] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [transactionToDelete, setTransactionToDelete] = useState<number | null>(null)
 
   useEffect(() => {
     getTransactions()
@@ -27,15 +32,16 @@ function Transactions() {
   }, [])
 
   const handleDelete = async (id: number) => {
-      try {
-        await deleteTransaction(id)
-        setTransactions(prev => prev.filter(t => t.id !== id))
-      } catch (error: any) {
-        console.log('Status:', error.response?.status)
-        console.log('Mensaje:', error.response?.data)
-        setError('Error al eliminar la transacción')
-      }
+    try {
+      await deleteTransaction(id)
+      setTransactions(prev => prev.filter(t => t.id !== id))
+    } catch (error: any) {
+      console.log('Status:', error.response?.status)
+      console.log('Mensaje:', error.response?.data)
+      setError('Error al eliminar la transaccion')
+    }
   }
+
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'
@@ -45,6 +51,15 @@ function Transactions() {
   
   return (
     <>
+    <div className='flex justify-center items-center mt-10'>
+      <Notifications type="alert">Transaction successfully deleted!</Notifications>
+    </div>
+    {transactionToDelete !== null && (
+      <Confirmation
+        close={() => setTransactionToDelete(null)}
+        onConfirm={() => {handleDelete(transactionToDelete!); setTransactionToDelete(null)}}>
+        Estas seguro de que quieres eliminar esta transaccion?
+      </Confirmation>)}
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)}/>}
     <div className='p-10'>
       <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
@@ -63,11 +78,11 @@ function Transactions() {
       {transactions.length !== 0 ? (
       <div className='md:py-10 pt-10 pb-5'>
         <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
-              <div id='full' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'full' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Full</div>
+              <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
               <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
               <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
         </div>
-        <p>Historial ({filteredTransactions.length})</p>
+        <p className='inter capitalize text-gray-400'>{select} transactions → <span className='font-bold'>{filteredTransactions.length}</span></p>
       </div>):(<></>)}
       {/* TRANSACTIONS CARDS */}
       {loading ? (
@@ -99,14 +114,15 @@ function Transactions() {
                   </p>
                 </div>
                 <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'
-                onClick={()=>handleDelete(t.id)}/>
+                onClick={()=>setTransactionToDelete(t.id)}/>{/* ()=>handleDelete(t.id) */}
               </div>
+              
             </div>
             <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.total_amount}€</p></div>
             <div className='flex flex-row justify-between items-center w-full pt-1'>
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
-              <div className='inter capitalize bg-blue-200 ring-1 ring-blue-500 rounded-full text-blue-600 text-xs py-1 px-2'>
-                <p>{t.category.name}</p>
+              <div className='inter capitalize bg-blue-200 rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center'>
+                <TagIcon className='w-4 mr-1 h-4'/><p>{t.category.name}</p>
               </div>
             </div>
           </div>
