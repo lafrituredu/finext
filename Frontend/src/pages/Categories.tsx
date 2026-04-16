@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 import Loading from '/src/assets/icons/Loading.svg?react'
 import List from '/src/assets/icons/List-icon.svg?react'
 import Squares from '/src/assets/icons/Dashboard-icon.svg?react'
-import Trash from '/src/assets/icons/Dashboard-icon.svg?react'
+import Padlock from '/src/assets/icons/Padlock.svg?react'
 import EditIcon from '/src/assets/icons/Edit-icon.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 
 import { getCategories, createCategory, deleteCategory, type Category } from '../api/CategoryService'
+import Confirmation from '../components/materials/Confirmation'
 
 function Categories() {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -16,6 +17,8 @@ function Categories() {
     const [select,setSelected] = useState('squares')
     const [filter,setFilter] = useState('')
     const [order,setOrder] = useState('')
+    const [error, setError] = useState<string | null>(null)
+    const [transactionToDelete, setTransactionToDelete] = useState<number | null>(null)
 
     useEffect(() => {
         getCategories()
@@ -24,20 +27,30 @@ function Categories() {
             .finally(() => setLoading(false))
     },[])
 
-
+    const categoriasPropias = categories.filter(c => c.user?.id != null);
+    const categoriasDefault = categories.filter(c => c.user?.id == null);
+  
+    const handleDelete = async (id: number) => {
+      try {
+        await deleteCategory(id)
+        setCategories(prev => prev.filter(c => c.id !== id))
+      } catch (error: any) {
+        setError('Error al eliminar la transaccion')
+      }
+    }
 
   const displayDataSquares = () => {
     return (<>
           <div className='inter'>
-            <p className='mb-2 text-xl MontMedium'>Categorias propias ({categories.filter(categories => categories.user?.id != null).length})</p>
-            <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10'>
-            {categories.filter(cat => cat.user?.id != null).map( (category,key) => 
+            <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
+            <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
+            {categoriasPropias.map( (category,key) => 
               <>
                   <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
                     hover:scale-102 transition-transform ease-in-out gap-6'>
                       <div className='flex justify-between'>
                         <p><TagIcon /></p>
-                        <p><Trash /></p>
+                        <p><TrashcanIcon onClick={() => {setTransactionToDelete(category.id)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /></p>
                       </div>
                       <div className='flex justify-center text-3xl'>
                         {category.name}
@@ -51,18 +64,22 @@ function Categories() {
                   </div>
               </>
               )}
+              {/* <button className='flex justify-center items-center text-2xl bg-blue-200 ring-2 ring-blue-300 rounded-full w-20 h-20'> + </button> */}
+              <div className='flex w-full h-full justify-center items-center'>
+                <button className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
+              </div>
             </div>
-            <p className='mb-2 text-xl MontMedium'>Categorias por defecto ({categories.filter(categories => categories.user?.id == null).length})</p>
+            <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto → <span className='font-bold'>{categoriasDefault.length}</span></p>
             <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
-              {categories.filter(cat => cat.user?.id == null).map( (category,key) =>
+              {categoriasDefault.map( (category,key) =>
               <>
                   <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
                     hover:scale-102 transition-transform ease-in-out gap-6'>
                       <div className='flex justify-between'>
                         <p><TagIcon /></p>
-                        <p><Trash /></p>
+                        <p><Padlock className='text-primary' /></p>
                       </div>
-                      <div className='flex justify-center text-3xl'>
+                      <div className='capitalize flex justify-center text-3xl'>
                         {category.name}
                       </div>
                       <div className='flex justify-between'>
@@ -92,9 +109,9 @@ function Categories() {
         <tbody>
           {categories.map( (category,key) => 
             <tr key={key} className='border-b border-gray-100 *:py-2'>
-              <td>{category.name}</td>
+              <td className='capitalize'>{category.name}</td>
               <td>{category.user?.id == null ? 'Default' : 'Own'}</td>
-              <td><TrashcanIcon onClick={() => {deleteCategory(category.id)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all' /></td>
+              <td>{ category.user?.id != null ? <TrashcanIcon onClick={() => {setTransactionToDelete(category.id)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 hover:rounded-xl' /> : <Padlock className='text-primary' /> }</td>
             </tr>
           )}
         </tbody>
@@ -142,6 +159,13 @@ function Categories() {
           {select == 'list'? displayDataList() : displayDataSquares()}
         </>
         }
+
+        {transactionToDelete !== null && (
+              <Confirmation
+                close={() => setTransactionToDelete(null)}
+                onConfirm={() => {handleDelete(transactionToDelete!); setTransactionToDelete(null)}}>
+                Estas seguro de que quieres eliminar esta transaccion?
+              </Confirmation>)}
       </div>
     </>
 

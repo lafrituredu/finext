@@ -17,11 +17,12 @@ export interface Transaction {
     recurrent_timer: string | null
     created_at: string
     user: {
-    id: number
-    username: string}
+        id: number
+        username: string}
     category: {
-    id: number
-    name: string}
+        id: number
+        name: string
+    }
 }
 
 export const getTransactions = async (): Promise<Transaction[]> => {

@@ -9,6 +9,10 @@ import Overview from './pages/Overview'
 import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import Categories from './pages/Categories'
+import Recurrent from './pages/Recurrent'
+import Taxes from './pages/Taxes'
+import Reports from './pages/Reports'
+import Goals from './pages/Goals'
 
 
 function App() {
@@ -21,17 +25,14 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/*  RUTAS PROTEGIDAS */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        >
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
           <Route path="" element={<Overview />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="recurrent" element={<Recurrent />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="taxes" element={<Taxes />} />
         </Route>
 
         {/* Ruta 404 */}
