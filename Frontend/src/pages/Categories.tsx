@@ -127,7 +127,7 @@ function Categories() {
         
         :
         <>
-          <div className='md:py-10 pt-10 pb-5'>
+          <div className='md:py-10 pt-10 pb-5 flex justify-end'>
             <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
                   <div id='squares'  onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'squares' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-full'} p-2 transition-all ease-in-out duration-200 cursor-pointer`}>
                     <Squares className='size-5' />
