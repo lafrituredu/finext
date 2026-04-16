@@ -47,7 +47,7 @@ function Navbar() {
             </div>
             <DarkButton/>
             <div className="md:flex ring-2 ring-white dark:ring-[#0F1732] rounded-full shadow-md hidden">
-                <Link to="/login">
+                <Link to="/dashboard">
                     <button className="bg-linear-to-r from-[#B6C3F2] to-[#DC94EE] hover:to-accent hover:from-primary duration-600 transition-colors ease-in-out p-2 w-40 rounded-full cursor-pointer">
                         Sign in
                     </button>
