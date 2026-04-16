@@ -22,16 +22,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Transactions
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
+
+    // CRUD Categories
+    Route::get('/categories', [CategoryController::class,'index']);
+    Route::post('/categories', [CategoryController::class,'store']);
+    Route::delete('/categories/{id}', [CategoryController::class,'destroy']);
 });
 
 // Route::apiResource('categories', CategoryController::class);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-//CRUD CATEGORIES
-Route::get('/categories', [CategoryController::class,'index']);
-Route::get('/categories/{id}', [CategoryController::class,'CategoriesPerId']);
-Route::post('/categories', [CategoryController::class,'store']);
-Route::delete('/categories/{id}', [CategoryController::class,'destroy']);

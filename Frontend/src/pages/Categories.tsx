@@ -8,7 +8,7 @@ import EditIcon from '/src/assets/icons/Edit-icon.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 
-import { getCategories, createCategory, deleteCategory, type Category, getCategoriesPerUser } from '../api/CategoryService'
+import { getCategories, createCategory, deleteCategory, type Category } from '../api/CategoryService'
 import { getCurrentUser } from '../api/AuthServices'
 import Confirmation from '../components/materials/Confirmation'
 
@@ -31,24 +31,37 @@ function Categories() {
         //     .catch(err => console.log(err))
         //     .finally(() => setLoading(false))
       const fetchData = async () => {
-        try {
-          const user = await getCurrentUser();
-          const _categories = await getCategoriesPerUser(user.id);
+        
+        // VERSIÓN OBTENIENDO EL USERID
 
-          setUserId(user.id);
-          setCategories(_categories);
-        } catch (err) {
-          console.log(err);
-          console.log('error')
-        } finally {
-          setLoading(false);
+        // try {
+        //   const user = await getCurrentUser();
+        //   const _categories = await getCategoriesPerUser(user.id);
+
+        //   setUserId(user.id);
+        //   setCategories(_categories);
+        // } catch (err) {
+        //   console.log(err);
+        //   console.log('error')
+        // } finally {
+        //   setLoading(false);
+        // }
+
+        // VERSIÓN SIN USAR EL USERID (LO OBTIENE EL SERVICIO)
+        try {
+          setCategories(await getCategories())
+          setLoading(false)
+        } catch (error) {
+          console.log(error)
+          setLoading(false)
         }
       };
 
       fetchData();
     },[])
 
-    const categoriasPropias = categories.filter(c => c.user_id == userid);
+    // const categoriasPropias = categories.filter(c => c.user_id == userid);
+    const categoriasPropias = categories.filter(c => c.user_id != null);
     const categoriasDefault = categories.filter(c => c.user_id == null);
   
     const handleDelete = async (id: number) => {
@@ -145,7 +158,7 @@ function Categories() {
           <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
               <p className='mont_semibold text-4xl'>Categorias</p>
               <button 
-              onClick={(e) => createCategory('hola',userid)}
+              onClick={(e) => console.log(createCategory(String(prompt('Escribe el nombre de la categoria'))))}
               className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
                 <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
                   Nueva categoria
