@@ -28,3 +28,9 @@ export const registerUser = async (data: {
   const response = await api.post<AuthResponse>('/register', data)
   return response.data
 }
+
+// GET CURRENT USER
+export const getCurrentUser = async (): Promise<any> => {
+  const response = await api.get('/me');
+  return response.data.user;
+};
