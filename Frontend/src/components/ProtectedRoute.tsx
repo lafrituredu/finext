@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import DarkButton from "./buttons/DarkButton.tsx";
+import Language from "./buttons/Lang.tsx";
 import api from "../api/axiosInstance";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -19,7 +21,14 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     checkToken();
   }, []);
 
-  if (isValid === null) return <div>Loading...</div>;
+  if (isValid === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-dark-background">
+        <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
+        <div className="hidden"><DarkButton/><Language/></div>
+      </div>
+    );
+  }
 
   if (!isValid) return <Navigate to="/login" />;
 
