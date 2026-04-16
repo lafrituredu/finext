@@ -25,4 +25,8 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    public function destroy($id){
+        return Category::destroy($id);
+    }
+
 }
