@@ -535,7 +535,13 @@ const Register: React.FC = () => {
         {/* RIGHT SIDE - Hero con imagen de fondo */}
         <div
           className="lg:flex hidden lg:w-[55%] bg-cover bg-center bg-no-repeat relative rounded-r-3xl"
-          style={{ backgroundImage: "url('/loginregister/Rectangle.png')" }}
+          style={{
+              backgroundImage: `url(${
+                document.documentElement.classList.contains("dark")
+                  ? "/loginregister/RectangleDark.png"
+                  : "/loginregister/Rectangle.png"
+              })`
+            }}
         >
           {/* Overlay para mejor legibilidad */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-r-3xl"></div>
