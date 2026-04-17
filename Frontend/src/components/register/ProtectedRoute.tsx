@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import DarkButton from "./buttons/DarkButton.tsx";
-import Language from "./buttons/Lang.tsx";
-import api from "../api/axiosInstance";
+import DarkButton from "../buttons/DarkButton.tsx";
+import Language from "../buttons/Lang.tsx";
+import api from "../../api/axiosInstance";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);

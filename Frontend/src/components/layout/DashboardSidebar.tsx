@@ -18,7 +18,7 @@ import DarkModeToggle from '../buttons/DarkButton'
 import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
-import { logout } from '../register/auth'
+import { logoutUser } from '../../api/AuthServices'
 
 interface DashboardSidebar {
   opened?: boolean;
@@ -137,7 +137,7 @@ const menuItems = [{
           </div>
           ))}
           <div className='flex flex-row justify-between items-center pt-10' >
-            <button onClick={() => logout()}>
+            <button onClick={() => logoutUser()}>
               <SidebarItem
               id={'logout'}
               icon={ExitIcon }
