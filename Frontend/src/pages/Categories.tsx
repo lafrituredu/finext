@@ -177,6 +177,7 @@ function Categories() {
 
         {categoryToDelete !== null && (
           <Confirmation
+            Icon={TrashcanIcon}
             close={() => setCategoryToDelete(null)}
             onConfirm={() => {handleDelete(categoryToDelete.id!); setCategoryToDelete(null)}}>
             Estas seguro de que quieres eliminar <span className='font-semibold'>{categoryToDelete.name}</span>
