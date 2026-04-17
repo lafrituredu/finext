@@ -25,7 +25,7 @@ function Dashboard() {
         <DashboardNavbar opened={opened} onToggle ={toggleMenu}/>
 
         <div className='flex justify-center items-center'>
-          <Notifications type="alert" duration={500} open={true}>Transaction successfully deleted!</Notifications>
+          {/*<Notifications type="alert" duration={500} open={true}>Transaction successfully deleted!</Notifications>*/}
         </div>
         <Outlet />
       </div>

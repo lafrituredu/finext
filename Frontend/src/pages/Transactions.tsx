@@ -12,6 +12,7 @@ import TagIcon from '/src/assets/icons/Tag.svg?react'
 import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
 import Notifications from '../components/materials/Notifications'
 import Confirmation from '../components/materials/Confirmation'
+import { getCategories, type Category } from '../api/CategoryService'
 
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -51,7 +52,7 @@ function Transactions() {
   
   return (
     <>
-    <div className='flex justify-center items-center mt-10'>
+    <div className='flex justify-center items-center'>
       {/* <Notifications type="alert">Transaction successfully deleted!</Notifications> */}
     </div>
     {transactionToDelete !== null && (
@@ -77,7 +78,7 @@ function Transactions() {
       </div>
       {transactions.length !== 0 ? (
       <div className='md:py-10 pt-10 pb-5'>
-        <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+        <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat select-none'>
               <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
               <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
               <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
@@ -109,8 +110,8 @@ function Transactions() {
                   'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
                   'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
                   <p className='flex justify-center items-center capitalize'>
-                    {t.type == 'income'?<Trending_up className='mr-2 text-green-600 w-5'/>:
-                    <Trending_down className='mr-2 text-red-600 w-5'/>}{t.type}
+                    {t.type == 'income'?<Trending_up className='sm:mr-2 text-green-600 w-5'/>:
+                    <Trending_down className='sm:mr-2 text-red-600 w-5'/>}<span className='sm:flex hidden'>{t.type}</span>
                   </p>
                 </div>
                 <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'

@@ -2,10 +2,19 @@ import { useEffect, useState } from "react";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
+import { getCategories, type Category } from '../../api/CategoryService'
 
 export function TransctionForm({ close }: any) {
   const [select, setSeleceted] = useState<any>('income');
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   useEffect(()=>{
+    getCategories()
+      .then(data => setCategories(data))
+      .catch(() => setError('Error al cargar las categorias'))
+      .finally(() => setLoading(false));
     console.log(select)
   },[select])
 
@@ -44,7 +53,15 @@ export function TransctionForm({ close }: any) {
             <option>Reducido 10%</option>
             <option>General 21%</option>
             </select>
-              
+            
+            <label>Categoria</label>
+            <select>
+              <option value="">Select</option>
+              {categories.map(c =>
+              <option value={c.id}>{c.name}</option>
+              )}
+            </select>
+
             <label>Description</label>
             <input type="text" placeholder="Text..." className="h-24" />
 
