@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { registerUser } from "../api/AuthServices";
+import { registerUser, checkEmail, checkUsername } from "../api/AuthServices";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import FiNextIcon from '/src/assets/icons/finext.svg?react';
 import DarkButton from  "../components/buttons/DarkButton.tsx";
@@ -16,6 +17,7 @@ type FormDataType = {
 
 const Register: React.FC = () => {
   const { t } = useTranslation("register");
+  const navigate = useNavigate();
 
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,10 +35,6 @@ const Register: React.FC = () => {
     phone_number: "",
     rol: "autonomo"
   });
-  
-  if (localStorage.getItem("token")) {
-    window.location.href = "/dashboard";
-  }
 
   const [availability, setAvailability] = useState<{
     email: boolean | null;
@@ -58,6 +56,9 @@ const Register: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    if (localStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
   }, []);
 
   const handleChange = (
@@ -78,29 +79,24 @@ const Register: React.FC = () => {
   };
 
   const checkAvailability = async () => {
-    setCheckingAvailability(true);
-    setError("");
+  setCheckingAvailability(true);
+  setError("");
 
-    try {
-      // Verificar email
-      const emailRes = await fetch(`http://127.0.0.1:8000/api/check-email?email=${formData.email}`);
-      const emailData = await emailRes.json();
+  try {
+    const emailData = await checkEmail(formData.email);
+    const usernameData = await checkUsername(formData.username);
 
-      // Verificar username
-      const usernameRes = await fetch(`http://127.0.0.1:8000/api/check-username?username=${formData.username}`);
-      const usernameData = await usernameRes.json();
-
-      setAvailability({
+    setAvailability({
         email: emailData.available,
         username: usernameData.available
       });
 
-      // Retornar los valores directamente, no del estado
       return {
         isAvailable: emailData.available && usernameData.available,
         emailAvailable: emailData.available,
         usernameAvailable: usernameData.available
       };
+
     } catch (err) {
       console.error("Error verificando disponibilidad:", err);
       setError("Error al verificar disponibilidad");
@@ -165,12 +161,12 @@ const Register: React.FC = () => {
     if (step === 2) {
       prevStep();
     } else {
-      window.location.href = "/login";
+      navigate("/login");
     }
   };
 
   const onGoToHome = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -197,7 +193,7 @@ const Register: React.FC = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", data.user.username);
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
 
     } catch (err: any) {
       setError(err.response?.data?.message || "Error al registrarse");
@@ -541,11 +537,7 @@ const Register: React.FC = () => {
                   ? "/loginregister/RectangleDark.png"
                   : "/loginregister/Rectangle.png"
               })`
-            }}
-        >
-          {/* Overlay para mejor legibilidad */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-r-3xl"></div>
-
+            }}>
           {/* Contenido */}
           <div className="relative z-10 flex flex-col justify-between p-12 w-full">
             {/* Logo arriba */}
@@ -579,7 +571,6 @@ const Register: React.FC = () => {
                 </div>
               </div>
             </div>
-
             {/* Espacio para estética */}
             <div></div>
           </div>

@@ -39,3 +39,15 @@ export const getCurrentUser = async (): Promise<any> => {
 export const logoutUser = async (): Promise<void> => {
   await api.post('/logout');
 };
+
+// CHECK EMAIL
+export const checkEmail = async (email: string) => {
+  const response = await api.get(`/check-email?email=${email}`)
+  return response.data
+}
+
+// CHECK USERNAME
+export const checkUsername = async (username: string) => {
+  const response = await api.get(`/check-username?username=${username}`)
+  return response.data
+}
