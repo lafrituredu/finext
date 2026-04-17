@@ -57,6 +57,7 @@ function Transactions() {
     </div>
     {transactionToDelete !== null && (
       <Confirmation
+        Icon={TrashcanIcon}
         close={() => setTransactionToDelete(null)}
         onConfirm={() => {handleDelete(transactionToDelete.id!); setTransactionToDelete(null)}}>
         Estas seguro de que quieres eliminar <span className='font-bold'>{transactionToDelete.name}</span>?
