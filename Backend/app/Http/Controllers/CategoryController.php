@@ -13,7 +13,7 @@ class CategoryController extends Controller
     {
         $user = $request->user();
         if ($user->rol == 'autonomo') {
-            $category = Category::where('user_id', $user->id)->orWhereNull('user_id')->get();
+            $category = Category::where('user_id', $user->id)->orWhereNull('user_id')->orderBy('user_id', 'desc')->get();
         }else{
             $category = Category::with('user')->get();
         }

@@ -21,6 +21,9 @@ export const createCategory = async(paramName:string): Promise<Number> => {
     if (paramName == undefined || paramName == "") {
         return 500;
     }
+
+    
+
     const response = await api.post('/categories', {
         name: paramName
     });
