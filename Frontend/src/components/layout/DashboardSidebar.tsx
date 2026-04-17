@@ -136,12 +136,14 @@ const menuItems = [{
               </ul>
           </div>
           ))}
-          <div className='flex flex-row justify-between items-center pt-10' onClick={() => logout()}>
-            <SidebarItem
+          <div className='flex flex-row justify-between items-center pt-10' >
+            <button onClick={() => logout()}>
+              <SidebarItem
               id={'logout'}
               icon={ExitIcon }
               label={t('logout')}
               />
+            </button>
               <div className='lg:flex hidden'><DarkModeToggle /></div>
           </div>
           
