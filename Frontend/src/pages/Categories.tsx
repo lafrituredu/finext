@@ -53,84 +53,84 @@ function Categories() {
       }
     }
 
-  const displayDataSquares = () => {
-    return (<>
-          <div className='inter'>
-            <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
-            <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
-            {categoriasPropias.map( (category,key) => 
-                <div key={key} className='flex flex-col justify-around items-between min-h-40 max-h-40
-                rounded-2xl p-4 ring-2 bg-gray-100 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
-                  hover:scale-102 transition-transform ease-in-out '>
-                    <div className='flex justify-between'>
-                      <p><TagIcon /></p>
-                      <p><TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /></p>
-                    </div>
-                    <div className='flex justify-center text-3xl'>
-                      {category.name}
-                    </div>
-                    <div className='flex justify-between'>
-                        <>
-                          <p>Own</p>
-                          <p><EditIcon /> </p>
-                        </>
-                    </div>
-                </div>
-              )}
-              {/* <button className='flex justify-center items-center text-2xl bg-blue-200 ring-2 ring-blue-300 rounded-full w-20 h-20'> + </button> */}
-              <div className='flex w-full h-full justify-center items-center'>
-                <button onClick={() => setShowCategoryForm(true)} className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
-              </div>
-            </div>
-            <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto → <span className='font-bold'>{categoriasDefault.length}</span></p>
-            <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
-              {categoriasDefault.map( (category,key) =>
-              <div key={category.id}>
-                  <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
-                    hover:scale-102 transition-transform ease-in-out gap-6'>
+    const displayDataSquares = () => {
+      return (<>
+            <div className='inter'>
+              <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
+              <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
+              {categoriasPropias.map( (category,key) => 
+                  <div key={key} className='flex flex-col justify-around items-between min-h-40 max-h-40
+                  rounded-2xl p-4 ring-2 bg-gray-100 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
+                    hover:scale-102 transition-transform ease-in-out '>
                       <div className='flex justify-between'>
                         <p><TagIcon /></p>
-                        <p><Padlock className='text-primary' /></p>
+                        <p><TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /></p>
                       </div>
-                      <div className='capitalize flex justify-center text-3xl'>
+                      <div className='flex justify-center text-3xl'>
                         {category.name}
                       </div>
                       <div className='flex justify-between'>
                           <>
-                            <p>Default</p>
+                            <p>Own</p>
                             <p><EditIcon /> </p>
                           </>
                       </div>
                   </div>
+                )}
+                {/* <button className='flex justify-center items-center text-2xl bg-blue-200 ring-2 ring-blue-300 rounded-full w-20 h-20'> + </button> */}
+                <div className='flex w-full h-full justify-center items-center'>
+                  <button onClick={() => setShowCategoryForm(true)} className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
+                </div>
               </div>
-              )}
+              <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto → <span className='font-bold'>{categoriasDefault.length}</span></p>
+              <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
+                {categoriasDefault.map( (category,key) =>
+                <div key={category.id}>
+                    <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
+                      hover:scale-102 transition-transform ease-in-out gap-6'>
+                        <div className='flex justify-between'>
+                          <p><TagIcon /></p>
+                          <p><Padlock className='text-primary' /></p>
+                        </div>
+                        <div className='capitalize flex justify-center text-3xl'>
+                          {category.name}
+                        </div>
+                        <div className='flex justify-between'>
+                            <>
+                              <p>Default</p>
+                              <p><EditIcon /> </p>
+                            </>
+                        </div>
+                    </div>
+                </div>
+                )}
+              </div>
             </div>
-          </div>
-    </>);
-  }
+      </>);
+    }
 
-  const displayDataList = () => {
-    return (<>
-      <table className='w-full overflow-x-scroll'>
-        <thead>
-          <tr className='border-b border-gray-200 dark:border-dark-text *:text-start montserrat *:py-2'>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map( (category,key) => 
-            <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
-              <td className='capitalize'>{category.name}</td>
-              <td>{category.user_id == null ? 'Default' : 'Own'}</td>
-              <td>{category.user_id != null ? <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /> : <Padlock className='text-primary' /> }</td>
+    const displayDataList = () => {
+      return (<>
+        <table className='w-full overflow-x-scroll'>
+          <thead>
+            <tr className='border-b border-gray-200 dark:border-dark-text *:text-start montserrat *:py-2'>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Acciones</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-    </>);
-  }
+          </thead>
+          <tbody>
+            {categories.map( (category,key) => 
+              <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
+                <td className='capitalize'>{category.name}</td>
+                <td>{category.user_id == null ? 'Default' : 'Own'}</td>
+                <td>{category.user_id != null ? <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /> : <Padlock className='text-primary' /> }</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </>);
+    }
 
   return (
   
