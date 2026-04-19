@@ -30,6 +30,11 @@ export const getTransactions = async (): Promise<Transaction[]> => {
     return response.data
 }
 
+export const createTransaction = async (data: any) => {
+  const response = await api.post("/transactions", data);
+  return response.data;
+};
+
 export const deleteTransaction = async (id:number): Promise<void> => {
     await api.delete<Transaction[]>(`/transactions/${id}`)
 }

@@ -51,19 +51,18 @@ function Home() {
           <div id="box1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
             <div className="p-5 inter">
-              <p className="text-xl bold_montserrat">Manage multiple accounts babygirl</p>
-              <p className="text-relaxed">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam, provident laborum distinctio fugiat</p>
+              <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
             </div>
-            <div className="absolute bottom-0 left-5 translate-x-20 translate-y-0 hover:-translate-y-5 transition-all ease-out w-100 bg-white border border-gray-300 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b border-r px-5 py-3.5 border-gray-200 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@jeremyin</span></p>
-            </div>
-
-            <div className="absolute bottom-0 left-5 translate-x-10 translate-y-10 hover:translate-y-5  transition-all ease-out w-100 bg-white border border-gray-300 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@erubio</span></p>
+            <div className="absolute bottom-0 left-5 translate-x-20 translate-y-0 hover:-translate-y-5 transition-all ease-out w-100 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b border-r px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@jeremyin</span></p>
             </div>
 
-            <div className="absolute bottom-0 left-5 translate-x-0 translate-y-20 hover:translate-y-15  transition-all ease-out w-100 bg-white border border-gray-300 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@magi</span></p>
+            <div className="absolute bottom-0 left-5 translate-x-10 translate-y-10 hover:translate-y-5  transition-all ease-out w-100 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@erubio</span></p>
+            </div>
+
+            <div className="absolute bottom-0 left-5 translate-x-0 translate-y-20 hover:translate-y-15  transition-all ease-out w-120 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@magi</span></p>
             </div>
           </div>
           {/*--- Card Middle ---*/}

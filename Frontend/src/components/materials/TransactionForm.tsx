@@ -3,6 +3,27 @@ import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 import { getCategories, type Category } from '../../api/CategoryService'
+import { createTransaction, type Transaction } from "../../api/TransactionService";
+
+import React from "react";
+import { useForm } from "react-hook-form"
+
+type TransactionFormValues = {
+  name: string
+  date: string
+  type: string
+  total_amount: number
+  iva_percent: number
+  client: string
+  description: string
+  status: boolean
+  category_id?: number
+};
+
+type FormProps = {
+  close: () => void;
+  onCreated: (transaction: Transaction) => void;
+};
 
 export function TransctionForm({ close }: any) {
   const [select, setSeleceted] = useState<any>('income');
@@ -10,15 +31,30 @@ export function TransctionForm({ close }: any) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(()=>{
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors }} = useForm<TransactionFormValues>()
+
+  const onSubmit = async (data: TransactionFormValues) => {
+  try {
+    const response = await createTransaction(data);
+    //onCreated(response);
+    close();
+  } catch (error) {console.error(error)}}
+
+    useEffect(()=>{
     getCategories()
       .then(data => setCategories(data))
       .catch(() => setError('Error al cargar las categorias'))
       .finally(() => setLoading(false));
     console.log(select)
-  },[select])
+    setValue("type", select);
+  },[select, setValue])
 
   return (
+    <form onSubmit={handleSubmit(onSubmit)} >
     <div className="flex items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0">
       <div className="inter absolute w-[60vh] h-fit bg-background dark:bg-dark-background dark:ring-2 dark:ring-gray-800 shadow-md rounded-2xl z-80 p-3 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
@@ -29,56 +65,53 @@ export function TransctionForm({ close }: any) {
                 <div id='income' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'income' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl text-green-600' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer flex items-center gap-1`}><TrendingUpIcon/>Income</div>
                 <div id='expense' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'expense' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl text-red-600' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer flex items-center gap-1`}><TrendingDownIcon/>Expsense</div>
               </div>
-              {/* Input oculto que guarda el valor */}
-              <input type="hidden" name="type" value={select}/>
             </div>
             <div className="flex flex-col">
-              <label>Nombre</label>
-              <input type="text" placeholder="Nombre" className="rounded-full ring-2 ring-gray-200 py-1 px-2"/>
+              <label>Nombre*</label>
+              <input {...register("name", { required: "El nombre es obligatorio" })} type="text" placeholder="Nombre"/>
+              {errors.name && <span className="text-red-300">{errors.name.message}</span>}
             </div>
             <div className="flex flex-row gap-10">
               <div className="flex flex-col">
                 <label>Importe*</label>
-                <input type="number" placeholder="0.00€" className="rounded-md ring-2 ring-gray-200 py-1 px-2 max-w-40"/>
+                <input type="number" step="0.01" {...register("total_amount", { required: "El importe es obligatorio", valueAsNumber: true })}/>
+                {errors.total_amount && <span className="text-red-300">{errors.total_amount.message}</span>}
               </div>
               <div className="flex flex-col w-full">
                 <label>Fecha*</label>
-                <input type="date" className="rounded-md ring-2 ring-gray-200 py-1 px-2" />
+                <input type="date" {...register("date", { required: "La fecha es obligatoria" })}/>
+                {errors.date && <span className="text-red-300">{errors.date.message}</span>}
               </div>
             </div>
-            <label>Tipo de IVA*</label>
-            <select>
-            <option>Selecciona</option>
-            <option>Superreducido 4%</option>
-            <option>Reducido 10%</option>
-            <option>General 21%</option>
+
+            <label>Tipo de IVA</label>
+            <select {...register("iva_percent", {setValueAs: (value) => value === "" ? null : Number(value)})}>
+              <option value="">0%</option>
+              <option value="4">Superreducido 4%</option>
+              <option value="10">Reducido 10%</option>
+              <option value="21">General 21%</option>
             </select>
             
             <label>Categoria</label>
-            <select>
+            <select {...register("category_id", {setValueAs: (value) => value === "" ? null : Number(value)})}>
               <option value="">Select</option>
-              {categories.map(c =>
-              <option value={c.id}>{c.name}</option>
-              )}
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
             </select>
 
             <label>Description</label>
-            <input type="text" placeholder="Text..." className="h-24" />
+            <input {...register("description")} type="text" />
 
             <label>Client</label>
-            <input type="text" placeholder="Text..." />
+            <input {...register("client")} type="text" />
 
-            <label>Método de pago</label>
-            <select>
-                <option>Cash</option>
-                <option>Tarjeta de credito</option>
-                <option>Trueque</option>
-            </select>
-              <button className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out">Añadir</button>
-              <button className="bg-red-700 py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out" onClick={close}>Cancelar</button>
+            <button type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out">Añadir</button>
+            <button className="bg-red-700 py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out" onClick={close}>Cancelar</button>
         </div>
       </div>
     </div>
+    </form>
   );
 }
 

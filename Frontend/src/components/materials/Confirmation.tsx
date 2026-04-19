@@ -16,7 +16,7 @@ export function Confirmation({Icon, children, close, onConfirm}:ConfirmationProp
 
   return (
     <>
-        <div className="flex flex-col items-center justify-center fixed bg-[#0000006b] backdrop-blur-xs min-w-full min-h-full z-60 top-0 left-0">
+        <div className="flex flex-col items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0">
             <div className="inter flex flex-col items-center justify-center bg-white shadow-md rounded-xl p-8 m-2">
                 {<Icon className="size-16 text-red-500 my-2"/>}
                 <p className="text-xl max-w-100 text-center">{children}</p>
