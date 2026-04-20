@@ -13,7 +13,7 @@ import { deleteTransaction, getTransactions, type Transaction } from '../api/Tra
 import Notifications from '../components/materials/Notifications'
 import Confirmation from '../components/materials/Confirmation'
 import { getCategories, type Category } from '../api/CategoryService'
-
+import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,7 +24,7 @@ function Transactions() {
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
-
+  const [transactionToEdit,setTransactionToEdit] = useState<Transaction | null>(null)
   useEffect(() => {
     getTransactions()
       .then(data => setTransactions(data))
@@ -62,12 +62,12 @@ function Transactions() {
         onConfirm={() => {handleDelete(transactionToDelete.id!); setTransactionToDelete(null)}}>
         Estas seguro de que quieres eliminar <span className='font-bold'>{transactionToDelete.name}</span>?
       </Confirmation>)}
-    {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)}/>}
+    {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)} transactionEdit={transactionToEdit!}/>}
     <div className='p-10'>
       <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
         <h2 className='mont_semibold text-4xl'>{t('transactions')}</h2>
         <button 
-        onClick={() => setShowTransactionForm(true)}
+        onClick={() => {setShowTransactionForm(true);setTransactionToEdit(null);}}
         className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
           <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
             {t('new_transaction')}
@@ -103,10 +103,13 @@ function Transactions() {
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
           <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-[#101a3d]
-            hover:scale-102 transition-transform ease-in-out'>
+            hover:scale-102 transition-transform ease-in-out w-full h-full'>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
+              {/* <div className='flex flex-row items-center gap-2'>
+              <div className='bg-gray-200 h-8 w-8 rounded-full ring-1 ring-gray-400'></div> */}
               <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
-              <div className='flex flex-row gap-2'>
+              {/* </div> */}
+              <div className='flex flex-row gap-2 items-center'>
                 <div className={t.type == 'income' ?
                   'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
                   'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
@@ -115,6 +118,8 @@ function Transactions() {
                     <Trending_down className='sm:mr-2 text-red-600 w-5'/>}<span className='sm:flex hidden'>{t.type}</span>
                   </p>
                 </div>
+                <PencilIcon className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
+                onClick={() => {setTransactionToEdit(t);setShowTransactionForm(true)}}/>
                 <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'
                 onClick={()=>setTransactionToDelete(t)}/>
               </div>

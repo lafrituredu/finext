@@ -25,11 +25,12 @@ type FormProps = {
   onCreated: (transaction: Transaction) => void;
 };
 
-export function TransctionForm({ close }: any) {
+export function TransctionForm({ close, transactionEdit }: {close:any, transactionEdit:Transaction}) {
   const [select, setSeleceted] = useState<any>('income');
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [transaction, setTransaction] = useState<Transaction>(transactionEdit)
 
   const {
     register,
@@ -59,7 +60,7 @@ export function TransctionForm({ close }: any) {
       <div className="inter absolute w-[60vh] h-fit bg-background dark:bg-dark-background dark:ring-2 dark:ring-gray-800 shadow-md rounded-2xl z-80 p-3 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col p-2 gap-y-4">
-            <p className="flex justify-center items-center text-2xl font-bold"><MoneyBagIcon className="w-8 mx-2"/>Añadir transacción</p>
+            <p className="flex justify-center items-center text-2xl font-bold"><MoneyBagIcon className="w-8 mx-2"/>{transactionEdit == null ? 'Añadir Transaccion' : 'Editar Transaccion' }</p>
             <div className="flex justify-center">
               <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-fit px-2 py-1 rounded-3xl flex flex-row items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
                 <div id='income' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'income' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl text-green-600' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer flex items-center gap-1`}><TrendingUpIcon/>Income</div>
@@ -68,7 +69,7 @@ export function TransctionForm({ close }: any) {
             </div>
             <div className="flex flex-col">
               <label>Nombre*</label>
-              <input {...register("name", { required: "El nombre es obligatorio" })} type="text" placeholder="Nombre"/>
+              <input {...register("name", { required: "El nombre es obligatorio" })} type="text" placeholder="Nombre" value={transaction !== null ? transaction.name : ""}/>
               {errors.name && <span className="text-red-300">{errors.name.message}</span>}
             </div>
             <div className="flex flex-row gap-10">
@@ -106,7 +107,7 @@ export function TransctionForm({ close }: any) {
             <label>Client</label>
             <input {...register("client")} type="text" />
 
-            <button type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out">Añadir</button>
+            <button type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out">{transactionEdit == null ? 'Crear' : 'Actualizar' }</button>
             <button className="bg-red-700 py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out" onClick={close}>Cancelar</button>
         </div>
       </div>
