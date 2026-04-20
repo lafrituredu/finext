@@ -22,6 +22,7 @@ function Categories() {
     const [error, setError] = useState<string | null>(null)
     const [showCategoryForm, setShowCategoryForm] = useState(false)
     const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
+    const [categoryToEdit,setCategoryToEdit] = useState<Category | null>(null)
     const [userid,setUserId] = useState<number | undefined>();
 
     useEffect(() => {
@@ -72,7 +73,7 @@ function Categories() {
                       <div className='flex justify-between'>
                           <>
                             <p>Own</p>
-                            <p><EditIcon /> </p>
+                            <p onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}}><EditIcon />Editar </p>
                           </>
                       </div>
                   </div>
@@ -183,7 +184,9 @@ function Categories() {
             Estas seguro de que quieres eliminar <span className='font-semibold'>{categoryToDelete.name}</span>
           </Confirmation>)
         }
-        {showCategoryForm && <CategoryForm close={() => setShowCategoryForm(false)}/>}
+        {showCategoryForm && categoryToEdit == null && <CategoryForm close={() => setShowCategoryForm(false)}/>}
+
+        {showCategoryForm && categoryToEdit && <CategoryForm categoryEdit={categoryToEdit} close={() => {setShowCategoryForm(false);setCategoryToEdit(null)}  }/>}
       </div>
     </>
 

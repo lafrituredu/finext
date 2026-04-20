@@ -22,8 +22,6 @@ export const createCategory = async(paramName:string): Promise<Number> => {
         return 500;
     }
 
-    
-
     const response = await api.post('/categories', {
         name: paramName
     });
@@ -32,5 +30,17 @@ export const createCategory = async(paramName:string): Promise<Number> => {
 
 export const deleteCategory = async(id:number): Promise<Number> => {
     const response = await api.delete<Category>(`/categories/${id}`);
+    return response.status;
+}
+
+export const updateCategory = async(paramName:string,id:number): Promise<Number> => {
+    if (paramName == undefined || paramName == "") {
+        return 500;
+    }
+
+    const response = await api.put(`/categories/${id}`, {
+        name: paramName,
+    });
+    
     return response.status;
 }

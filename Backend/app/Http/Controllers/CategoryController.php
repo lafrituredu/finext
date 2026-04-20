@@ -37,6 +37,25 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    public function update(Request $request,$id){
+
+        $user = $request->user();
+        $category = Category::find($id);
+
+        if ($user->id != $category->user_id) {
+            return response('',401);
+        }
+
+        $data = $request->validate([
+            'name' => 'required|string',
+            'user_id' => 'exists:users,id'
+        ]);
+
+        $category->update([
+            'name' => $data['name']
+        ]);
+    }
+
     public function destroy($id){
         return Category::destroy($id);
     }
