@@ -13,6 +13,7 @@ return new class extends Migration
     {
        Schema::create('autonomos', function (Blueprint $table) {
             $table->foreignId('user_id')->primary()->constrained()->cascadeOnDelete();
+            $table->string('dni')->unique();
             $table->date('birth_date')->nullable();
             $table->decimal('modulo_iva', 5, 2)->nullable();
             $table->enum('civil_state', ['soltero','casado','divorciado','separado','viudo','pareja_de_hecho'])->nullable();
