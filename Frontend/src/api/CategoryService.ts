@@ -4,6 +4,8 @@ import api from './axiosInstance'
 export interface Category {
     id: number,
     name: string,
+    icon: string | null,
+    color: string | null,
     user_id: number,
     user: {
         id: number,
