@@ -21,6 +21,7 @@ function Transactions() {
 
   const { t } = useTranslation("transactions")
   const [select,setSelected] = useState<any>('total')
+  const [selectFilter,setSelectedFilter] = useState('squares')
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
@@ -49,6 +50,31 @@ function Transactions() {
     if (select === 'expenses') return t.type === 'expense'
     return true //'total'
   })
+
+  const displayDataSquares = () => {
+    return (<>
+    </>);
+  }
+
+  const displayDataList = () => {
+    return (<>
+    </>);
+  }
+
+  {/* PARA MOSTRAR LISTA O SQUARESD   */}
+  {/* selectFilter == 'list'? displayDataList() : displayDataSquares() */}
+  
+  {/* TOGGLE PARA SETEAR EL FILTRO */}
+  {/*
+  <div id='toggleFilter' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+    <div id='squares'  onClick={(e) => setSelectedFilter(e.currentTarget.id)} className={`${selectFilter == 'squares' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-full'} p-2 transition-all ease-in-out duration-200 cursor-pointer`}>
+      <Squares className='size-5' />
+    </div>
+    <div id='list' onClick={(e) => setSelectedFilter(e.currentTarget.id)} className={`${selectFilter == 'list' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-full'} p-2  transition-all ease-in-out duration-200 cursor-pointer`}>
+      <List className='size-6' />
+    </div>
+  </div>
+  */}
   
   return (
     <>
@@ -100,6 +126,7 @@ function Transactions() {
       </div>
       ) : 
       (
+
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
           <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-[#101a3d]
@@ -138,6 +165,7 @@ function Transactions() {
       </div>
 
       )}
+
     </div>
     </>
   )
