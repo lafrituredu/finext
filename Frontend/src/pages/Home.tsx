@@ -13,11 +13,15 @@ import FiNextIcon from '/src/assets/icons/finext.svg?react'
 import Goals from '/src/assets/icons/Goals.svg?react'
 import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
 import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
+import PDFIcon from '/src/assets/icons/PDF-Icon.svg?react'
 
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 function Home() {
   const { t } = useTranslation("home");
+  const [PDFanimation,setPDFanimation] = useState(false);
+
   return (
     <>
       <Navbar/>
@@ -102,8 +106,19 @@ function Home() {
 
           </div>
           {/*--- Card Right ---*/}
-          <div className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
-          hover:-translate-y-4 duration-400 ease-out transition-transform"></div>
+          <div  id="card3" className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          hover:-translate-y-4 duration-400 ease-out transition-transform relative">
+            <div className="p-5 inter">
+              <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
+            </div>
+              <div className={`absolute w-full h-[50%] bottom-0 left-0 flex items-center justify-center gap-5 overflow-hidden`}>
+                <button onClick={() => setPDFanimation(!PDFanimation)} className="bg-red-300 p-2 border-2 rounded-full cursor-pointer hover:shadow-2xl"><PDFIcon className="size-5" /> </button>
+                <div className={`border border-gray-200 h-30 bg-white w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-5' : 'translate-y-35'} transition duration-300 ease-out`}>
+                  <p className="bold_montserrat font-bold">Taxes | auto-generated</p>
+                  <p className="montserrat">Taxes of { new Date().toLocaleDateString() }</p>
+                </div>
+              </div>
+          </div>
         </div>
       </div>
       {/* Dots */}
