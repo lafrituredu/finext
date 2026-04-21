@@ -65,7 +65,10 @@ function Categories() {
                     hover:scale-102 transition-transform ease-in-out `} style={{ background: category?.color?.concat(`55`) ??'#f3f4f6' , border: `1px solid ${category?.color}`}}>
                       <div className='flex justify-between'>
                         <p><TagIcon /></p>
-                        <p><TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /></p>
+                        <p className='flex items-center gap-1'>
+                          <EditIcon onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}} className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text '/>
+                          <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
+                        </p>
                       </div>
                       <div className='flex justify-center text-3xl'>
                         {category.name}
@@ -73,9 +76,6 @@ function Categories() {
                       <div className='flex justify-between'>
                           <>
                             <p>Own</p>
-                            <p onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}}>
-                              <EditIcon className='size-5 cursor-pointer text-dark-card dark:text-white'/>
-                            </p>
                           </>
                       </div>
                   </div>
@@ -101,7 +101,6 @@ function Categories() {
                         <div className='flex justify-between'>
                             <>
                               <p>Default</p>
-                              <p><EditIcon /> </p>
                             </>
                         </div>
                     </div>
