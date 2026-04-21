@@ -152,7 +152,7 @@ function Transactions() {
               </div>
               
             </div>
-            <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.total_amount}€</p></div>
+            <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.type != 'income' && <span>-</span>}{t.total_amount}€</p></div>
             <div className='flex flex-row justify-between items-center w-full pt-1'>
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
               {t.category !== null && (

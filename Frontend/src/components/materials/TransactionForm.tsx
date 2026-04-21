@@ -42,6 +42,7 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
   const [transactioniva, setTransactionIva] = useState<number>(transactionEdit?.iva_percent || 0)
   const [transactionDescription, setTransactionDescription] = useState<string>(transactionEdit?.description || '')
   const [transactionClient, setTransactionClient] = useState<string>(transactionEdit?.client || '')
+  const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
 
   const {
     register,
@@ -72,6 +73,7 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
     setValue("type", select);
     if (transactionEdit) {
       setValue("id", transactionEdit.id)
+      setValue("category_id", transactionEdit.category_id ?? undefined) 
     }
   },[select, setValue, transactionEdit])
 
@@ -120,7 +122,8 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
             </select>
             
             <label>Categoria</label>
-            <select {...register("category_id", {setValueAs: (value) => value === "" ? null : Number(value)})}>
+            <select {...register("category_id", {setValueAs: (value) => value === "" ? null : Number(value)})} value={category}
+              onChange={(e) => setCategory(e.target.value)}>
               <option value="">Select</option>
               {categories.map(c => (
                 <option key={c.id} value={c.id}>{c.name}</option>
