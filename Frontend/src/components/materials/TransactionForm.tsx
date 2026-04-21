@@ -113,9 +113,9 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
             </div>
 
             <label>Tipo de IVA</label>
-            <select {...register("iva_percent", {setValueAs: (value) => value === "" ? null : Number(value)})} value={transactioniva}
+            <select {...register("iva_percent", {setValueAs: (value) => value === ""   ? undefined : parseFloat(value)})} value={transactioniva}
               onChange={(e)=>setTransactionIva(e.currentTarget.value)}>
-              <option value="0.00">0%</option>
+              <option value={0}>0%</option>
               <option value="4.00">Superreducido 4%</option>
               <option value="10.00">Reducido 10%</option>
               <option value="21.00">General 21%</option>
