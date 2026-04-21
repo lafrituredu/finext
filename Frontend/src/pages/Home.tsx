@@ -112,8 +112,10 @@ function Home() {
               <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
             </div>
               <div className={`absolute w-full h-[50%] bottom-0 left-0 flex items-center justify-center gap-5 overflow-hidden`}>
-                <button onClick={() => setPDFanimation(!PDFanimation)} className="bg-red-300 p-2 border-2 rounded-full cursor-pointer hover:shadow-2xl"><PDFIcon className="size-5" /> </button>
-                <div className={`border border-gray-200 h-30 bg-white w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-5' : 'translate-y-35'} transition duration-300 ease-out`}>
+                <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-dark-card rounded-full cursor-pointer shadow-md hover:scale-110 transition
+                after:content-[''] after:absolute after:rounded-full after:w-3 after:h-3 after:bg-red-500 after:top-0 after:right-0 after:animate-ping
+                before:content-[''] before:absolute before:rounded-full before:w-3 before:h-3 before:bg-red-500 before:top-0 before:right-0"><PDFIcon className="size-5 text-dark" /> </button>
+                <div className={`border border-gray-200 h-30  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-5'} transition duration-300 ease-out`}>
                   <p className="bold_montserrat font-bold">Taxes | auto-generated</p>
                   <p className="montserrat">Taxes of { new Date().toLocaleDateString() }</p>
                 </div>
