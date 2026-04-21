@@ -35,6 +35,11 @@ export const createTransaction = async (data: any) => {
   return response.data;
 };
 
+export const updateTransaction = async(data:any,id:number) => {
+    const response = await api.put(`/transactions/${id}`, data)
+    return response.data;
+}
+
 export const deleteTransaction = async (id:number): Promise<void> => {
-    await api.delete<Transaction[]>(`/transactions/${id}`)
+    await api.delete(`/transactions/${id}`)
 }

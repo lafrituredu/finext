@@ -35,7 +35,7 @@ class TransactionController extends Controller
             'date' => 'required|date',
             'type' => 'required|in:income,expense',
             'total_amount' => 'required|numeric|min:0',
-            'iva_pervent' => 'nullable|numeric|in:4,10,21',
+            'iva_percent' => 'nullable|numeric|in:4,10,21',
             'client' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'nullable|boolean',
@@ -47,7 +47,7 @@ class TransactionController extends Controller
             'date' => $data['date'],
             'type' => $data['type'],
             'total_amount' => $data['total_amount'],
-            'iva_pervent' => $data['iva_pervent'] ?? null,
+            'iva_percent' => $data['iva_percent'] ?? null,
             'client' => $data['client'] ?? null,
             'description' => $data['description'] ?? null,
             'status' => $data['status'] ?? true,
@@ -57,7 +57,48 @@ class TransactionController extends Controller
 
         return response()->json($transaction, 201);
     }
+        
+    public function update(Request $request, $id)
+    {
+        logger()->info('Update request data:', $request->all());
+        $user = $request->user();
+        $transaction = Transaction::find($id);
 
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        if ($user->id != $transaction->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $data = $request->validate([
+            'name'         => 'required|string|max:255',
+            'date'         => 'required|date',
+            'type'         => 'required|in:income,expense',
+            'total_amount' => 'required|numeric|min:0',
+            'iva_percent'  => 'nullable|numeric|in:4,10,21',
+            'client'       => 'nullable|string|max:255',
+            'description'  => 'nullable|string',
+            'status'       => 'nullable|boolean',
+            'category_id'  => 'nullable|exists:categories,id',
+        ]);
+
+        $transaction->update([
+            'name'         => $data['name'],
+            'date'         => $data['date'],
+            'type'         => $data['type'],
+            'total_amount' => $data['total_amount'],
+            'iva_percent'  => $data['iva_percent'] ?? null,
+            'client'       => $data['client'] ?? null,
+            'description'  => $data['description'] ?? null,
+            'status'       => $data['status'] ?? true,
+            'category_id'  => $data['category_id'] ?? null,
+        ]);
+
+        return response()->json($transaction->fresh());
+    }
+    
     public function delete($id)
     {
         $transaction = Transaction::find($id);

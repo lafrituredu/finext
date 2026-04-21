@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Transactions
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class,'store']);
+    Route::put('/transactions/{id}', [TransactionController::class,'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
 
     // CRUD Categories
