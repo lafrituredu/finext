@@ -10,6 +10,9 @@ import MoneyBag from '/src/assets/icons/Money-bag.svg?react'
 import Flag from '/src/assets/icons/Flag.svg?react'
 import PolyBrain from '/src/assets/icons/PolyBrain.svg?react'
 import FiNextIcon from '/src/assets/icons/finext.svg?react'
+import Goals from '/src/assets/icons/Goals.svg?react'
+import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
+import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 
 import { NavLink } from "react-router-dom";
 
@@ -48,7 +51,7 @@ function Home() {
         <div className="flex justify-center mx-4 pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
           
-          <div id="box1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
             <div className="p-5 inter">
               <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
@@ -66,8 +69,37 @@ function Home() {
             </div>
           </div>
           {/*--- Card Middle ---*/}
-          <div className="flex flex-col bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
-          hover:-translate-y-4 duration-400 ease-out transition-transform">
+          <div id="card2" className="flex flex-col bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          hover:-translate-y-4 duration-400 ease-out transition-transform relative overflow-clip">
+            <div className="p-5 inter">
+              <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
+            </div>
+
+            <div className="-bottom-2 left-4 absolute w-fit h-fit flex hover:-translate-x-100 transition-all ease-in-out duration-1000 gap-5">
+              <div className='w-100  border  rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+                  <div className='flex items-center justify-between'>
+                      <span className='flex items-center montserrat'>
+                          <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('incomes')}
+                      </span>
+                      <KpiStatsUp className='text-green-600 right-0'/>
+                  </div>
+                    <p className='text-4xl text-green-600'>112.321€</p>
+                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+              </div>
+
+              <div className='w-100 border transition-all ease-out duration-300 rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+                  <div className='flex items-center justify-between'>
+                      <span className='flex items-center montserrat'>
+                          <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('outcomes')}
+                      </span>
+                      <KpiStatsDown className='text-red-600 right-0'/>
+                  </div>
+                    <p className='text-4xl text-red-600'>112.321€</p>
+                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+              </div>
+            </div>
+
+
           </div>
           {/*--- Card Right ---*/}
           <div className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]

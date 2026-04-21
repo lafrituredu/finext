@@ -4,12 +4,12 @@ import Loading from '/src/assets/icons/Loading.svg?react'
 import List from '/src/assets/icons/List-icon.svg?react'
 import Squares from '/src/assets/icons/Dashboard-icon.svg?react'
 import Padlock from '/src/assets/icons/Padlock.svg?react'
-import EditIcon from '/src/assets/icons/Edit-icon.svg?react'
+import EditIcon from '/src/assets/icons/Pencil.svg?react'
+// import EditIcon from '/src/assets/icons/Edit-icon.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 
 import { getCategories, createCategory, deleteCategory, type Category } from '../api/CategoryService'
-import { getCurrentUser } from '../api/AuthServices'
 import Confirmation from '../components/materials/Confirmation'
 import CategoryForm from '../components/materials/CategoryForm'
 
@@ -60,9 +60,9 @@ function Categories() {
               <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
               <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
               {categoriasPropias.map( (category,key) => 
-                  <div key={key} className='flex flex-col justify-around items-between min-h-40 max-h-40
-                  rounded-2xl p-4 ring-2 bg-gray-100 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
-                    hover:scale-102 transition-transform ease-in-out '>
+                  <div key={key} className={`flex flex-col justify-around items-between min-h-40 max-h-40
+                  rounded-2xl p-4 ring-2 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
+                    hover:scale-102 transition-transform ease-in-out `} style={{ background: category?.color?.concat(`55`) ??'#f3f4f6' , border: `1px solid ${category?.color}`}}>
                       <div className='flex justify-between'>
                         <p><TagIcon /></p>
                         <p><TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /></p>
@@ -73,7 +73,9 @@ function Categories() {
                       <div className='flex justify-between'>
                           <>
                             <p>Own</p>
-                            <p onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}}><EditIcon />Editar </p>
+                            <p onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}}>
+                              <EditIcon className='size-5 cursor-pointer text-dark-card dark:text-white'/>
+                            </p>
                           </>
                       </div>
                   </div>
