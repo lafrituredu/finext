@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('full_name');
-            $table->enum('rol', ['gestor','autonomo']);
+            $table->enum('rol', ['particular','gestor','autonomo']);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_number')->nullable();

@@ -20,7 +20,7 @@ class AuthController extends Controller
                     'min:8',
                     'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
                 ],
-                'rol' => 'required|in:gestor,autonomo'
+                'rol' => 'required|in:particular,gestor,autonomo'
             ]);
 
             $user = User::create([
