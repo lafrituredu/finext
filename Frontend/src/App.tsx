@@ -14,6 +14,7 @@ import Taxes from './pages/Taxes'
 import Reports from './pages/Reports'
 import Goals from './pages/Goals'
 import About from './pages/About.tsx'
+import Contact from './pages/Contact.tsx'
 
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+
 
 
         {/*  RUTAS PROTEGIDAS */}

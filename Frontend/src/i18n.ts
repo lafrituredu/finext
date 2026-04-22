@@ -35,6 +35,9 @@ import transactionsEN from "./language/en/transactions.json";
 import aboutES from  "./language/es/about.json";
 import aboutEN from  "./language/en/about.json";
 
+import contactES from  "./language/es/contact.json";
+import ContactEN from  "./language/en/contact.json";
+
 
 
 
@@ -51,7 +54,8 @@ export const resources = {
     transactions: transactionsES,
     login: loginES,
     register: registerES,
-    about: aboutES
+    about: aboutES,
+    contact: contactES
   },
   en: {
     common: en,
@@ -64,7 +68,8 @@ export const resources = {
     transactions: transactionsEN,
     login: loginEN,
     register: registerEN,
-    about: aboutEN
+    about: aboutEN,
+    contact: ContactEN
   },
 } as const;
 
