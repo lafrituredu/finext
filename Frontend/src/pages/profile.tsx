@@ -1,11 +1,15 @@
-import React from 'react'
+import { Link } from "react-router-dom";
+import Navbar from "../components/layout/Navbar"
 
-function profile() {
+import { useTranslation } from 'react-i18next';
+
+function Profile() {
+  const { t } = useTranslation("error404");
   return (
-    <div>
-      Profile
-    </div>
+    <>
+        <p>profile works!</p>
+    </>
   )
 }
 
-export default profile
+export default Profile
