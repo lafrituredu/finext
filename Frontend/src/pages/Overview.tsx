@@ -1,17 +1,27 @@
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import Goals from '/src/assets/icons/Goals.svg?react'
 import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
 import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
+import { getTransactions, type Transaction } from '../api/TransactionService';
 
 
 function Overview() {
 const { t } = useTranslation("overview");
 
-
 const [select,setSeleceted] = useState<any>('cashflow');
+const [transactions, setTransactions] = useState<Transaction[]>([])
+const [loading, setLoading] = useState(true)
+const [error, setError] = useState<string | null>(null)
+
+useEffect(() => {
+getTransactions()
+    .then(data => setTransactions(data))
+    .catch(() => setError('Error al cargar las transacciones'))
+    .finally(() => setLoading(false));
+}, [])
 
 const config = {
     options: {
@@ -39,6 +49,50 @@ const config = {
     ],
 };
 
+function calculateIncomes(){
+    return transactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+        .toFixed(2)
+}
+
+function calculateIncomesIva(){
+    return transactions
+        .filter(t => t.type ==='income')
+        .reduce((acc, t) => {
+            const amount = Number(t.total_amount)
+            const iva = Number(t.iva_percent)
+            return acc + amount - (amount * (iva / 100))
+        }, 0)
+        .toFixed(2)
+}
+
+function calculateExpenses(){
+    return transactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+        .toFixed(2)
+}
+function calculateExpensesIva(){
+    return transactions
+        .filter(t => t.type ==='expense')
+        .reduce((acc, t) => {
+            const amount = Number(t.total_amount)
+            const iva = Number(t.iva_percent)
+            return acc + amount - (amount * (iva / 100))
+        }, 0)
+        .toFixed(2)
+}
+
+function calculateCashflow(){
+    const incomes = transactions
+        .filter(t => t.type === 'income')
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+    const expenses = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+    return (incomes - expenses).toFixed(2)
+}
   return (
     <div className='min-h-full w-full p-10 inter'>
         {/* VISTA GENERAL */}
@@ -51,7 +105,10 @@ const config = {
                     </span>
                     <KpiStatsUp className='text-green-600 right-0'/>
                 </div>
-                    <p className='text-4xl text-green-600'>112.321€</p>
+                <div>
+                    <p className='text-4xl text-green-600'>{calculateIncomes()}€</p>
+                    <p className='text-xl text-green-500'>{calculateIncomesIva()}€</p>
+                </div>
                 <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
             </div>
 
@@ -62,7 +119,10 @@ const config = {
                     </span>
                     <KpiStatsDown className='text-red-600 right-0'/>
                 </div>
-                <p className='text-4xl text-red-600'>112.321€</p>
+                <div>
+                    <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
+                    <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
+                </div>
                 <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
             </div>
 
@@ -72,7 +132,7 @@ const config = {
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('cash_flow')}
                     </span>
                     <KpiStatsUp className='text-[#84A2EB] right-0'/></p>
-                <p className='text-4xl text-[#84A2EB]'>112.321€</p>
+                <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
                 <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
             </div>
 
@@ -82,7 +142,7 @@ const config = {
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('open_goals')}
                     </span>
                     <KpiStatsUp className='text-green-600 right-0'/></p>
-                <p className='text-4xl text-green-600'>2</p>
+                <p className='text-4xl text-green-600'>0</p>
                 <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
             </div>
         </div>

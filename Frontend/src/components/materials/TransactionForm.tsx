@@ -42,7 +42,7 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
   const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
   const [transactionImport, setTransactionImport] = useState<number | string>(transactionEdit?.total_amount || '')
   const [transactionDate, setTransactionDate] = useState<string>(transactionEdit?.date || '')
-  const [transactioniva, setTransactionIva] = useState<number>(transactionEdit?.iva_percent || 21.00)
+  const [transactioniva, setTransactionIva] = useState<number | string>(transactionEdit?.iva_percent || 21.00)
   const [transactionDescription, setTransactionDescription] = useState<string>(transactionEdit?.description || '')
   const [transactionClient, setTransactionClient] = useState<string>(transactionEdit?.client || '')
   const [transactionPaymentMethod, setTransactionPaymentMethod] = useState<string>(transactionEdit?.payment_method || '')
@@ -118,7 +118,7 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
 
             <label>Tipo de IVA</label>
             <select {...register("iva_percent", {setValueAs: (value) => value === ""   ? undefined : parseFloat(value)})} value={transactioniva}
-              onChange={(e)=>setTransactionIva(parseFloat(e.currentTarget.value))}>
+              onChange={(e)=>setTransactionIva(e.currentTarget.value)}>
               <option value="0">Sin IVA</option>
               <option value="4.00">Superreducido 4%</option>
               <option value="10.00">Reducido 10%</option>

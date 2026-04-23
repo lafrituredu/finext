@@ -84,7 +84,6 @@ function Transactions() {
     </div>
   </div>
   */}
-  console.log(transactions)
   return (
     <>
     <div className='flex justify-center items-center'>
