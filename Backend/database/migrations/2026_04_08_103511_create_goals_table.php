@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->integer('target_amount');
+            $table->integer('current_amount');
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->boolean('completed')->default(false);

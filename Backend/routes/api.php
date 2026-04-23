@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GoalController;
 use App\Http\Controllers\TransactionController;
 
 // AUTH
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/categories', [CategoryController::class,'store']);
     Route::put('/categories/{id}', [CategoryController::class,'update']);
     Route::delete('/categories/{id}', [CategoryController::class,'destroy']);
+
+    Route::get('/goals', [GoalController::class,'index']);
 });
 
 // Route::apiResource('categories', CategoryController::class);

@@ -10,6 +10,7 @@ class Goal extends Model
     'user_id',
     'name',
     'target_amount',
+    'current_amount',
     'start_date',
     'end_date',
     'completed'
