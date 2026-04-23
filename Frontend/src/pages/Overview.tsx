@@ -124,7 +124,7 @@ function calculateCashflow(){
                     <p className='text-4xl text-green-600'>{calculateIncomes()}€</p>
                     <p className='text-xl text-green-500'>{calculateIncomesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -138,7 +138,7 @@ function calculateCashflow(){
                     <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
                     <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] }  {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] }  {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -148,7 +148,7 @@ function calculateCashflow(){
                     </span>
                     <KpiStatsUp className='text-[#84A2EB] right-0'/></p>
                 <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -158,7 +158,7 @@ function calculateCashflow(){
                     </span>
                     <KpiStatsUp className='text-green-600 right-0'/></p>
                 <p className='text-4xl text-green-600'>0</p>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
         </div>
 
@@ -192,7 +192,7 @@ function calculateCashflow(){
                 <p className='flex items-center montserrat font-semibold gap-2 mb-3'><Goals className='size-6' /> {t('financial_goals')}</p>
                 
                 <div className='mb-8'>
-                    <p className='flex justify-between text-[#7B7B7B] dark:text-[#D8E0F9] text-xl mb-1'>
+                    <p className='flex justify-between text-[#7B7B7B] dark:text-dark-text text-xl mb-1'>
                         <span>Goal 1</span>
                         <span>1400€ / 1800€</span>
                     </p>
@@ -202,7 +202,7 @@ function calculateCashflow(){
                 </div>
 
                 <div className='mb-3'>
-                    <p className='flex justify-between text-[#7B7B7B] dark:text-[#D8E0F9] text-xl mb-1'>
+                    <p className='flex justify-between text-[#7B7B7B] dark:text-dark-text text-xl mb-1'>
                         <span>Goal 1</span>
                         <span>1400€ / 1800€</span>
                     </p>
@@ -213,27 +213,27 @@ function calculateCashflow(){
             </div>
 
             {/* SUMMARY */}
-            <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-[#D8E0F9]'>
+            <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-dark-text'>
                 <p className='flex items-center montserrat font-semibold gap-2 mb-3'><File className='size-6' /> {t('summary')}</p>
                 
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg mb-2'>
-                    <span className='text-[#7B7B7B] dark:text-[#D8E0F9]'>{t('total_incomes')}</span>
-                    <span className='text-green-600'>1000€</span>
+                    <span className='text-[#7B7B7B] dark:text-dark-text'>{t('total_incomes')}</span>
+                    <span className='text-green-600'>{calculateIncomes()}€</span>
                 </p>
 
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg mb-2'>
-                    <span className='text-[#7B7B7B] dark:text-[#D8E0F9]'>{t('total_outcomes')}</span>
-                    <span className='text-red-600'>500€</span>
+                    <span className='text-[#7B7B7B] dark:text-dark-text'>{t('total_outcomes')}</span>
+                    <span className='text-red-600'>{calculateExpenses()}€</span>
                 </p>
 
-                <div className='w-full h-px mb-2 bg-[#0000001a] dark:bg-[#D8E0F9]'></div>
+                <div className='w-full h-px mb-2 bg-[#0000001a] dark:bg-dark-text'></div>
                 
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg'>
-                    <span className='text-[#7B7B7B] dark:text-[#D8E0F9]'>{t('cash_flow')}</span>
-                    <span className='text-green-600'>500€</span>
+                    <span className='text-[#7B7B7B] dark:text-dark-text'>{t('cash_flow')}</span>
+                    <span className='text-green-600'>{calculateCashflow()}€</span>
                 </p>
 
             </div>
