@@ -92,7 +92,8 @@ const menuItems = [{
         label: t('profile'),
         icon: UsersIcon,
         children: [
-        { label: 'List', to: '/dashboard/users' },{ label: 'Create', to: '/dashboard/users/create' }
+        { label: 'Edit', to: '/dashboard/profile' },
+        { label: 'Invite Manager', to: '/dashboard/invite' }
         ]
         }
     ]

@@ -15,6 +15,7 @@ import Reports from './pages/Reports'
 import Goals from './pages/Goals'
 import About from './pages/About.tsx'
 import Contact from './pages/Contact.tsx'
+import Profile from './pages/Profile.tsx'
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="goals" element={<Goals />} />
           <Route path="taxes" element={<Taxes />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Ruta 404 */}
