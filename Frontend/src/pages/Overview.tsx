@@ -15,7 +15,8 @@ const [select,setSeleceted] = useState<any>('cashflow');
 const [transactions, setTransactions] = useState<Transaction[]>([])
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
-
+const today = new Date();
+const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Diciembre']
 useEffect(() => {
 getTransactions()
     .then(data => setTransactions(data))
@@ -109,7 +110,7 @@ function calculateCashflow(){
                     <p className='text-4xl text-green-600'>{calculateIncomes()}€</p>
                     <p className='text-xl text-green-500'>{calculateIncomesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -123,7 +124,7 @@ function calculateCashflow(){
                     <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
                     <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -133,7 +134,7 @@ function calculateCashflow(){
                     </span>
                     <KpiStatsUp className='text-[#84A2EB] right-0'/></p>
                 <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
@@ -143,7 +144,7 @@ function calculateCashflow(){
                     </span>
                     <KpiStatsUp className='text-green-600 right-0'/></p>
                 <p className='text-4xl text-green-600'>0</p>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
             </div>
         </div>
 
