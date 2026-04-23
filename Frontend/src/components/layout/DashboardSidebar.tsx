@@ -144,7 +144,7 @@ const menuItems = [{
               label={t('logout')}
               />
             </button>
-              <div className='lg:flex hidden'><DarkModeToggle /></div>
+              <div className='flex'><DarkModeToggle /></div>
           </div>
           
         </div>

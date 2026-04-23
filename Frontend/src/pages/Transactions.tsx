@@ -14,6 +14,8 @@ import Notifications from '../components/materials/Notifications'
 import Confirmation from '../components/materials/Confirmation'
 import { getCategories, type Category } from '../api/CategoryService'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
+import CardIcon from '/src/assets/icons/Credit-card.svg?react'
+import CoinIcon from '/src/assets/icons/Coin.svg?react'
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
@@ -132,10 +134,13 @@ function Transactions() {
           <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-[#101a3d]
             hover:scale-102 transition-transform ease-in-out w-full h-full'>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
-              {/* <div className='flex flex-row items-center gap-2'>
-              <div className='bg-gray-200 h-8 w-8 rounded-full ring-1 ring-gray-400'></div> */}
+              <div className='flex flex-row items-center truncate gap-2'>
+              <div>
+                {t.payment_method == "card" ? (<CardIcon className='text-text dark:text-dark-text'/>) : 
+                (<CoinIcon className='text-text dark:text-dark-text'/>)}
+              </div>
               <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
-              {/* </div> */}
+              </div>
               <div className='flex flex-row gap-2 items-center'>
                 <div className={t.type == 'income' ?
                   'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 

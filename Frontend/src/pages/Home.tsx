@@ -76,7 +76,7 @@ function Home() {
           <div id="card2" className="flex flex-col bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative overflow-clip">
             <div className="p-5 inter">
-              <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
+              <p className="text-2xl bold_montserrat">Manage your finances with a <span className="font-bold">Personal account</span></p>
             </div>
 
             <div className="-bottom-2 left-4 absolute w-fit h-fit flex hover:-translate-x-100 transition-all ease-in-out duration-1000 gap-5">
@@ -109,7 +109,7 @@ function Home() {
           <div  id="card3" className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative">
             <div className="p-5 inter">
-              <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
+              <p className="text-2xl bold_montserrat">Generate custom PDF as <span className="font-bold">Freelancer</span></p>
             </div>
               <div className={`absolute w-full h-[50%] bottom-0 left-0 flex items-center justify-center gap-5 overflow-hidden`}>
                 <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-dark-card rounded-full cursor-pointer shadow-md hover:scale-110 transition

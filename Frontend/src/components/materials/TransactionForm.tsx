@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
-import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
+import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
+import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
+import CardIcon from "/src/assets/icons/Credit-card.svg?react"
+import CoinIcon from "/src/assets/icons/Coin.svg?react"
 import { getCategories, type Category } from '../../api/CategoryService'
-import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService";
+import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
 
 import React from "react";
 import { useForm } from "react-hook-form"
@@ -17,6 +19,7 @@ type TransactionFormValues = {
   iva_percent: number
   client: string
   description: string
+  payment_method: string
   status: boolean
   category_id?: number
 };
@@ -37,11 +40,12 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
     const transactionId = transactionEdit.id
   }
   const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
-  const [transactionImport, setTransactionImport] = useState<number>(transactionEdit?.total_amount || 0)
+  const [transactionImport, setTransactionImport] = useState<number | string>(transactionEdit?.total_amount || '')
   const [transactionDate, setTransactionDate] = useState<string>(transactionEdit?.date || '')
   const [transactioniva, setTransactionIva] = useState<number | string>(transactionEdit?.iva_percent || 21.00)
   const [transactionDescription, setTransactionDescription] = useState<string>(transactionEdit?.description || '')
   const [transactionClient, setTransactionClient] = useState<string>(transactionEdit?.client || '')
+  const [transactionPaymentMethod, setTransactionPaymentMethod] = useState<string>(transactionEdit?.payment_method || '')
   const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
 
   const {
@@ -94,13 +98,13 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
             <div className="flex flex-col">
               <label>Nombre*</label>
               <input {...register("name", { required: "El nombre es obligatorio" })} type="text" placeholder="Nombre" value={transactionName}
-              onChange={(e)=>setTransactionName(e.target.value)}/>
+              onChange={(e)=>setTransactionName(e.target.value)} className="font-bold"/>
               {errors.name && <span className="text-red-300">{errors.name.message}</span>}
             </div>
             <div className="flex flex-row gap-10">
               <div className="flex flex-col">
                 <label>Importe*</label>
-                <input type="number" step="0.10" {...register("total_amount", { required: "El importe es obligatorio", valueAsNumber: true })} value={transactionImport}
+                <input type="number" step="0.10" {...register("total_amount", { required: "El importe es obligatorio", valueAsNumber: true })} placeholder="1000€" value={transactionImport}
                 onChange={(e)=>setTransactionImport(parseFloat(e.target.value))}/>
                 {errors.total_amount && <span className="text-red-300">{errors.total_amount.message}</span>}
               </div>
@@ -115,20 +119,22 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
             <label>Tipo de IVA</label>
             <select {...register("iva_percent", {setValueAs: (value) => value === ""   ? undefined : parseFloat(value)})} value={transactioniva}
               onChange={(e)=>setTransactionIva(e.currentTarget.value)}>
-              <option value={0}>0%</option>
+              <option value="0">Sin IVA</option>
               <option value="4.00">Superreducido 4%</option>
               <option value="10.00">Reducido 10%</option>
               <option value="21.00">General 21%</option>
             </select>
             
             <label>Categoria</label>
+            {!loading ? (
             <select {...register("category_id", {setValueAs: (value) => value === "" ? null : Number(value)})} value={category}
               onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Select</option>
+              <option value="">Select category...</option>
               {categories.map(c => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
+            ) : (<p className="text-gray-400 animate-pulse">Loading categories...</p>)}
 
             <label>Description</label>
             <input {...register("description")} type="text" value={transactionDescription}
@@ -137,8 +143,18 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
             <label>Client</label>
             <input {...register("client")} type="text" value={transactionClient}
             onChange={(e)=>setTransactionClient(e.target.value)}/>
-            <button type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out">{transactionEdit == null ? 'Crear' : 'Actualizar' }</button>
-            <button className="bg-red-700 py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out" onClick={close}>Cancelar</button>
+
+            <label>Payment Method</label>
+            <select {...register("payment_method")} value={transactionPaymentMethod}
+              onChange={(e)=>setTransactionPaymentMethod(e.currentTarget.value)}>
+              <option value="card">Credit Card</option>
+              <option value="cash">Cash</option>
+            </select>
+
+            <button type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer
+            hover:scale-104 transition-all duration-200 ease-in-out">{transactionEdit == null ? 'Crear' : 'Actualizar' }</button>
+            <button className="bg-background dark:bg-dark-background ring-1 ring-gray-300 py-2 px-6 rounded-full shadow-md cursor-pointer
+            hover:scale-104 transition-all duration-200 ease-in-out" onClick={close}>Abort</button>
         </div>
       </div>
     </div>

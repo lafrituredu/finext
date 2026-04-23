@@ -23,7 +23,7 @@ export function Confirmation({Icon, children, close, onConfirm}:ConfirmationProp
                 <div className="flex flex-col justify-between pt-5 gap-4 w-full">
                     <button className="bg-red-400 rounded-full py-2 w-full cursor-pointer select-none hover:scale-104 hover:bg-red-500 
                     transition-all duration-100 ease-in-out" onClick={onConfirm}>Delete</button>
-                    <button className="bg-background ring-2 ring-gray-300 dark:bg-dark-background dark:ring-dark-card rounded-full py-2 w-full cursor-pointer select-none 
+                    <button className="bg-background ring-1 ring-gray-300 dark:bg-dark-background dark:ring-dark-card rounded-full py-2 w-full cursor-pointer select-none 
                     hover:scale-104 transition-all duration-100 ease-in-out" onClick={close}>Abort</button>
                 </div>
             </div>

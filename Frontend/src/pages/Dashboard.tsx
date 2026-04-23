@@ -13,10 +13,10 @@ function Dashboard() {
     };
     
 
-    console.log(
-      "%c Bienvenido a @FINEXT",
-      "color: #242424; padding: 6px 10px; border-radius: 4px; font-size:24px; font-family: Arial;",
-    );
+    // console.log(
+    //   "%c Bienvenido a @FINEXT",
+    //   "color: #242424; padding: 6px 10px; border-radius: 4px; font-size:24px; font-family: Arial;",
+    // );
   return (
   <>
     <div className='h-screen w-full flex'>
