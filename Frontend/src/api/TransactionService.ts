@@ -8,7 +8,7 @@ export interface Transaction {
     date: string
     type: 'income' | 'expense'
     total_amount: number
-    iva_percent: number | null
+    iva_percent: number
     client: string | null
     description: string | null
     payment_method: string | null

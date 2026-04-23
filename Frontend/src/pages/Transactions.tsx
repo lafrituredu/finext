@@ -46,6 +46,13 @@ function Transactions() {
     }
   }
 
+  function transactionWithIVA(amount:number, iva:any){
+    if (amount < 0) throw new Error("Amount must be positive value");
+    let i = amount * (iva / 100);
+    const total = amount - i
+    return total
+  }
+
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'
@@ -77,7 +84,7 @@ function Transactions() {
     </div>
   </div>
   */}
-  
+  console.log(transactions)
   return (
     <>
     <div className='flex justify-center items-center'>
@@ -146,18 +153,26 @@ function Transactions() {
                   'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
                   'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
                   <p className='flex justify-center items-center capitalize'>
-                    {t.type == 'income'?<Trending_up className='sm:mr-2 text-green-600 w-5'/>:
-                    <Trending_down className='sm:mr-2 text-red-600 w-5'/>}<span className='sm:flex hidden'>{t.type}</span>
+                    {t.type == 'income'?<Trending_up className='lg:mr-2 text-green-600 w-5'/>:
+                    <Trending_down className='lg:mr-2 text-red-600 w-5'/>}<span className='lg:flex hidden'>{t.type}</span>
                   </p>
                 </div>
-                <PencilIcon className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
+                <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
                 onClick={() => {setTransactionToEdit(t);setShowTransactionForm(true)}}/>
-                <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 rounded-full'
+                <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
                 onClick={()=>setTransactionToDelete(t)}/>
               </div>
               
             </div>
-            <div className={t.type == 'income'?'text-green-400':'text-red-400'}><p className='inter text-4xl'>{t.type != 'income' && <span>-</span>}{t.total_amount}€</p></div>
+            <div className={t.type == 'income'?'text-green-400':'text-red-400'}>
+              <p className='inter text-4xl'>{t.type != 'income' && <span>-</span>}{t.total_amount}€</p>
+                <div className='flex flex-row gap-2'>
+                  {t.iva_percent > 0 &&
+                  <p className={t.type == 'income'?'text-green-400':'text-red-400'}>{transactionWithIVA(t.total_amount, t.iva_percent).toFixed(2)}€</p>
+                  }
+                  <span className='text-gray-400'>IVA {Math.round(t.iva_percent)}%</span>
+                </div>
+            </div>
             <div className='flex flex-row justify-between items-center w-full pt-1'>
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
               {t.category !== null && (
