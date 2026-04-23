@@ -112,10 +112,10 @@ function Home() {
               <p className="text-2xl bold_montserrat">Generate custom PDF as <span className="font-bold">Freelancer</span></p>
             </div>
               <div className={`absolute w-full h-[50%] bottom-0 left-0 flex items-center justify-center gap-5 overflow-hidden`}>
-                <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-dark-card rounded-full cursor-pointer shadow-md hover:scale-110 transition
+                <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-primary rounded-full cursor-pointer shadow-md hover:scale-110 transition
                 after:content-[''] after:absolute after:rounded-full after:w-3 after:h-3 after:bg-red-500 after:top-0 after:right-0 after:animate-ping
-                before:content-[''] before:absolute before:rounded-full before:w-3 before:h-3 before:bg-red-500 before:top-0 before:right-0"><PDFIcon className="size-5 text-dark" /> </button>
-                <div className={`border border-gray-200 h-30  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-5'} transition duration-300 ease-out`}>
+                before:content-[''] before:absolute before:rounded-full before:w-3 before:h-3 before:bg-red-500 before:top-0 before:right-0"><PDFIcon className="size-5 text-dark-text" /> </button>
+                <div className={`border border-gray-700 h-30  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-5'} transition duration-300 ease-out`}>
                   <p className="bold_montserrat font-bold">Taxes | auto-generated</p>
                   <p className="montserrat">Taxes of { new Date().toLocaleDateString() }</p>
                 </div>
@@ -135,7 +135,7 @@ function Home() {
           <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
           <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
         </div>
-        <div className="flex flex-row items-center justify-center pt-12 gap-3 w-full">
+        <div className="flex flex-row items-center justify-center pt-24 gap-3 w-full">
           <div className="lg:flex hidden bg-[#6483d2] w-80 h-100 rounded-3xl -translate-x-40 hover:-translate-x-52 duration-400 transition-all"></div>
           {/*Fix absolute card*/}
           <div className="bg-primary ring-5 ring-background dark:ring-dark-background lg:absolute w-100 h-120 rounded-3xl z-1"></div>
