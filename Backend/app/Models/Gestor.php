@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gestor extends Model
 {
+    protected $table = 'gestores';
+
+    public $timestamps = false;
+
+    protected $primaryKey = 'user_id';
+
+    public $incrementing = false;
+
     protected $fillable = [
     'user_id'
     ];

@@ -24,6 +24,12 @@ export const registerUser = async (data: {
   full_name: string
   phone_number: string
   rol: string
+  dni?: string
+  birthdate?: string
+  modulo_iva?: string
+  estado_civil?: string
+  empresa?: string
+  irpf?: string
 }): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/register', data)
   return response.data

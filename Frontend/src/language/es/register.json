@@ -10,6 +10,7 @@
   "full_name_label": "Nombre completo",
   "phone_label": "Teléfono",
   "role_label": "Rol",
+  "role_particular": "Particular",
   "role_autonomo": "Autónomo",
   "role_gestor": "Gestor",
   "back": "Atrás",
@@ -23,5 +24,16 @@
   "hero_title": "Únete a FiNext",
   "hero_description": "Crea tu cuenta y empieza a gestionar tus finanzas de forma inteligente con FiNext.",
   "step1_title": "Información de acceso",
-  "step2_title": "Datos personales"
+  "step2_title": "Datos personales",
+  "step3_title": "Datos fiscales",
+  "dni_label": "DNI/NIE",
+  "birthdate_label": "Fecha de nacimiento",
+  "modulo_iva_label": "Módulo de IVA (%)",
+  "estado_civil_label": "Estado civil",
+  "estado_civil_soltero": "Soltero/a",
+  "estado_civil_casado": "Casado/a",
+  "estado_civil_divorciado": "Divorciado/a",
+  "estado_civil_viudo": "Viudo/a",
+  "empresa_label": "Empresa",
+  "irpf_label": "IRPF (%)"
 }

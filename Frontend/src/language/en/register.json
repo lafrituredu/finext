@@ -10,6 +10,7 @@
   "full_name_label": "Full name",
   "phone_label": "Phone",
   "role_label": "Role",
+  "role_particular": "Individual",
   "role_autonomo": "Self-employed",
   "role_gestor": "Manager",
   "back": "Back",
@@ -23,5 +24,16 @@
   "hero_title": "Join FiNext",
   "hero_description": "Create your account and start managing your finances smartly with FiNext.",
   "step1_title": "Access information",
-  "step2_title": "Personal data"
+  "step2_title": "Personal data",
+  "step3_title": "Tax information",
+  "dni_label": "ID Number",
+  "birthdate_label": "Date of birth",
+  "modulo_iva_label": "VAT Module (%)",
+  "estado_civil_label": "Marital status",
+  "estado_civil_soltero": "Single",
+  "estado_civil_casado": "Married",
+  "estado_civil_divorciado": "Divorced",
+  "estado_civil_viudo": "Widowed",
+  "empresa_label": "Company",
+  "irpf_label": "Income Tax (%)"
 }
