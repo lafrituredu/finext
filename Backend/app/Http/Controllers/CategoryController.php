@@ -27,11 +27,13 @@ class CategoryController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
+            'color' => 'string',
             'user_id' => 'exists:users,id'
         ]);
 
         $category = Category::create([
             'name' => $data['name'],
+            'color' => $data['color'],
             'user_id' => $user->id
         ]);
         return response()->json($category, 201);
@@ -48,11 +50,13 @@ class CategoryController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
+            'color' => 'string',
             'user_id' => 'exists:users,id'
         ]);
 
         $category->update([
-            'name' => $data['name']
+            'name' => $data['name'],
+            'color' => $data['color']
         ]);
     }
 

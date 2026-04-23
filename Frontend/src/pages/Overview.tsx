@@ -10,13 +10,27 @@ import { getTransactions, type Transaction } from '../api/TransactionService';
 
 function Overview() {
 const { t } = useTranslation("overview");
+const { t: tUtils } = useTranslation("utils");
 
 const [select,setSeleceted] = useState<any>('cashflow');
 const [transactions, setTransactions] = useState<Transaction[]>([])
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
-const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Diciembre']
+const months = [
+    tUtils('months.january'),
+    tUtils('months.february'),
+    tUtils('months.march'),
+    tUtils('months.april'),
+    tUtils('months.may'),
+    tUtils('months.june'),
+    tUtils('months.july'),
+    tUtils('months.august'),
+    tUtils('months.september'),
+    tUtils('months.october'),
+    tUtils('months.november'),
+    tUtils('months.december')
+]
 useEffect(() => {
 getTransactions()
     .then(data => setTransactions(data))
@@ -34,7 +48,7 @@ const config = {
     },
     markers: { size: 5 },
     xaxis: {
-        categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November','December']
+        categories: months
     }
     
     },
@@ -52,14 +66,14 @@ const config = {
 
 function calculateIncomes(){
     return transactions
-        .filter(t => t.type === 'income')
+        .filter(t => t.type === 'income' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 
 function calculateIncomesIva(){
     return transactions
-        .filter(t => t.type ==='income')
+        .filter(t => t.type ==='income' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
@@ -70,13 +84,13 @@ function calculateIncomesIva(){
 
 function calculateExpenses(){
     return transactions
-        .filter(t => t.type === 'expense')
+        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 function calculateExpensesIva(){
     return transactions
-        .filter(t => t.type ==='expense')
+        .filter(t => t.type ==='expense' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
@@ -87,10 +101,10 @@ function calculateExpensesIva(){
 
 function calculateCashflow(){
     const incomes = transactions
-        .filter(t => t.type === 'income')
+        .filter(t => t.type === 'income' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
     const expenses = transactions
-        .filter(t => t.type === 'expense')
+        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
     return (incomes - expenses).toFixed(2)
 }
@@ -124,7 +138,7 @@ function calculateCashflow(){
                     <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
                     <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ months[today.getMonth()] }  {today.getFullYear()}</p>
             </div>
 
             <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>

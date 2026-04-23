@@ -19,13 +19,14 @@ export const getCategories = async (): Promise<Category[]> => {
 }
 
 // Devolvems el status para ver si es 201
-export const createCategory = async(paramName:string): Promise<Number> => {
+export const createCategory = async(paramName:string,paramColor?:string): Promise<Number> => {
     if (paramName == undefined || paramName == "") {
         return 500;
     }
 
     const response = await api.post('/categories', {
-        name: paramName
+        name: paramName,
+        color: paramColor
     });
     return response.status;
 }
@@ -35,13 +36,14 @@ export const deleteCategory = async(id:number): Promise<Number> => {
     return response.status;
 }
 
-export const updateCategory = async(paramName:string,id:number): Promise<Number> => {
+export const updateCategory = async(paramName:string,id:number,paramColor?:string): Promise<Number> => {
     if (paramName == undefined || paramName == "") {
         return 500;
     }
 
     const response = await api.put(`/categories/${id}`, {
         name: paramName,
+        color: paramColor,
     });
     
     return response.status;

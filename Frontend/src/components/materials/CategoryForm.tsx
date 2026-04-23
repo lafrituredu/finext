@@ -7,16 +7,18 @@ import { createCategory, updateCategory, type Category } from "../../api/Categor
 export function CategoryForm({ close,categoryEdit }: {close:any,categoryEdit?:Category}) {
   const [select, setSeleceted] = useState<any>('income');
   const [category,setCategory] = useState<string>(categoryEdit?.name || '');
-
+  const [color,setColor] = useState<string>(categoryEdit?.color || '#f3f4f6');
+  
   const handleSubmit = ( e: React.FormEvent<HTMLFormElement> ) => {
     e.preventDefault();
     if (categoryEdit != null) {
-      updateCategory(category,categoryEdit.id) 
+      updateCategory(category,categoryEdit.id,color) 
     }else{
-      createCategory(category);
+      createCategory(category,color);
     }
     close()
   }
+
   return (
     <div className="flex items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0">
       <div className="inter absolute w-[60vh] h-fit bg-background dark:bg-dark-background dark:ring-2 dark:ring-gray-800 shadow-md rounded-2xl z-80 p-3 overflow-y-auto"
@@ -26,7 +28,12 @@ export function CategoryForm({ close,categoryEdit }: {close:any,categoryEdit?:Ca
 
             <div className="flex flex-col">
               <label>Nombre de la categoria</label>
-              <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Nombre" id="name" name="name" className="srounded-full ring-2 ring-gray-200 py-1 px-2"/>
+              <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Nombre" id="name" name="name" className="rounded-full ring-2 ring-gray-200 py-1 px-2"/>
+            </div>
+
+            <div className="flex flex-col">
+              <label>Color de la categoria: {color}</label>
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} placeholder="Nombre" id="color" name="color" className="rounded-full ring-2 ring-gray-200 py-1 px-2"/>
             </div>
               
             <input value={categoryEdit == null ? 'Crear' : 'Editar' } type="submit" className="bg-primary py-2 px-6 rounded-full shadow-md text-white cursor-pointer hover:scale-104 transition-all duration-200 ease-in-out"/>
