@@ -15,7 +15,6 @@ class GoalController extends Controller
         $user = $request->user();
 
         $goals = Goal::where('user_id',$user->id)->get();
-        // $goals = Goal::all();
         return response()->json($goals,200);
     }
 
@@ -24,7 +23,27 @@ class GoalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = $request->user();
+        $data = $request->validate([
+            'name' => 'required|string',
+            'target_amount' => 'required|numeric',
+            'current_amount' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'completed' => 'required|numeric'
+        ]);
+
+        $goal = Goal::create([
+            'user_id' => $user->id,
+            'name' => $data['name'],
+            'target_amount' => $data['target_amount'],
+            'current_amount' => $data['current_amount'],
+            'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'],
+            'completed' => $data['completed']
+        ]);
+
+        return response()->json($goal, 201);
     }
 
     /**
@@ -40,7 +59,17 @@ class GoalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = $request->user();
+        $goal = Goal::find($id);
+
+        $goal->validate([
+            'name' => 'required|string',
+            'target_amount' => 'required|numeric',
+            'current_amount' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'completed' => 'required|numeric'
+        ]);
     }
 
     /**
@@ -48,6 +77,6 @@ class GoalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return Goal::destroy($id);
     }
 }
