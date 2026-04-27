@@ -9,6 +9,7 @@
   "primary_login": "Go to login",
   "primary_dashboard": "Go to dashboard",
   "primary_back_login": "Back to login",
+  "secondary_register": "Back to register",
   "resend": "Resend verification email",
   "resending": "Resending...",
   "missing_email": "We do not have an email to resend the verification to.",

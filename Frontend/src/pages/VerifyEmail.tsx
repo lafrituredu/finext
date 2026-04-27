@@ -22,6 +22,21 @@ const VerifyEmail: React.FC = () => {
   const [error, setError] = useState("");
   const hasActiveSession = Boolean(localStorage.getItem("token"));
 
+  const clearPendingSession = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  };
+
+  const goToLogin = () => {
+    clearPendingSession();
+    navigate("/login");
+  };
+
+  const goToRegister = () => {
+    clearPendingSession();
+    navigate("/register");
+  };
+
   const [status, setStatus] = useState(searchParams.get("status") || "pending");
   const [email, setEmail] = useState(searchParams.get("email") || "");
 
@@ -107,7 +122,8 @@ const VerifyEmail: React.FC = () => {
         description: t("verified_description"),
         primaryLabel: hasActiveSession ? t("primary_dashboard") : t("primary_login"),
         primaryAction: () => navigate(hasActiveSession ? "/dashboard" : "/login"),
-        showResend: false
+        showResend: false,
+        showRegister: false
       };
     }
 
@@ -116,8 +132,9 @@ const VerifyEmail: React.FC = () => {
         title: t("invalid_title"),
         description: t("invalid_description"),
         primaryLabel: t("primary_back_login"),
-        primaryAction: () => navigate("/login"),
-        showResend: Boolean(email)
+        primaryAction: goToLogin,
+        showResend: Boolean(email),
+        showRegister: true
       };
     }
 
@@ -125,8 +142,9 @@ const VerifyEmail: React.FC = () => {
       title: t("pending_title"),
       description: t("pending_description"),
       primaryLabel: t("primary_login"),
-      primaryAction: () => navigate("/login"),
-      showResend: Boolean(email)
+      primaryAction: goToLogin,
+      showResend: Boolean(email),
+      showRegister: true
     };
   }, [email, hasActiveSession, navigate, status, t]);
 
@@ -222,6 +240,16 @@ const VerifyEmail: React.FC = () => {
               className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? t("resending") : t("resend")}
+            </button>
+          )}
+
+          {content.showRegister && (
+            <button
+              type="button"
+              onClick={goToRegister}
+              className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium mt-3"
+            >
+              {t("secondary_register")}
             </button>
           )}
         </div>

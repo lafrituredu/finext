@@ -9,6 +9,7 @@
   "primary_login": "Ir al login",
   "primary_dashboard": "Ir al dashboard",
   "primary_back_login": "Volver al login",
+  "secondary_register": "Volver al registro",
   "resend": "Reenviar correo de verificacion",
   "resending": "Reenviando...",
   "missing_email": "No tenemos un correo para reenviar la verificacion.",
