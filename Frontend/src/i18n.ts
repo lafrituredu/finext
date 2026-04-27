@@ -13,6 +13,8 @@ import loginEN from "./language/en/login.json";
 
 import registerES from "./language/es/register.json";
 import registerEN from "./language/en/register.json";
+import verifyEmailES from "./language/es/verifyEmail.json";
+import verifyEmailEN from "./language/en/verifyEmail.json";
 
 import navES from "./language/es/nav.json";
 import navEN from "./language/en/nav.json";
@@ -55,6 +57,7 @@ export const resources = {
     transactions: transactionsES,
     login: loginES,
     register: registerES,
+    verifyEmail: verifyEmailES,
     about: aboutES,
     contact: contactES,
     utils: utilsES
@@ -70,6 +73,7 @@ export const resources = {
     transactions: transactionsEN,
     login: loginEN,
     register: registerEN,
+    verifyEmail: verifyEmailEN,
     about: aboutEN,
     contact: ContactEN,
     utils: utilsEN

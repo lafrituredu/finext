@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Overview from './pages/Overview'
 import Register from './pages/Register'
+import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/register/ProtectedRoute.tsx'
 import Categories from './pages/Categories'
 import Recurrent from './pages/Recurrent'
@@ -26,6 +27,7 @@ function App() {
         <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
 

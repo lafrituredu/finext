@@ -1,0 +1,18 @@
+{
+  "verified_title": "Email verified",
+  "verified_description": "Your account is already verified. You can now sign in normally.",
+  "invalid_title": "Invalid link",
+  "invalid_description": "The verification link is invalid or has expired. If you want, we can send you a new one.",
+  "pending_title": "Check your email",
+  "pending_description": "We have sent you a verification link. Open your inbox and confirm your account to continue.",
+  "email_label": "Email",
+  "primary_login": "Go to login",
+  "primary_dashboard": "Go to dashboard",
+  "primary_back_login": "Back to login",
+  "resend": "Resend verification email",
+  "resending": "Resending...",
+  "missing_email": "We do not have an email to resend the verification to.",
+  "resend_error": "We could not resend the email.",
+  "hero_title": "Confirm your account",
+  "hero_description": "We want to make sure the email is yours before activating access. As soon as you verify it, you will be able to continue normally."
+}

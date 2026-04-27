@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Autonomo;
+use App\Models\Gestor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Gestor;
-use App\Models\Autonomo;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -65,39 +66,100 @@ class AuthController extends Controller
         });
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->load(['gestor', 'autonomo']);
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'Usuario registrado',
+            'message' => 'Te hemos enviado un correo para verificar tu cuenta.',
+            'user' => $user->only(['id', 'username', 'email']),
+            'token' => $token,
+            'requires_verification' => true,
+        ], 201);
+    }
+
+    // LOGIN
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Credenciales incorrectas'
+            ], 401);
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Debes verificar tu correo antes de iniciar sesión.',
+                'code' => 'EMAIL_NOT_VERIFIED',
+                'email' => $user->email,
+            ], 403);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login correcto',
             'user' => $user,
             'token' => $token
         ]);
     }
 
-    // LOGIN
-    public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
+    public function verifyEmail(Request $request, int $id, string $hash)
+    {
+        $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
 
-    $user = User::where('email', $request->email)->first();
+        if (!URL::hasValidSignature($request)) {
+            return redirect()->away($frontendUrl . '/verify-email?status=invalid');
+        }
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json([
-            'message' => 'Credenciales incorrectas'
-        ], 401);
+        $user = User::find($id);
+
+        if (!$user || !hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect()->away($frontendUrl . '/verify-email?status=invalid');
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
+        return redirect()->away(
+            $frontendUrl . '/verify-email?status=success&email=' . urlencode($user->email)
+        );
     }
 
-    $token = $user->createToken('auth_token')->plainTextToken;
+    public function resendVerificationEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
-    return response()->json([
-        'message' => 'Login correcto',
-        'user' => $user,
-        'token' => $token
-    ]);
-}
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'No hemos encontrado ninguna cuenta con ese correo.',
+            ], 404);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Ese correo ya está verificado.',
+                'already_verified' => true,
+            ]);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json([
+            'message' => 'Te hemos reenviado el correo de verificación.',
+        ]);
+    }
+
     public function checkEmail(Request $request)
     {
         $email = $request->query('email');
@@ -116,10 +178,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Verificar si el username está disponible
-     * GET /api/check-username?username={username}
-     */
     public function checkUsername(Request $request)
     {
         $username = $request->query('username');
@@ -137,19 +195,18 @@ class AuthController extends Controller
             'available' => !$exists
         ]);
     }
- public function me(Request $request)
-{
-    return response()->json($request->user());
-}
+
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
+    }
 
     public function logout(Request $request)
     {
-        // Elimina el token actual
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logout correcto'
         ]);
-    }   
-    
+    }
 }

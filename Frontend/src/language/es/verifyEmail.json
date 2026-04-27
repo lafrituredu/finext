@@ -1,0 +1,18 @@
+{
+  "verified_title": "Correo verificado",
+  "verified_description": "Tu cuenta ya esta verificada. Ya puedes iniciar sesion con normalidad.",
+  "invalid_title": "Enlace no valido",
+  "invalid_description": "El enlace de verificacion no es valido o ha caducado. Si quieres, podemos enviarte uno nuevo.",
+  "pending_title": "Revisa tu correo",
+  "pending_description": "Te hemos enviado un enlace de verificacion. Abre tu bandeja de entrada y confirma tu cuenta para poder continuar.",
+  "email_label": "Correo",
+  "primary_login": "Ir al login",
+  "primary_dashboard": "Ir al dashboard",
+  "primary_back_login": "Volver al login",
+  "resend": "Reenviar correo de verificacion",
+  "resending": "Reenviando...",
+  "missing_email": "No tenemos un correo para reenviar la verificacion.",
+  "resend_error": "No hemos podido reenviar el correo.",
+  "hero_title": "Confirma tu cuenta",
+  "hero_description": "Queremos asegurarnos de que el correo es tuyo antes de activar el acceso. En cuanto lo verifiques, podras seguir con normalidad."
+}

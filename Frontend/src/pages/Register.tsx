@@ -128,7 +128,6 @@ const Register: React.FC = () => {
       };
     } catch (err) {
       console.error("Error verifying availability:", err);
-      setError("Error al verificar disponibilidad");
 
       return {
         isAvailable: false,
@@ -220,9 +219,20 @@ const Register: React.FC = () => {
       const dataToSend = buildRegisterPayload(formData);
       const data = await registerUser(dataToSend);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", data.user.username);
-      navigate("/dashboard");
+      if (data.token && data.user?.username) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", data.user.username);
+      }
+
+      navigate(
+        `/verify-email?status=pending&email=${encodeURIComponent(formData.email)}`,
+        {
+          state: {
+            message:
+              data.message || "Te hemos enviado un correo para verificar tu cuenta."
+          }
+        }
+      );
     } catch (err: any) {
       setError(err.response?.data?.message || "Error al registrarse");
     } finally {

@@ -1,9 +1,13 @@
 import api from './axiosInstance'
 
 export interface AuthResponse {
-  user: any
-  token: string
+  user?: any
+  token?: string
   message: string
+  requires_verification?: boolean
+  code?: string
+  email?: string
+  already_verified?: boolean
 }
 
 // LOGIN
@@ -32,6 +36,14 @@ export const registerUser = async (data: {
   irpf?: string
 }): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/register', data)
+  return response.data
+}
+
+export const resendVerificationEmail = async (email: string): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>('/email/verification-notification', {
+    email,
+  })
+
   return response.data
 }
 

@@ -46,11 +46,29 @@ const Login: React.FC = () => {
     try {
       const data = await loginUser(email.trim(), password);
 
+      if (!data.token || !data.user?.username) {
+        throw new Error("La respuesta del servidor no incluye la sesión esperada.");
+      }
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", data.user.username);
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Error al iniciar sesión");
+      const responseData = err.response?.data;
+
+      if (responseData?.code === "EMAIL_NOT_VERIFIED" && responseData?.email) {
+        navigate(
+          `/verify-email?status=pending&email=${encodeURIComponent(responseData.email)}`,
+          {
+            state: {
+              message: responseData.message
+            }
+          }
+        );
+        return;
+      }
+
+      setError(responseData?.message || "Error al iniciar sesión");
     } finally {
       setLoading(false);
     }
