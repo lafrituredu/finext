@@ -14,3 +14,10 @@ export const getGoals = async (): Promise<Goal[]> => {
     const response = await api.get<Goal[]>('/goals')
     return response.data
 }
+
+export const contribute = async (id:number,cashToAdd:number) => {
+    const response = await api.put<Goal[]>(`/goals/contribute/${id}`, {
+        contribution: cashToAdd
+    })
+    return response.status
+} 

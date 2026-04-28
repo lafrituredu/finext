@@ -18,6 +18,22 @@ class GoalController extends Controller
         return response()->json($goals,200);
     }
 
+    public function addContribution(Request $request, int $id){
+        $user = $request->user();
+        $goal = Goal::find($id);
+        if ($goal->user_id != $user->id) {
+            return 401;
+        }
+        $data = $request->validate([
+            'contribution' => 'required|numeric'
+        ]);
+
+        $new_amount = $goal->current_amount + $data['contribution'];
+        return $goal->update([
+            'current_amount' => $new_amount;
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

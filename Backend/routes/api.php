@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/categories/{id}', [CategoryController::class,'destroy']);
 
     Route::get('/goals', [GoalController::class,'index']);
+    Route::put('/goals/contribute/{id}',[GoalController::class,'addContribution'])
 });
 
 // Route::apiResource('categories', CategoryController::class);
