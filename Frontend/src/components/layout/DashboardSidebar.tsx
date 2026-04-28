@@ -8,6 +8,8 @@ import Language from '../buttons/Lang'
 //ICONOS
 import UsersIcon from '/src/assets/icons/Profile-icon.svg?react'
 import GearIcon from '/src/assets/icons/Gear.svg?react'
+import DashboardIcon from '/src/assets/icons/Dashboard.svg?react'
+import DashboardIcon2 from '/src/assets/icons/Dashboard2.svg?react'
 import ChartPieSlice from '/src/assets/icons/ChartPieSlice.svg?react'
 import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
 import Goals from '/src/assets/icons/Goals.svg?react'
@@ -38,7 +40,7 @@ const menuItems = [{
   items: [{
     id: 'dashboard',
     label: t('dashboard'),
-    icon: ChartPieSlice,
+    icon: DashboardIcon,
     to: '/dashboard',
   },
   {
@@ -48,10 +50,10 @@ const menuItems = [{
     to: '/dashboard/transactions'
   },
   {
-    id: 'recurrent',
-    label: t('recurrent'),
-    icon: Recurrent,
-    to: '/dashboard/recurrent'
+    id: 'bill',
+    label: t('bills'),
+    icon: Calculator,
+    to: '/dashboard/bills'
   },
   {
     id: 'categories',
@@ -65,11 +67,11 @@ const menuItems = [{
     icon: Goals,
     to: '/dashboard/goals'
   },
-    {
-    id: 'taxes',
-    label: t('taxes'),
-    icon: Calculator,
-    to: '/dashboard/taxes'
+  {
+    id: 'recurrent',
+    label: t('recurrent'),
+    icon: Recurrent,
+    to: '/dashboard/recurrent'
   },
   {
     id: 'reports',
@@ -82,19 +84,13 @@ const menuItems = [{
     name: t('utils'),
     items: [
         {
-        id: 'config',
-        label: t('config'),
-        icon: GearIcon,
-        to: '/dashboard/comps',
-        },
-        {
-        id: 'profile',
-        label: t('profile'),
-        icon: UsersIcon,
-        children: [
-        { label: 'Edit', to: '/dashboard/profile' },
-        { label: 'Invite Manager', to: '/dashboard/invite' }
-        ]
+          id: 'profile',
+          label: t('profile'),
+          icon: UsersIcon,
+          children: [
+          { label: 'Edit', to: '/dashboard/profile' },
+          { label: 'Invite Manager', to: '/dashboard/invite' }
+          ]
         }
     ]
   }

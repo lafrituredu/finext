@@ -33,7 +33,7 @@ function Transactions() {
       .then(data => setTransactions(data))
       .catch(() => setError('Error al cargar las transacciones'))
       .finally(() => setLoading(false));
-  }, [])
+  }, [showTransactionForm])
 
   const handleDelete = async (id: number) => {
     try {

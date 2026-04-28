@@ -12,7 +12,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if($user->rol == 'autonomo'){
+        if($user->rol != 'gestor'){
             $transactions = Transaction::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
                 ->with(['category', 'user'])->get();

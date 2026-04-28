@@ -11,12 +11,13 @@ import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/register/ProtectedRoute.tsx'
 import Categories from './pages/Categories'
 import Recurrent from './pages/Recurrent'
-import Taxes from './pages/Taxes'
+import Taxes from './pages/Bills.tsx'
 import Reports from './pages/Reports'
 import Goals from './pages/Goals'
 import About from './pages/About.tsx'
 import Contact from './pages/Contact.tsx'
 import Profile from './pages/Profile.tsx'
+import Bills from './pages/Bills.tsx'
 
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
           <Route path="recurrent" element={<Recurrent />} />
           <Route path="reports" element={<Reports />} />
           <Route path="goals" element={<Goals />} />
-          <Route path="taxes" element={<Taxes />} />
+          <Route path="bills" element={<Bills />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

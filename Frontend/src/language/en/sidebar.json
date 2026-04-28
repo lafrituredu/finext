@@ -11,5 +11,6 @@
     "reports":"Reports",
     "utils":"Utils",
     "config":"Config",
-    "profile":"Profile" 
+    "profile":"Profile",
+    "bills":"Bills"
 }
