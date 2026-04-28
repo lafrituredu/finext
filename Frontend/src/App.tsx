@@ -38,11 +38,11 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
           <Route path="" element={<Overview />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="bills" element={<Bills />} />
           <Route path="categories" element={<Categories />} />
           <Route path="recurrent" element={<Recurrent />} />
           <Route path="reports" element={<Reports />} />
           <Route path="goals" element={<Goals />} />
-          <Route path="bills" element={<Bills />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 
