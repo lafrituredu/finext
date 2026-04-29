@@ -46,6 +46,8 @@ import utilsEN from "./language/en/utils.json";
 import profileES from "./language/es/profile.json";
 import profileEN from "./language/en/profile.json";
 
+import billsES from "./language/es/bills.json";
+import billsEN from "./language/en/bills.json";
 
 
 export const resources = {
@@ -63,8 +65,7 @@ export const resources = {
     verifyEmail: verifyEmailES,
     about: aboutES,
     contact: contactES,
-    utils: utilsES,
-    profile: profileES
+    utils: utilsES
   },
   en: {
     common: en,
@@ -80,8 +81,7 @@ export const resources = {
     verifyEmail: verifyEmailEN,
     about: aboutEN,
     contact: ContactEN,
-    utils: utilsEN,
-    profile: profileEN
+    utils: utilsEN
   },
 } as const;
 
