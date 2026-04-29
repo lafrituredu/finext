@@ -58,6 +58,10 @@ function Profile() {
     setForm((current) => ({ ...current, [name]: value }));
   };
 
+  const handleFieldChange = (name: string, value: string) => {
+    setForm((current) => ({ ...current, [name]: value }));
+  };
+
   const handleRoleChange = (role: ProfileRole) => {
     setForm((current) => ({ ...current, rol: role }));
   };
@@ -108,6 +112,7 @@ function Profile() {
           roleLabel={roleLabel}
           onSubmit={handleSubmit}
           onChange={handleChange}
+          onFieldChange={handleFieldChange}
           onRoleChange={handleRoleChange}
         />
       </div>

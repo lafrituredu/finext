@@ -22,6 +22,7 @@
   "civil_state": "Marital status",
   "company": "Company",
   "irpf": "Income tax (%)",
+  "select_option": "Select an option",
   "civil_single": "Single",
   "civil_married": "Married",
   "civil_divorced": "Divorced",

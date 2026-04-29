@@ -35,5 +35,6 @@
   "estado_civil_divorciado": "Divorciado/a",
   "estado_civil_viudo": "Viudo/a",
   "empresa_label": "Empresa",
-  "irpf_label": "IRPF (%)"
+  "irpf_label": "IRPF (%)",
+  "select_option": "Selecciona"
 }

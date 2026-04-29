@@ -22,6 +22,7 @@
   "civil_state": "Estado civil",
   "company": "Empresa",
   "irpf": "IRPF (%)",
+  "select_option": "Selecciona una opcion",
   "civil_single": "Soltero/a",
   "civil_married": "Casado/a",
   "civil_divorced": "Divorciado/a",

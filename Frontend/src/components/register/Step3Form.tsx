@@ -1,5 +1,8 @@
 import React from "react";
 
+import DropdownSelect from "../materials/DropdownSelect";
+import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
+
 type FormDataType = {
   dni: string;
   birthdate: string;
@@ -143,15 +146,13 @@ const Step3Form: React.FC<Props> = ({
           <label className="text-sm text-gray-600 dark:text-gray-400 inter">
             {t("modulo_iva_label")}
           </label>
-          <input
-            type="number"
+          <DropdownSelect
             name="modulo_iva"
             value={formData.modulo_iva}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            step="0.01"
-            className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            placeholder={t("select_option")}
+            options={ivaOptions}
+            onChange={(name, value) => handleChange({ target: { name, value } })}
+            buttonClassName="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all inter"
           />
         </div>
 
@@ -159,15 +160,13 @@ const Step3Form: React.FC<Props> = ({
           <label className="text-sm text-gray-600 dark:text-gray-400 inter">
             {t("irpf_label")}
           </label>
-          <input
-            type="number"
+          <DropdownSelect
             name="irpf"
             value={formData.irpf}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            step="0.01"
-            className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            placeholder={t("select_option")}
+            options={irpfOptions}
+            onChange={(name, value) => handleChange({ target: { name, value } })}
+            buttonClassName="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all inter"
           />
         </div>
       </div>

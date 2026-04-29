@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import type { UserProfile } from "../../api/AuthServices";
 import type { ProfileFormData, ProfileRole } from "../../pages/Profile";
+import DropdownSelect from "../materials/DropdownSelect";
+import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
 import GearIcon from "/src/assets/icons/Gear.svg?react";
 
 const roleOptions: ProfileRole[] = ["particular", "autonomo", "gestor"];
@@ -20,6 +22,7 @@ type ProfileFormProps = {
   roleLabel: (role: ProfileRole) => string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onFieldChange: (name: string, value: string) => void;
   onRoleChange: (role: ProfileRole) => void;
 };
 
@@ -32,6 +35,7 @@ function ProfileForm({
   roleLabel,
   onSubmit,
   onChange,
+  onFieldChange,
   onRoleChange
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
@@ -162,31 +166,25 @@ function ProfileForm({
 
             <label className={labelClass}>
               {t("modulo_iva")}
-              <input
-                className={inputClass}
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
+              <DropdownSelect
                 name="modulo_iva"
                 value={form.modulo_iva}
-                onChange={onChange}
-                required
+                placeholder={t("select_option")}
+                options={ivaOptions}
+                onChange={onFieldChange}
+                buttonClassName={inputClass}
               />
             </label>
 
             <label className={labelClass}>
               {t("irpf")}
-              <input
-                className={inputClass}
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
+              <DropdownSelect
                 name="irpf"
                 value={form.irpf}
-                onChange={onChange}
-                required
+                placeholder={t("select_option")}
+                options={irpfOptions}
+                onChange={onFieldChange}
+                buttonClassName={inputClass}
               />
             </label>
 
