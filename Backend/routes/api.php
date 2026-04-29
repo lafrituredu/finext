@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Usuario autenticado
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Transactions

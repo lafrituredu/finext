@@ -10,6 +10,41 @@ export interface AuthResponse {
   already_verified?: boolean
 }
 
+export interface AutonomoProfile {
+  dni?: string | null
+  birth_date?: string | null
+  modulo_iva?: string | number | null
+  civil_state?: string | null
+  company?: string | null
+  irpf?: string | number | null
+}
+
+export interface UserProfile {
+  id: number
+  username: string
+  full_name: string
+  phone_number?: string | null
+  rol: 'particular' | 'gestor' | 'autonomo'
+  email: string
+  email_verified_at?: string | null
+  avatar?: string | null
+  autonomo?: AutonomoProfile | null
+  gestor?: Record<string, unknown> | null
+}
+
+export interface UpdateUserProfilePayload {
+  username: string
+  full_name: string
+  phone_number?: string
+  rol: 'particular' | 'gestor' | 'autonomo'
+  dni?: string
+  birth_date?: string
+  modulo_iva?: string
+  civil_state?: string
+  company?: string
+  irpf?: string
+}
+
 // LOGIN
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/login', {
@@ -48,8 +83,15 @@ export const resendVerificationEmail = async (email: string): Promise<AuthRespon
 }
 
 // GET CURRENT USER
-export const getCurrentUser = async (): Promise<any> => {
-  const response = await api.get('/me');
+export const getCurrentUser = async (): Promise<UserProfile> => {
+  const response = await api.get<UserProfile>('/me');
+  return response.data;
+};
+
+export const updateCurrentUser = async (
+  data: UpdateUserProfilePayload
+): Promise<UserProfile> => {
+  const response = await api.put<UserProfile>('/me', data);
   return response.data;
 };
 

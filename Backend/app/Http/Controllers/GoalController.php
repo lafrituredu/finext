@@ -30,7 +30,7 @@ class GoalController extends Controller
 
         $new_amount = $goal->current_amount + $data['contribution'];
         return $goal->update([
-            'current_amount' => $new_amount
+            'current_amount' => $new_amount 
         ]);
     }
 

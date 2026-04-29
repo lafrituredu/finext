@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -198,7 +199,74 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user()->load(['autonomo', 'gestor']);
+
+        return response()->json($user);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'full_name' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:255',
+            'rol' => 'required|in:particular,gestor,autonomo',
+            'dni' => [
+                'required_if:rol,autonomo',
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('autonomos', 'dni')->ignore($user->id, 'user_id'),
+            ],
+            'birth_date' => 'nullable|date',
+            'modulo_iva' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+            'civil_state' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
+            'company' => 'required_if:rol,autonomo|nullable|string|max:255',
+            'irpf' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+        ]);
+
+        DB::transaction(function () use ($user, $data) {
+            $user->update([
+                'username' => $data['username'],
+                'full_name' => $data['full_name'],
+                'phone_number' => $data['phone_number'] ?? null,
+                'rol' => $data['rol'],
+            ]);
+
+            if ($data['rol'] === 'gestor') {
+                $user->autonomo()->delete();
+                Gestor::firstOrCreate(['user_id' => $user->id]);
+            }
+
+            if ($data['rol'] === 'particular') {
+                $user->autonomo()->delete();
+                $user->gestor()->delete();
+            }
+
+            if ($data['rol'] === 'autonomo') {
+                $user->gestor()->delete();
+                Autonomo::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'dni' => $data['dni'],
+                        'birth_date' => $data['birth_date'] ?? null,
+                        'modulo_iva' => $data['modulo_iva'] ?? null,
+                        'civil_state' => $data['civil_state'] ?? null,
+                        'company' => $data['company'],
+                        'irpf' => $data['irpf'] ?? null,
+                    ]
+                );
+            }
+        });
+
+        return response()->json($user->fresh()->load(['autonomo', 'gestor']));
     }
 
     public function logout(Request $request)
