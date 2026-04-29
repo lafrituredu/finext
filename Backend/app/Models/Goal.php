@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Goal extends Model
 {
     protected $fillable = [
+    'id',
     'user_id',
     'name',
     'target_amount',

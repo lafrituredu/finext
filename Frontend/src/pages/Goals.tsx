@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
 
-import { getGoals, getRecomendation, type Goal } from '../api/GoalService';
+import { getGoals, getRecomendation, destroyGoal , type Goal } from '../api/GoalService';
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
+import  { GoalAmountForm } from "../components/materials/GoalAmountForm"
+import Confirmation from '../components/materials/Confirmation';
 
 function Goals() {
   const [goals,setGoals] = useState<Goal[]>();
+  const [goalEdit,setGoalEdit] = useState<Goal>();
+  const [goalDelete,setGoalDelete] = useState<Goal>();
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<any>(null)
+  const [showGoalAmountForm, setShowGoalAmountForm] = useState(false)
 
   useEffect(() => {
     getGoals()
@@ -19,7 +24,7 @@ function Goals() {
       .then(data => setTransactions(data))
       .catch(() => setError('Error al cargar las transacciones'))
       .finally(() => setLoading(false));
-  },[]);
+  },[showGoalAmountForm]);
   
   function calculateCashflow(){
     const incomes = transactions
@@ -37,7 +42,7 @@ function Goals() {
          <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
             <p className='mont_semibold text-4xl'>Goals</p>
             <button 
-            onClick={(e) => console.log(getGoals())}
+            onClick={(e) => setShowGoalAmountForm(true)}
             className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
                 Nueva categoria
@@ -55,7 +60,7 @@ function Goals() {
               const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
               return (
                 <div key={key} className='inter w-full border border-[#0000001a] rounded-2xl px-8 py-5 flex flex-col gap-4 dark:bg-dark-card'>
-                  <p className='font-semibold montserrat flex justify-between'>{goal.name}<TrashcanIcon className='text-red-500' /> </p>
+                  <p className='font-semibold montserrat flex justify-between'>{goal.name}<TrashcanIcon onClick={() => setGoalDelete(goal)} className='text-red-500 cursor-pointer' /> </p>
                   <div>
                     <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} días</span> <span>{goal.target_amount}€</span></p>
                     <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
@@ -69,8 +74,7 @@ function Goals() {
                     {/* <p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p> */}
 
                   <div className='w-full h-px bg-slate-200' />
-
-                  <button className='w-full p-2 bg-black text-white dark:bg-primary cursor-pointer hover:scale-[102%] transition rounded-lg'>Aportar</button>
+                  <button  disabled={goal.completed == 1} onClick={() => {setGoalEdit(goal);setShowGoalAmountForm(true)} } className='w-full p-2 bg-black text-white dark:bg-primary cursor-pointer hover:scale-[102%] transition rounded-lg disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:scale-100'>Aportar</button>
                 </div>
               )
             }
@@ -78,6 +82,14 @@ function Goals() {
             )}
           </div>
         </div>
+        {showGoalAmountForm && <GoalAmountForm close={() => {setShowGoalAmountForm(false);setGoalEdit(undefined)}} goalEdit={goalEdit}/> }
+        {goalDelete !== null && (
+        <Confirmation
+          Icon={TrashcanIcon}
+          close={() => setGoalDelete(undefined)}
+          onConfirm={() => {destroyGoal(goalDelete!);setGoalDelete(undefined)}}>
+          Estas seguro de que quieres eliminar <span className='font-bold'>{goalDelete?.name}</span>?
+        </Confirmation>)}
     </>
   )
 }

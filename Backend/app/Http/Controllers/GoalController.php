@@ -29,6 +29,9 @@ class GoalController extends Controller
         ]);
 
         $new_amount = $goal->current_amount + $data['contribution'];
+        if ($new_amount == $goal->target_amount) {
+            $goal->update(['completed' => 1]);
+        }
         return $goal->update([
             'current_amount' => $new_amount 
         ]);

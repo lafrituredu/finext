@@ -27,7 +27,7 @@ function Transactions() {
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
-  const [transactionToEdit,setTransactionToEdit] = useState<Transaction | null>(null)
+  const [transactionToEdit, setTransactionToEdit] = useState<Transaction | null>(null)
   useEffect(() => {
     getTransactions()
       .then(data => setTransactions(data))

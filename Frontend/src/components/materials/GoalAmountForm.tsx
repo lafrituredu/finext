@@ -3,70 +3,38 @@ import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 import { getCategories, type Category } from '../../api/CategoryService'
-import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
+import { contribute, type Goal } from "../../api/GoalService"
 
 import React from "react";
 import { useForm } from "react-hook-form"
 
-type TransactionFormValues = {
-  id: number
-  name: string
-  date: string
-  type: string
-  total_amount: number
-  iva_percent: number
-  client: string
-  description: string
-  payment_method: string
-  status: boolean
-  category_id?: number
-};
-
-export function GoalAmountForm({ close, transactionEdit }: { close: any, transactionEdit?: Transaction }) {
-  const [select, setSelected] = useState<any>(transactionEdit?.type || 'income');
+export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goal }) {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
-  const [transactionImport, setTransactionImport] = useState<number | string>(transactionEdit?.total_amount || '')
-  const [transactionDate, setTransactionDate] = useState<string>(transactionEdit?.date || '')
-  const [transactioniva, setTransactionIva] = useState<number | string>(transactionEdit?.iva_percent || 21.00)
-  const [transactionDescription, setTransactionDescription] = useState<string>(transactionEdit?.description || '')
-  const [transactionClient, setTransactionClient] = useState<string>(transactionEdit?.client || '')
-  const [transactionPaymentMethod, setTransactionPaymentMethod] = useState<string>(transactionEdit?.payment_method || '')
-  const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
+  const [GoalName, setGoalName] = useState<string>(goalEdit?.name || '')
+  const [GoalAmount, setGoalAmount] = useState<number>(0)
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm<TransactionFormValues>()
+  } = useForm<Goal>()
 
-  const onSubmit = async (data: TransactionFormValues) => {
+  const onSubmit = async (data: Goal) => {
     try {
       const { id, ...dataWithoutId } = data
-      if (transactionEdit != null) {
-        await updateTransaction(dataWithoutId, id)
+      if (goalEdit != null) {
+       await contribute(goalEdit.id,GoalAmount);
       } else {
-        await createTransaction(dataWithoutId)
+        //await createTransaction(dataWithoutId)
       }
       close()
     } catch (error) { console.error(error) }
   }
 
-  useEffect(() => {
-    getCategories()
-      .then(data => setCategories(data))
-      .catch(() => setError('Error al cargar las categorias'))
-      .finally(() => setLoading(false));
-    setValue("type", select);
-    if (transactionEdit) {
-      setValue("id", transactionEdit.id)
-      setValue("category_id", transactionEdit.category_id ?? undefined)
-    }
-  }, [select, setValue, transactionEdit])
 
   /* ─── shared input classes ─── */
   const inputCls = `
@@ -111,7 +79,7 @@ export function GoalAmountForm({ close, transactionEdit }: { close: any, transac
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <MoneyBagIcon className="w-7 h-7" />
-              {transactionEdit == null ? 'Añadir Transacción' : 'Editar Transacción'}
+              {goalEdit == null ? 'Añadir Meta' : 'Editar Meta'}
             </h2>
             {/* Close X */}
             <button
@@ -126,37 +94,6 @@ export function GoalAmountForm({ close, transactionEdit }: { close: any, transac
             </button>
           </div>
 
-          {/* Income / Expense */}
-          <div className="flex justify-center">
-            <div className="
-              flex items-center gap-1.5 p-1.5
-              bg-gray-100 dark:bg-[#0F1732]
-              rounded-2xl border border-gray-200 dark:border-gray-700
-              montserrat
-            ">
-              {[
-                { id: 'income', label: 'Income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'expense', label: 'Expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
-              ].map(({ id, label, Icon, activeColor }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setSelected(id)}
-                  className={`
-                    flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold
-                    transition-all duration-200 ease-in-out cursor-pointer
-                    ${select === id
-                      ? `bg-white dark:bg-[#1a2957] shadow-sm ${activeColor}`
-                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Name */}
           <div>
             <label className={labelCls}>Nombre *</label>
@@ -164,12 +101,95 @@ export function GoalAmountForm({ close, transactionEdit }: { close: any, transac
               {...register("name", { required: "El nombre es obligatorio" })}
               type="text"
               placeholder="Ej. Factura cliente"
-              value={transactionName}
-              onChange={(e) => setTransactionName(e.target.value)}
+              value={GoalName}
+              onChange={(e) => setGoalName(e.target.value)}
               className={inputCls}
             />
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
+
+          {goalEdit != null && <p className={labelCls}>Restante: {goalEdit.target_amount - goalEdit.current_amount}, Aportado: {goalEdit?.current_amount},Recomendado:</p>}
+
+
+          {/* Amount */}
+
+          {
+            goalEdit != null &&
+            <div>
+              <label className={labelCls}>Cantidad</label>
+              <input
+              {...register("current_amount", { required: "Introducir la cantidad es obligatorio", max: { value: goalEdit.target_amount - goalEdit.current_amount , message: `la cantidad a aportar no puede ser superior a ${goalEdit.target_amount - goalEdit.current_amount}`} })}
+                type="number"
+                placeholder="0.00"
+                className={inputCls}
+                onChange={(e) => setGoalAmount(parseFloat(e.target.value))}
+              />
+              {errors.current_amount && <p className="mt-1 text-xs text-red-400">{errors.current_amount.message}</p>}
+            </div>
+          }
+          
+          {goalEdit == null && (
+            <>
+              {/* Target Amount */}
+              <div>
+                <label className={labelCls}>Cantidad objetivo *</label>
+                <input
+                  {...register("target_amount", {
+                    required: "La cantidad objetivo es obligatoria",
+                    min: { value: 1, message: "Debe ser mayor que 0" }
+                  })}
+                  type="number"
+                  placeholder="Ej. 1000"
+                  className={inputCls}
+                />
+                {errors.target_amount && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.target_amount.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Start Date */}
+              <div>
+                <label className={labelCls}>Fecha inicio *</label>
+                <input
+                  {...register("start_date", {
+                    required: "La fecha de inicio es obligatoria"
+                  })}
+                  type="date"
+                  className={inputCls}
+                />
+                {errors.start_date && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.start_date.message}
+                  </p>
+                )}
+              </div>
+
+              {/* End Date */}
+              <div>
+                <label className={labelCls}>Fecha fin *</label>
+                <input
+                  {...register("end_date", {
+                    required: "La fecha de fin es obligatoria",
+                    validate: (value, formValues) => {
+                      return (
+                        new Date(value) > new Date(formValues.start_date) ||
+                        "La fecha fin debe ser posterior a la de inicio"
+                      );
+                    }
+                  })}
+                  type="date"
+                  className={inputCls}
+                />
+                {errors.end_date && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.end_date.message}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
 
           {/* Submit */}
           <div className="flex flex-col sm:flex-row gap-3 pt-8">
@@ -183,7 +203,7 @@ export function GoalAmountForm({ close, transactionEdit }: { close: any, transac
                 cursor-pointer
               "
             >
-              {transactionEdit == null ? '✓ Crear transacción' : '✓ Actualizar'}
+              {goalEdit == null ? '✓ Crear meta' : '✓ Actualizar'}
             </button>
             <button
               type="button"

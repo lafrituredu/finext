@@ -1,13 +1,14 @@
 import api from './axiosInstance'
 
 export interface Goal {
+    id: number,
     user_id: number,
     name: string,
     target_amount: number,
     current_amount: number,
     start_date: Date | string,
     end_date: Date | string,
-    completed: boolean
+    completed: number
 }
 
 export const getGoals = async (): Promise<Goal[]> => {
@@ -40,3 +41,8 @@ export const getRecomendation = (goal:Goal,cashflow:number) => {
         return 0;
     }
 }
+
+export const destroyGoal = async (goal:Goal) => {
+    const response = await api.delete<Goal[]>(`/goals/${goal.id}`)
+    return response.data
+} 
