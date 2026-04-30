@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-import { getGoals, getRecomendation, destroyGoal , type Goal } from '../api/GoalService';
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
+import PencilIcon from '/src/assets/icons/Pencil.svg?react'
+
+import { getGoals, getRecomendation, destroyGoal , type Goal } from '../api/GoalService';
 import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
 import  { GoalAmountForm } from "../components/materials/GoalAmountForm"
+import  { GoalForm } from "../components/materials/GoalForm"
 import Confirmation from '../components/materials/Confirmation';
 
 function Goals() {
@@ -14,6 +17,7 @@ function Goals() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<any>(null)
   const [showGoalAmountForm, setShowGoalAmountForm] = useState(false)
+  const [showGoalForm, setShowGoalForm] = useState(false)
 
   useEffect(() => {
     getGoals()
@@ -24,7 +28,7 @@ function Goals() {
       .then(data => setTransactions(data))
       .catch(() => setError('Error al cargar las transacciones'))
       .finally(() => setLoading(false));
-  },[showGoalAmountForm]);
+  },[showGoalAmountForm,goalDelete,showGoalForm]);
   
   function calculateCashflow(){
     const incomes = transactions
@@ -42,7 +46,7 @@ function Goals() {
          <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
             <p className='mont_semibold text-4xl'>Goals</p>
             <button 
-            onClick={(e) => setShowGoalAmountForm(true)}
+            onClick={(e) => setShowGoalForm(true)}
             className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
                 Nueva categoria
@@ -60,7 +64,12 @@ function Goals() {
               const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
               return (
                 <div key={key} className='inter w-full border border-[#0000001a] rounded-2xl px-8 py-5 flex flex-col gap-4 dark:bg-dark-card'>
-                  <p className='font-semibold montserrat flex justify-between'>{goal.name}<TrashcanIcon onClick={() => setGoalDelete(goal)} className='text-red-500 cursor-pointer' /> </p>
+                  <p className='font-semibold montserrat flex justify-between'>{goal.name}
+                    <span className='flex gap-1 items-center'>
+                      <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text' onClick={() => {setShowGoalForm(true);setGoalEdit(goal)}} />
+                      <TrashcanIcon onClick={() => setGoalDelete(goal)} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
+                    </span>
+                  </p>
                   <div>
                     <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} días</span> <span>{goal.target_amount}€</span></p>
                     <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
@@ -68,9 +77,9 @@ function Goals() {
                     </div>
                   </div>
 
-                  {recomendation == 1 && <div className='bg-[#98EE841a] p-2'><p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p></div>}
-                  {recomendation == -1 && <div className='bg-[#ee84841a] p-2'><p>You’re <span className='text-red-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p></div>}
-                  {recomendation == 0 && <div className='bg-[#98EE841a] p-2'><p>You’re <span className='text-orange-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p></div>}
+                  <div className={`${recomendation.bg} p-2`}>
+                    <p>{recomendation.message}</p>
+                  </div>
                     {/* <p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p> */}
 
                   <div className='w-full h-px bg-slate-200' />
@@ -83,13 +92,14 @@ function Goals() {
           </div>
         </div>
         {showGoalAmountForm && <GoalAmountForm close={() => {setShowGoalAmountForm(false);setGoalEdit(undefined)}} goalEdit={goalEdit}/> }
-        {goalDelete !== null && (
+        {goalDelete !== undefined && (
         <Confirmation
           Icon={TrashcanIcon}
           close={() => setGoalDelete(undefined)}
           onConfirm={() => {destroyGoal(goalDelete!);setGoalDelete(undefined)}}>
           Estas seguro de que quieres eliminar <span className='font-bold'>{goalDelete?.name}</span>?
         </Confirmation>)}
+        {showGoalForm && <GoalForm close={() => {setGoalEdit(undefined);setShowGoalForm(false)} } goalEdit={goalEdit} />}
     </>
   )
 }

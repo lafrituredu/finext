@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/categories/{id}', [CategoryController::class,'destroy']);
 
     Route::get('/goals', [GoalController::class,'index']);
+    Route::post('/goals',[GoalController::class,'store']);
+    Route::put('/goals/{id}',[GoalController::class,'update']);
     Route::put('/goals/contribute/{id}',[GoalController::class,'addContribution']);
     Route::delete('/goals/{id}',[GoalController::class,'destroy']);
 });

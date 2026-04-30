@@ -81,7 +81,11 @@ class GoalController extends Controller
         $user = $request->user();
         $goal = Goal::find($id);
 
-        $goal->validate([
+        if ($user->id != $goal->user_id) {
+            return response(['Message' => 'Not authorized'],401);
+        }
+
+        $data = $request->validate([
             'name' => 'required|string',
             'target_amount' => 'required|numeric',
             'current_amount' => 'required|numeric',
@@ -89,6 +93,17 @@ class GoalController extends Controller
             'end_date' => 'required|date',
             'completed' => 'required|numeric'
         ]);
+
+        $goal->update([
+            'name' => $data['name'],
+            'target_amount' => $data['target_amount'],
+            'current_amount' => $data['current_amount'],
+            'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'],
+            'completed' => $data['completed']
+        ]);
+
+        return response()->json($goal, 200);
     }
 
     /**

@@ -108,7 +108,7 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
 
-          {goalEdit != null && <p className={labelCls}>Restante: {goalEdit.target_amount - goalEdit.current_amount}, Aportado: {goalEdit?.current_amount},Recomendado:</p>}
+          
 
 
           {/* Amount */}
@@ -125,6 +125,7 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
                 onChange={(e) => setGoalAmount(parseFloat(e.target.value))}
               />
               {errors.current_amount && <p className="mt-1 text-xs text-red-400">{errors.current_amount.message}</p>}
+              {goalEdit != null && <p className={`${labelCls} text-xs mt-1`}>Restante: {goalEdit.target_amount - goalEdit.current_amount}, Aportado: {goalEdit?.current_amount}</p>}
             </div>
           }
           

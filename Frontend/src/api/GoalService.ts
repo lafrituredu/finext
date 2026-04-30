@@ -16,6 +16,18 @@ export const getGoals = async (): Promise<Goal[]> => {
     return response.data
 }
 
+export const createGoal = async (data: Goal): Promise<Goal[]> => {
+    const response = await api.post<Goal[]>(`/goals/`,data)
+    console.log(response.data)
+    return response.data
+}
+
+export const updateGoal = async (data: Goal): Promise<Goal[]> => {
+    const response = await api.put<Goal[]>(`/goals/${data.id}`, data)
+    console.log(response.data)
+    return response.data
+}
+
 export const contribute = async (id:number,cashToAdd:number) => {
     const response = await api.put<Goal[]>(`/goals/contribute/${id}`, {
         contribution: cashToAdd
@@ -34,11 +46,11 @@ export const getRecomendation = (goal:Goal,cashflow:number) => {
     const goalMonthly = months != 0 ? difference / months : difference;
 
     if (goalMonthly*1.15 > cashflow*percent) {
-        return -1;
+        return {status: -1, bg: 'bg-[#ee84841a]', message: 'Vas por debajo del ritmo recomendado. Deberías aumentar tu aportación mensual para alcanzar la meta a tiempo.'};
     }else if (goalMonthly < cashflow*percent*0.9){
-        return 1;
+        return {status: 1, bg: 'bg-[#98EE841a]', message: "Vas por encima del ritmo recomendado. Podrías reducir ligeramente tus aportaciones o alcanzarás la meta antes de lo previsto."};
     }else{
-        return 0;
+        return {status: 0, bg: 'bg-[#98EE841a]',message: "Vas en buen camino. Tu ritmo de aportación es adecuado para alcanzar la meta."};
     }
 }
 
