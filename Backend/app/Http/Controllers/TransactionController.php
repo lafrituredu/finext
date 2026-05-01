@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Bill;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -15,7 +16,7 @@ class TransactionController extends Controller
         if($user->rol != 'gestor'){
             $transactions = Transaction::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
-                ->with(['category', 'user'])->get();
+                ->with(['category', 'user', 'bill'])->get();
         }else{
             $transactions = Transaction::with(['category','user'])->get();
         }
@@ -41,6 +42,7 @@ class TransactionController extends Controller
             'payment_method' => 'required|string',
             'status' => 'nullable|boolean',
             'category_id' => 'nullable|exists:categories,id',
+            'bill_id' => 'nullable|exists:bills,id',
         ]);
 
         $transaction = Transaction::create([
@@ -54,6 +56,7 @@ class TransactionController extends Controller
             'payment_method' => $data['payment_method'],
             'status' => $data['status'] ?? true,
             'category_id' => $data['category_id'] ?? null,
+            'bill_id' => $data['bill_id'] ?? null,
             'user_id' => $user->id,
         ]);
 
@@ -85,6 +88,7 @@ class TransactionController extends Controller
             'payment_method' => 'required|string',
             'status'       => 'nullable|boolean',
             'category_id'  => 'nullable|exists:categories,id',
+            'bill_id' => 'nullable|exists:bills,id',
         ]);
 
         $transaction->update([
@@ -98,6 +102,7 @@ class TransactionController extends Controller
             'payment_method' => $data['payment_method'],
             'status'       => $data['status'] ?? true,
             'category_id'  => $data['category_id'] ?? null,
+            'bill_id' => $data['bill_id'] ?? null,
         ]);
 
         return response()->json($transaction->fresh());

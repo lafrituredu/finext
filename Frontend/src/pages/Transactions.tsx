@@ -175,7 +175,8 @@ function Transactions() {
             <div className='flex flex-row justify-between items-center w-full pt-1'>
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
               {t.category !== null && (
-              <div className='inter capitalize bg-blue-200 rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center'>
+              <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center`}
+              style={{ backgroundColor: t.category.color.concat(`30`), border: `1px solid ${t.category?.color}`, color: `${t.category?.color}`}}>
                 <TagIcon className='w-4 mr-1 h-4'/><p>{t.category.name}</p>
               </div>)}
             </div>

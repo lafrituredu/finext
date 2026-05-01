@@ -4,6 +4,7 @@ export interface Transaction {
     id: number
     user_id: number
     category_id: number | null
+    bill_id: number | null
     name: string
     date: string
     type: 'income' | 'expense'
@@ -21,6 +22,11 @@ export interface Transaction {
         username: string}
     category: {
         id: number
+        color: string
+        name: string
+    }
+    bill:{
+        id: number,
         name: string
     }
 }
