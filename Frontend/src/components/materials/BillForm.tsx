@@ -29,7 +29,7 @@ type BillFormValues = {
 };
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
-  const [select, setSelected] = useState<any>(billEdit?.type || 'income');
+  const [select, setSelected] = useState<any>(billEdit?.type || 'recibida');
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -169,8 +169,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               montserrat
             ">
               {[
-                { id: 'income', label: 'Income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'expense', label: 'Expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+                { id: 'recibida', label: 'Recibida', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+                { id: 'emitida', label: 'Emitida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
               ].map(({ id, label, Icon, activeColor }) => (
                 <button
                   key={id}
