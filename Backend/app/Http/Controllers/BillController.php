@@ -15,10 +15,10 @@ class BillController extends Controller
         if ($user->rol != 'gestor') {
             $bills = Bill::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
-                ->with(['user'])
+                ->with(['user', 'category'])
                 ->get();
         } else {
-            $bills = Bill::with(['user'])->get();
+            $bills = Bill::with(['user', 'category'])->get();
         }
 
         return response()->json($bills);
@@ -38,6 +38,7 @@ class BillController extends Controller
             'description'    => 'nullable|string',
             'payment_method' => 'required|string',
             'plazos'         => 'nullable|boolean',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         $bill = Bill::create([
@@ -51,6 +52,7 @@ class BillController extends Controller
             'description'    => $data['description'] ?? null,
             'payment_method' => $data['payment_method'],
             'plazos'         => $data['plazos'] ?? null,
+            'category_id' => $data['category_id'] ?? null,
         ]);
 
         return response()->json($bill, 201);

@@ -49,6 +49,8 @@ import profileEN from "./language/en/profile.json";
 import billsES from "./language/es/bills.json";
 import billsEN from "./language/en/bills.json";
 
+import transactionsFormES from "./language/es/transactionsForms.json";
+import transactionsFormEN from "./language/en/transactionsForm.json";
 
 export const resources = {
   es: {
@@ -60,6 +62,7 @@ export const resources = {
     overview: overviewES,
     sidebar: sidebarES,
     transactions: transactionsES,
+    transactionsForm: transactionsFormES,
     login: loginES,
     register: registerES,
     verifyEmail: verifyEmailES,
@@ -76,6 +79,7 @@ export const resources = {
     overview: overviewEN,
     sidebar: sidebarEN,
     transactions: transactionsEN,
+    transactionsForm: transactionsFormEN,
     login: loginEN,
     register: registerEN,
     verifyEmail: verifyEmailEN,

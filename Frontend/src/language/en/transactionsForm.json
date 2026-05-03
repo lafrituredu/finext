@@ -1,0 +1,58 @@
+{
+  "title": {
+    "create": "Add Transaction",
+    "edit": "Edit Transaction"
+  },
+  "type": {
+    "income": "Income",
+    "expense": "Expense"
+  },
+  "fields": {
+    "name": "Name",
+    "amount": "Amount",
+    "date": "Date",
+    "iva": "VAT Type",
+    "category": "Category",
+    "description": "Description",
+    "client": "Client",
+    "paymentMethod": "Payment method"
+  },
+  "placeholders": {
+    "name": "E.g. Client invoice",
+    "amount": "0.00 €",
+    "noCategory": "No category",
+    "loadingCategories": "Loading categories…",
+    "description": "Optional description",
+    "client": "Client name"
+  },
+  "iva": {
+    "none": "No VAT — 0%",
+    "superreduced": "Super-reduced — 4%",
+    "reduced": "Reduced — 10%",
+    "general": "Standard — 21%"
+  },
+  "payment": {
+    "card": "Credit card",
+    "cash": "Cash",
+    "transfer": "Bank transfer"
+  },
+  "buttons": {
+    "create": "✓ Create transaction",
+    "update": "✓ Update",
+    "cancel": "Cancel"
+  },
+  "errors": {
+  "nameRequired": "Name is required",
+  "nameTooLong": "Name cannot exceed 40 characters",
+  "nameInvalidChars": "Only letters, numbers and spaces are allowed",
+  "amountRequired": "Amount is required",
+  "amountMin": "Amount must be greater than 0",
+  "amountMax": "Amount cannot exceed 1,000,000",
+  "dateRequired": "Date is required",
+  "loadCategories": "Error loading categories",
+  "descriptionTooLong": "Description cannot exceed 100 characters",
+  "descriptionInvalidChars": "Only letters, numbers and spaces are allowed",
+  "clientTooLong": "Client name cannot exceed 20 characters",
+  "clientInvalidChars": "Only letters, numbers and spaces are allowed"
+}
+}

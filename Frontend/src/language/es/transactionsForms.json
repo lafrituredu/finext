@@ -1,0 +1,58 @@
+{
+  "title": {
+    "create": "Añadir Transacción",
+    "edit": "Editar Transacción"
+  },
+  "type": {
+    "income": "Ingreso",
+    "expense": "Gasto"
+  },
+  "fields": {
+    "name": "Nombre",
+    "amount": "Importe",
+    "date": "Fecha",
+    "iva": "Tipo de IVA",
+    "category": "Categoría",
+    "description": "Descripción",
+    "client": "Cliente",
+    "paymentMethod": "Método de pago"
+  },
+  "placeholders": {
+    "name": "Ej. Factura cliente",
+    "amount": "0.00 €",
+    "noCategory": "Sin categoría",
+    "loadingCategories": "Cargando categorías…",
+    "description": "Descripción opcional",
+    "client": "Nombre del cliente"
+  },
+  "iva": {
+    "none": "Sin IVA — 0%",
+    "superreduced": "Superreducido — 4%",
+    "reduced": "Reducido — 10%",
+    "general": "General — 21%"
+  },
+  "payment": {
+    "card": "Tarjeta de crédito",
+    "cash": "Efectivo",
+    "transfer": "Transferencia bancaria"
+  },
+  "buttons": {
+    "create": "✓ Crear transacción",
+    "update": "✓ Actualizar",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "nameRequired": "El nombre es obligatorio",
+    "nameTooLong": "El nombre no puede superar 40 caracteres",
+    "nameInvalidChars": "Solo se permiten letras, números y espacios",
+    "amountRequired": "El importe es obligatorio",
+    "amountMin": "El importe debe ser mayor que 0",
+    "amountMax": "El importe no puede superar 1.000.000",
+    "dateRequired": "La fecha es obligatoria",
+    "loadCategories": "Error al cargar las categorías",
+    "descriptionTooLong": "La descripción no puede superar 100 caracteres",
+    "descriptionInvalidChars": "Solo se permiten letras, números y espacios",
+    "clientTooLong": "El cliente no puede superar 20 caracteres",
+    "clientInvalidChars": "Solo se permiten letras, números y espacios"
+  }
+}

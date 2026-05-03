@@ -4,9 +4,9 @@ import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 import { getCategories, type Category } from '../../api/CategoryService'
 import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
-
 import React from "react";
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next";
 
 type TransactionFormValues = {
   id: number
@@ -27,6 +27,7 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
   const [transactionImport, setTransactionImport] = useState<number | string>(transactionEdit?.total_amount || '')
@@ -37,6 +38,7 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   const [transactionPaymentMethod, setTransactionPaymentMethod] = useState<string>(transactionEdit?.payment_method || '')
   const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
 
+  const { t } = useTranslation("transactionsForm")
   const {
     register,
     handleSubmit,
@@ -45,6 +47,8 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   } = useForm<TransactionFormValues>()
 
   const onSubmit = async (data: TransactionFormValues) => {
+    if (isSubmitting) return
+    setIsSubmitting(true)
     try {
       const { id, ...dataWithoutId } = data
       if (transactionEdit != null) {
@@ -53,13 +57,16 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
         await createTransaction(dataWithoutId)
       }
       close()
-    } catch (error) { console.error(error) }
+    } catch (error) {
+      console.error(error)
+      setIsSubmitting(false)
+    }
   }
 
   useEffect(() => {
     getCategories()
       .then(data => setCategories(data))
-      .catch(() => setError('Error al cargar las categorias'))
+      .catch(() => setError(t('errors.loadCategories')))
       .finally(() => setLoading(false));
     setValue("type", select);
     if (transactionEdit) {
@@ -68,32 +75,22 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
     }
   }, [select, setValue, transactionEdit])
 
-  /* ─── shared input classes ─── */
-  const inputCls = `
-    w-full rounded-xl border border-gray-200 dark:border-gray-700
+  const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
     bg-gray-50 dark:bg-[#0f1b35]
     text-gray-800 dark:text-gray-100
     placeholder:text-gray-400 dark:placeholder:text-gray-500
     px-4 py-2.5 text-sm font-medium
     focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
-    transition-all duration-150
-  `;
+    transition-all duration-150`;
 
-  const labelCls = `
-    block text-xs font-semibold uppercase tracking-wide
-    text-gray-500 dark:text-gray-400 mb-1
-  `;
+  const labelCls = `block text-xs font-semibold uppercase tracking-wide
+    text-gray-500 dark:text-gray-400 mb-1`;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input type="hidden" {...register("id")} />
 
-      {/* ── Backdrop ── */}
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4"
-        onClick={close}
-      >
-        {/* ── Modal card ── */}
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
         <div
           className="
             relative w-full max-w-lg max-h-[90vh] overflow-y-auto
@@ -102,23 +99,19 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
             ring-1 ring-black/5 dark:ring-white/10
             p-6 sm:p-8
             flex flex-col gap-5
-            inter
-          "
-          onClick={(e) => e.stopPropagation()}
-        >
+            inter"
+          onClick={(e) => e.stopPropagation()}>
 
-          {/* ── Header ── */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <MoneyBagIcon className="w-7 h-7" />
-              {transactionEdit == null ? 'Añadir Transacción' : 'Editar Transacción'}
+              {transactionEdit == null ? t('title.create') : t('title.edit')}
             </h2>
-            {/* Close X */}
             <button
               type="button"
               onClick={close}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-            >
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -132,12 +125,11 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               flex items-center gap-1.5 p-1.5
               bg-gray-100 dark:bg-[#0F1732]
               rounded-2xl border border-gray-200 dark:border-gray-700
-              montserrat
-            ">
+              montserrat">
               {[
-                { id: 'income', label: 'Income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'expense', label: 'Expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
-              ].map(({ id, label, Icon, activeColor }) => (
+                { id: 'income', labelKey: 'type.income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+                { id: 'expense', labelKey: 'type.expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+              ].map(({ id, labelKey, Icon, activeColor }) => (
                 <button
                   key={id}
                   type="button"
@@ -147,11 +139,9 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
                     transition-all duration-200 ease-in-out cursor-pointer
                     ${select === id
                       ? `bg-white dark:bg-[#1a2957] shadow-sm ${activeColor}`
-                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}
-                  `}
-                >
+                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}>
                   <Icon className="w-4 h-4" />
-                  {label}
+                  {t(labelKey)}
                 </button>
               ))}
             </div>
@@ -159,42 +149,58 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
 
           {/* Name */}
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('fields.name')} *</label>
             <input
-              {...register("name", { required: "El nombre es obligatorio" })}
+              {...register("name", { required: t('errors.nameRequired'),
+              maxLength: {
+                value: 40,
+                message: t('errors.nameTooLong')
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                message: t('errors.nameInvalidChars')
+              }
+              })}
               type="text"
-              placeholder="Ej. Factura cliente"
+              placeholder={t('placeholders.name')}
               value={transactionName}
               onChange={(e) => setTransactionName(e.target.value)}
-              className={inputCls}
-            />
+              className={inputCls}/>
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
 
           {/* Amount - Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Importe *</label>
+              <label className={labelCls}>{t('fields.amount')} *</label>
               <input
                 type="number"
                 step="0.10"
-                {...register("total_amount", { required: "El importe es obligatorio", valueAsNumber: true })}
-                placeholder="0.00 €"
+                {...register("total_amount", { required: t('errors.amountRequired'), 
+                  valueAsNumber: true,
+                min:{
+                  value:0.01,
+                  message: t('errors.amountMin')
+                },
+                max:{
+                  value:1_000_000,
+                  message: t('errors.amountMax')
+                },
+              })}
+                placeholder={t('placeholders.amount')}
                 value={transactionImport}
                 onChange={(e) => setTransactionImport(parseFloat(e.target.value))}
-                className={inputCls}
-              />
+                className={inputCls}/>
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Fecha *</label>
+              <label className={labelCls}>{t('fields.date')} *</label>
               <input
                 type="date"
-                {...register("date", { required: "La fecha es obligatoria" })}
+                {...register("date", { required: t('errors.dateRequired') })}
                 value={transactionDate}
                 onChange={(e) => setTransactionDate(e.target.value)}
-                className={inputCls}
-              />
+                className={inputCls}/>
               {errors.date && <p className="mt-1 text-xs text-red-400">{errors.date.message}</p>}
             </div>
           </div>
@@ -202,21 +208,20 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
           {/* Iva - Category */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Tipo de IVA</label>
+              <label className={labelCls}>{t('fields.iva')}</label>
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
                 value={transactioniva}
                 onChange={(e) => setTransactionIva(e.currentTarget.value)}
-                className={inputCls}
-              >
-                <option value="0">Sin IVA — 0%</option>
-                <option value="4.00">Superreducido — 4%</option>
-                <option value="10.00">Reducido — 10%</option>
-                <option value="21.00">General — 21%</option>
+                className={inputCls}>
+                <option value="0">{t('iva.none')}</option>
+                <option value="4.00">{t('iva.superreduced')}</option>
+                <option value="10.00">{t('iva.reduced')}</option>
+                <option value="21.00">{t('iva.general')}</option>
               </select>
             </div>
             <div>
-              <label className={labelCls}>Categoría</label>
+              <label className={labelCls}>{t('fields.category')}</label>
               {!loading ? (
                 <select
                   {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
@@ -224,14 +229,14 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
                   onChange={(e) => setCategory(e.target.value)}
                   className={inputCls}
                 >
-                  <option value="">Sin categoría</option>
+                  <option value="">{t('placeholders.noCategory')}</option>
                   {categories.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
               ) : (
                 <div className={`${inputCls} animate-pulse text-gray-400 dark:text-gray-500`}>
-                  Cargando categorías…
+                  {t('placeholders.loadingCategories')}
                 </div>
               )}
             </div>
@@ -239,56 +244,74 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
 
           {/* Description */}
           <div>
-            <label className={labelCls}>Descripción</label>
+            <label className={labelCls}>{t('fields.description')}</label>
             <input
-              {...register("description")}
+              {...register("description", {
+                maxLength: {
+                value: 100,
+                message: t('errors.descriptionTooLong')
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                message: t('errors.descriptionInvalidChars')
+              }
+              })}
               type="text"
-              placeholder="Descripción opcional"
+              placeholder={t('placeholders.description')}
               value={transactionDescription}
               onChange={(e) => setTransactionDescription(e.target.value)}
-              className={inputCls}
-            />
+              className={inputCls}/>
+              {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
 
           {/* Client - Payment method */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Cliente</label>
+              <label className={labelCls}>{t('fields.client')}</label>
               <input
-                {...register("client")}
+                {...register("client", {               
+                maxLength: {
+                value: 20,
+                message: t('errors.clientTooLong')
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                message: t('errors.clientInvalidChars')
+              }
+              })}
                 type="text"
-                placeholder="Nombre del cliente"
+                placeholder={t('placeholders.client')}
                 value={transactionClient}
                 onChange={(e) => setTransactionClient(e.target.value)}
-                className={inputCls}
-              />
+                className={inputCls}/>
+                {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Método de pago</label>
+              <label className={labelCls}>{t('fields.paymentMethod')}</label>
               <select
                 {...register("payment_method")}
                 value={transactionPaymentMethod}
                 onChange={(e) => setTransactionPaymentMethod(e.currentTarget.value)}
-                className={inputCls}
-              >
-                <option value="card">💳 Tarjeta de crédito</option>
-                <option value="cash">💵 Efectivo</option>
+                className={inputCls}>
+                <option value="card">{t('payment.card')}</option>
+                <option value="cash">{t('payment.cash')}</option>
+                <option value="transfer">{t('payment.transfer')}</option>
               </select>
             </div>
           </div>
+
           {/* Submit */}
           <div className="flex flex-col sm:flex-row gap-3 pt-8">
             <button
               type="submit"
+              disabled={isSubmitting}
               className="
                 flex-1 bg-primary text-white font-semibold
                 py-2.5 px-6 rounded-xl shadow-md
                 hover:brightness-110 active:scale-[0.98]
                 transition-all duration-150 ease-in-out
-                cursor-pointer
-              "
-            >
-              {transactionEdit == null ? '✓ Crear transacción' : '✓ Actualizar'}
+                cursor-pointer">
+              {transactionEdit == null ? t('buttons.create') : t('buttons.update')}
             </button>
             <button
               type="button"
@@ -301,10 +324,8 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
                 py-2.5 px-6 rounded-xl
                 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
                 transition-all duration-150 ease-in-out
-                cursor-pointer
-              "
-            >
-              Cancelar
+                cursor-pointer">
+              {t('buttons.cancel')}
             </button>
           </div>
 

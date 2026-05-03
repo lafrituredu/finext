@@ -16,6 +16,7 @@ import { getCategories, type Category } from '../api/CategoryService'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 import CardIcon from '/src/assets/icons/Credit-card.svg?react'
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
+import BankIcon from '/src/assets/icons/Bank.svg?react'
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
@@ -143,8 +144,9 @@ function Transactions() {
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <div className='flex flex-row items-center truncate gap-2'>
               <div>
-                {t.payment_method == "card" ? (<CardIcon className='text-text dark:text-dark-text'/>) : 
-                (<CoinIcon className='text-text dark:text-dark-text'/>)}
+                {t.payment_method == "card" && (<CardIcon className='text-text dark:text-dark-text'/>)}
+                {t.payment_method == "cash" && (<CoinIcon className='text-text dark:text-dark-text'/>)}
+                {t.payment_method =="transfer" && (<BankIcon className='text-text dark:text-dark-text'/>)}
               </div>
               <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
               </div>
