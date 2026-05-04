@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\BillController;
 
 // AUTH
 Route::post('/register', [AuthController::class, 'register']);
@@ -28,7 +29,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/transactions', [TransactionController::class,'store']);
     Route::put('/transactions/{id}', [TransactionController::class,'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
-
+    Route::get('/transactions/bill/{billId}', [TransactionController::class, 'getByBill']);
+    // Bills
+    Route::get('/bills', [BillController::class, 'index']);
+    Route::post('/bills', [BillController::class,'store']);
+    Route::put('/bills/{id}', [BillController::class,'update']);
+    Route::delete('/bills/{id}', [BillController::class, 'delete']);
     // CRUD Categories
     Route::get('/categories', [CategoryController::class,'index']);
     Route::post('/categories', [CategoryController::class,'store']);

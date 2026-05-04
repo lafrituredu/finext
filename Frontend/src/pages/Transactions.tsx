@@ -159,10 +159,14 @@ function Transactions() {
                     <Trending_down className='lg:mr-2 text-red-600 w-5'/>}<span className='lg:flex hidden'>{t.type}</span>
                   </p>
                 </div>
-                <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
-                onClick={() => {setTransactionToEdit(t);setShowTransactionForm(true)}}/>
-                <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
-                onClick={()=>setTransactionToDelete(t)}/>
+                {t.bill_id == null && (
+                <div className='flex flex-row justify-center items-center gap-2'>
+                  <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
+                  onClick={() => {setTransactionToEdit(t);setShowTransactionForm(true)}}/>
+                  <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
+                  onClick={()=>setTransactionToDelete(t)}/>
+                </div>
+                )}
               </div>
               
             </div>

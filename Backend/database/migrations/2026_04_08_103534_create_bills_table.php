@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('payment_method')->nullable();
 
-            $table->boolean('plazos')->default(false);
+            $table->integer('plazos')->nullable()->default(null);
 
             $table->timestamps();
         });

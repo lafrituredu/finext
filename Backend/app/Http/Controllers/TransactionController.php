@@ -121,4 +121,13 @@ class TransactionController extends Controller
         return response()->json(['message' => 'Transaction deleted successfully'], 200);
     }
 
+    public function getByBill(Request $request, $billId)
+    {
+        $user = $request->user();
+        $transactions = Transaction::where('bill_id', $billId)
+            ->where('user_id', $user->id)
+            ->get();
+        return response()->json($transactions);
+    }
+
 }
