@@ -6,6 +6,7 @@ import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
+import { getGoals, type Goal } from '../api/GoalService';
 
 
 function Overview() {
@@ -14,27 +15,122 @@ const { t: tUtils } = useTranslation("utils");
 
 const [select,setSeleceted] = useState<any>('cashflow');
 const [transactions, setTransactions] = useState<Transaction[]>([])
+const [goals, setGoals] = useState<Goal[]>([])
+
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
-const months = [
-    tUtils('months.january'),
-    tUtils('months.february'),
-    tUtils('months.march'),
-    tUtils('months.april'),
-    tUtils('months.may'),
-    tUtils('months.june'),
-    tUtils('months.july'),
-    tUtils('months.august'),
-    tUtils('months.september'),
-    tUtils('months.october'),
-    tUtils('months.november'),
-    tUtils('months.december')
-]
+
+const sum = (a:number,b:number) => {
+    return a+b;
+}
+
+let months = [];
+for (let i = 0; i <= 11; i++) {
+    let _months = ['january','february','march','april','may','june','july','august','september','october','november','december']
+    let month = `months.${_months[i]}`
+    let obj = {
+        name: tUtils(month),
+        incomes: transactions.filter(t => new Date(t.date).getMonth() == i && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+        expense: transactions.filter(t => new Date(t.date).getMonth() == i && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+    }
+    
+    months.push(obj);
+}
+
+let filtered:any = [];
+
+transactions.forEach( element => {
+    let date = new Date(element.date).getMonth();
+    if (element.type == 'income') {
+        let total = filtered[date].incomes + element.total_amount;
+    }
+    
+})
+
+// const months = [
+//     {
+//         month: 0,
+//         name: tUtils('months.january'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 0 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 0 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 1,
+//         name: tUtils('months.february'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 1 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 1 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 2,
+//         name: tUtils('months.march'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 2 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 2 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 3,
+//         name: tUtils('months.april'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 3 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 3 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 4,
+//         name: tUtils('months.may'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 4 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 4 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 5,
+//         name: tUtils('months.june'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 5 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 5 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 6,
+//         name: tUtils('months.july'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 6 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 6 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 7,
+//         name: tUtils('months.august'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 7 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 7 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 8,
+//         name: tUtils('months.september'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 8 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 8 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 9,
+//         name: tUtils('months.october'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 9 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 9 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 10,
+//         name: tUtils('months.november'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 10 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 10 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     },
+//     {
+//         month: 11,
+//         name: tUtils('months.december'),
+//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 11 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
+//         expense: transactions.filter(t => new Date(t.date).getMonth() == 11 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+//     }
+// ];
+
 useEffect(() => {
 getTransactions()
     .then(data => setTransactions(data))
     .catch(() => setError('Error al cargar las transacciones'))
+    .finally(() => setLoading(false));
+getGoals()
+    .then(data => setGoals(data))
+    .catch(() => setError('Error al cargar los Goals'))
     .finally(() => setLoading(false));
 }, [])
 
@@ -48,25 +144,25 @@ const config = {
     },
     markers: { size: 5 },
     xaxis: {
-        categories: months
+        categories: months.map(m => m.name)
     }
     
     },
     series: [
     {
         name: t('incomes'),
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
+        data: months.map(m => m.incomes)
     },
     {
         name: t('outcomes'),
-        data: [40, 50, 55, 60, 59, 70, 70, 23]
+        data: months.map(m => m.expense)
     }
     ],
 };
 
 function calculateIncomes(){
     return transactions
-        .filter(t => t.type === 'income' && new Date(t.date).getMonth() == new Date().getMonth())
+        .filter(t => t.type === 'income' && new Date(t.date).getMonth()  == new Date().getMonth())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
@@ -113,7 +209,7 @@ function calculateCashflow(){
         {/* VISTA GENERAL */}
         <p className='font-semibold mb-2 montserrat'>{t('overview')}</p>
         <div className='w-full grid xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 grid-cols-1 content-between justify-between xl:gap-10 gap-5 mb-10'>
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
                 <div className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('incomes')}
@@ -124,10 +220,10 @@ function calculateCashflow(){
                     <p className='text-4xl text-green-600'>{calculateIncomes()}€</p>
                     <p className='text-xl text-green-500'>{calculateIncomesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
                 <div className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('outcomes')}
@@ -138,27 +234,27 @@ function calculateCashflow(){
                     <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
                     <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
                 </div>
-                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] }  {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name }  {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
                 <p className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('cash_flow')}
                     </span>
                     <KpiStatsUp className='text-[#84A2EB] right-0'/></p>
                 <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
-                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
                 <p className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('open_goals')}
                     </span>
                     <KpiStatsUp className='text-green-600 right-0'/></p>
-                <p className='text-4xl text-green-600'>0</p>
-                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()] } {today.getFullYear()}</p>
+                <p className='text-4xl text-green-600'>{goals.length}</p>
+                <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
         </div>
 

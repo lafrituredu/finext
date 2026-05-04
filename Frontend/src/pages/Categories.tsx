@@ -58,7 +58,7 @@ function Categories() {
       return (<>
             <div className='inter'>
               <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
-              <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
+              <div className='min-h-40 grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
               {categoriasPropias.map( (category,key) => 
                   <div key={key} className={`flex flex-col justify-around items-between min-h-40 max-h-40
                   rounded-2xl p-4 ring-2 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
@@ -85,12 +85,12 @@ function Categories() {
                   <button onClick={() => setShowCategoryForm(true)} className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
                 </div>
               </div>
-              <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto → <span className='font-bold'>{categoriasDefault.length}</span></p>
+              <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto</p>
               <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
                 {categoriasDefault.map( (category,key) =>
                 <div key={category.id}>
-                    <div key={key} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
-                      hover:scale-102 transition-transform ease-in-out gap-6'>
+                    <div key={key} className='flex flex-col dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
+                      hover:scale-102 transition-transform ease-in-out gap-6' style={{ background: category?.color?.concat(`55`) ??'#f3f4f6' , border: `1px solid ${category?.color}`}}>
                         <div className='flex justify-between'>
                           <p><TagIcon /></p>
                           <p><Padlock className='text-primary' /></p>
