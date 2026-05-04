@@ -34,6 +34,16 @@ useEffect(() => {
   getCurrentUser()
     .then(setUser)
     .catch(() => setUser(null));
+
+  const handleUserProfileUpdated = (event: Event) => {
+    setUser((event as CustomEvent<UserProfile>).detail);
+  };
+
+  window.addEventListener("user-profile-updated", handleUserProfileUpdated);
+
+  return () => {
+    window.removeEventListener("user-profile-updated", handleUserProfileUpdated);
+  };
 }, []);
 
 

@@ -42,6 +42,12 @@ const getApiErrorMessage = (err: unknown, fallback: string) => {
   return fallback;
 };
 
+const notifyUserProfileUpdated = (user: UserProfile) => {
+  window.dispatchEvent(
+    new CustomEvent<UserProfile>("user-profile-updated", { detail: user })
+  );
+};
+
 function Profile() {
   const { t } = useTranslation("profile");
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -87,6 +93,7 @@ function Profile() {
     try {
       const updatedUser = await uploadCurrentUserAvatar(file);
       setUser(updatedUser);
+      notifyUserProfileUpdated(updatedUser);
       setMessage(t("avatar_saved"));
     } catch (err: unknown) {
       setError(getApiErrorMessage(err, t("avatar_save_error")));
@@ -103,6 +110,7 @@ function Profile() {
     try {
       const updatedUser = await deleteCurrentUserAvatar();
       setUser(updatedUser);
+      notifyUserProfileUpdated(updatedUser);
       setMessage(t("avatar_deleted"));
     } catch (err: unknown) {
       setError(getApiErrorMessage(err, t("avatar_delete_error")));
@@ -120,6 +128,7 @@ function Profile() {
     try {
       const updatedUser = await updateCurrentUser(profileFormToPayload(form));
       setUser(updatedUser);
+      notifyUserProfileUpdated(updatedUser);
       localStorage.setItem("user", updatedUser.username);
       setMessage(t("saved"));
     } catch (err: unknown) {
