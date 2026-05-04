@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SidebarItem from './SidebarItem'
 
 //i8n
@@ -7,10 +7,7 @@ import Language from '../buttons/Lang'
 
 //ICONOS
 import UsersIcon from '/src/assets/icons/Profile-icon.svg?react'
-import GearIcon from '/src/assets/icons/Gear.svg?react'
 import DashboardIcon from '/src/assets/icons/Dashboard.svg?react'
-import DashboardIcon2 from '/src/assets/icons/Dashboard2.svg?react'
-import ChartPieSlice from '/src/assets/icons/ChartPieSlice.svg?react'
 import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
 import Goals from '/src/assets/icons/Goals.svg?react'
 import Calculator from '/src/assets/icons/Calculator.svg?react'
@@ -20,7 +17,7 @@ import DarkModeToggle from '../buttons/DarkButton'
 import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
-import { logoutUser } from '../../api/AuthServices'
+import { getCurrentUser, logoutUser, type UserProfile } from '../../api/AuthServices'
 
 interface DashboardSidebar {
   opened?: boolean;
@@ -28,11 +25,16 @@ interface DashboardSidebar {
 
 function DashboardSidebar({opened = true}:DashboardSidebar) {
 const [openId, setOpenId] = useState();
-const [open,setOpen] = useState(false);
-// const toggleOffCanvas = () => {
-//     setOpen(!open);
-// }
+const [user, setUser] = useState<UserProfile | null>(null);
 const { t } = useTranslation("sidebar");
+const avatarUrl = user?.avatar_url || user?.avatar;
+const username = user?.username || localStorage.getItem('user') || '[username]';
+
+useEffect(() => {
+  getCurrentUser()
+    .then(setUser)
+    .catch(() => setUser(null));
+}, []);
 
 
 const menuItems = [{
@@ -111,8 +113,16 @@ const menuItems = [{
           {/* <div className='fixed'><DarkModeToggle /></div> */}
           <div>
           <div className='lg:flex flex-col items-center justify-center hidden pt-4'>
-            <FinextIcon className='w-16 h-16 m-4' />
-            <p className='inter'> {t('welcome')} {localStorage.getItem('user') ?? '[username]'}!</p>
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt=""
+                className="w-16 h-16 m-4 rounded-full object-cover"
+              />
+            ) : (
+              <FinextIcon className='w-16 h-16 m-4' />
+            )}
+            <p className='inter'> {t('welcome')} {username}!</p>
             <Language/>
           </div>
           {menuItems.map((item,key) => (
