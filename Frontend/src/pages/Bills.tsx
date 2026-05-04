@@ -4,6 +4,7 @@ import BillForm from "../components/materials/BillForm"
 import { getBills, deleteBill, type Bill } from '../api/BillService'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
+import FileIcon from '/src/assets/icons/File.svg?react'
 import { getTransactionsByBill } from '../api/TransactionService'
 
 function Bills() {
@@ -60,6 +61,13 @@ function Bills() {
     const paid = billsPaid[bill.id] ?? null
     if (paid === null) return false
     return paid > Number(bill.total_amount)
+  }
+
+    function billWithIVA(amount:number, iva:any){
+    if (amount < 0) throw new Error("Amount must be positive value");
+    let i = amount * (iva / 100);
+    const total = amount - i
+    return total
   }
 
   const handleDelete = async (id: number) => {
@@ -129,7 +137,10 @@ function Bills() {
           <p className="text-red-400 text-sm">{error}</p>
         )}
         {!loading && !error && bills.length === 0 && (
-          <p className="text-gray-400 dark:text-gray-500 text-sm">No hay facturas.</p>
+          <div className='flex flex-col justify-center items-center inter pt-40'>
+            <FileIcon className='w-24 h-24'/>
+            <p className='text-xl'>{t('no_bills')}</p>
+          </div>
         )}
 
         {/* Cards */}
@@ -190,15 +201,15 @@ function Bills() {
 
                 {/* Amount */}
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-2xl font-bold ${bill.type === 'recibida' ? 'text-emerald-500' : 'text-red-400'}`}>
+                  <span className={`text-2xl font-bold ${bill.type === 'recibida' ? 'text-emerald-500' : 'text-red-500'}`}>
                     {bill.type === 'emitida' && '-'}{Number(bill.total_amount).toFixed(2)} €
                   </span>
                 </div>
                 <div>
                   {bill.iva_percent > 0 && (
                     <div className='flex flex-row gap-2 items-baseline'>
-                      <span className="text-md text-emerald-300">
-                        {Number(bill.total_amount).toFixed(2)} €
+                      <span className={`text-md ${bill.type === 'recibida' ? 'text-emerald-300' : 'text-red-300'}`}>
+                        {bill.type !== 'recibida' && '-'}{Number(billWithIVA(bill.total_amount, bill.iva_percent))} € 
                       </span>
                       <span className="text-xs text-gray-400 dark:text-gray-500">
                         IVA {bill.iva_percent}%
@@ -217,14 +228,14 @@ function Bills() {
                     </span>
                   )}
                 </div>
-                <div className='flex w-full justify-center items-center text-xs'>
+                <div className='flex w-full justify-start items-center text-xs select-none'>
                   {isPending(bill) ? (
-                    <div className='text-indigo-300'>
+                    <div className='text-indigo-300 hover:text-indigo-500 transition-colors ease-in-out duration-200'>
                       <p>Faltan plazos por añadir</p>
                     </div>
                   ) : null}
                   {isHigher(bill) ? (
-                    <div className='text-red-300'>
+                    <div className='text-red-300 hover:text-red-500 transition-colors ease-in-out duration-200'>
                       <p>Se ha pagado mas del importe introducido</p>
                     </div>
                   ) : null}

@@ -139,8 +139,8 @@ function Transactions() {
 
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
-          <div key={t.id} className='flex flex-col bg-gray-100 dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-[#101a3d]
-            hover:scale-102 transition-transform ease-in-out w-full h-full'>
+          <div key={t.id} className= {`flex flex-col ${t.bill_id != null ? "bg-blue-50 ring-blue-100" : "bg-gray-100 ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-2 dark:ring-[#101a3d]
+            hover:scale-102 transition-transform ease-in-out w-full h-full`}>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <div className='flex flex-row items-center truncate gap-2'>
               <div>

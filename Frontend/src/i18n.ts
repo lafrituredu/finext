@@ -68,7 +68,8 @@ export const resources = {
     verifyEmail: verifyEmailES,
     about: aboutES,
     contact: contactES,
-    utils: utilsES
+    utils: utilsES,
+    bills: billsES,
   },
   en: {
     common: en,
@@ -85,7 +86,8 @@ export const resources = {
     verifyEmail: verifyEmailEN,
     about: aboutEN,
     contact: ContactEN,
-    utils: utilsEN
+    utils: utilsEN,
+    bills: billsEN,
   },
 } as const;
 

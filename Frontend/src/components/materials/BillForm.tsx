@@ -53,7 +53,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     if (billEdit?.id) {
       getTransactionsByBill(billEdit.id)
         .then(transactions => {
-          if (transactions.length > 0) {
+          if (transactions.length > 1) {
             setIsInstallment(true)
             setInstallments(transactions.map(t => ({
               amount: t.total_amount,

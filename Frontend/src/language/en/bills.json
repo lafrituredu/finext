@@ -1,4 +1,5 @@
 {
     "bills": "Bills",
-    "new_bill": "New Bill"
+    "new_bill": "New Bill",
+    "no_bills": "There are no Bills"
 }

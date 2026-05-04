@@ -75,6 +75,20 @@ class BillController extends Controller
                     'category_id'    => $data['category_id'] ?? null,
                 ]);
             }
+        }else{
+            Transaction::create([
+                'user_id'        => $user->id,
+                'bill_id'        => $bill->id,
+                'name'           => $data['name'],
+                'date'           => $data['date'],
+                'type'           => $data['type'] === 'recibida' ? 'income' : 'expense',
+                'total_amount'   => $data['total_amount'],
+                'iva_percent'    => $data['iva_percent'] ?? 0,
+                'client'         => $data['client'] ?? null,
+                'description'    => $data['description'] ?? null,
+                'payment_method' => $data['payment_method'],
+                'category_id'    => $data['category_id'] ?? null,
+            ]);
         }
         return response()->json($bill, 201);
     }
@@ -143,6 +157,20 @@ class BillController extends Controller
                     'category_id'    => $data['category_id'] ?? null,
                 ]);
             }
+        }else{
+            Transaction::create([
+                'user_id'        => $user->id,
+                'bill_id'        => $bill->id,
+                'name'           => $data['name'],
+                'date'           => $data['date'],
+                'type'           => $data['type'] === 'recibida' ? 'income' : 'expense',
+                'total_amount'   => $data['total_amount'],
+                'iva_percent'    => $data['iva_percent'] ?? 0,
+                'client'         => $data['client'] ?? null,
+                'description'    => $data['description'] ?? null,
+                'payment_method' => $data['payment_method'],
+                'category_id'    => $data['category_id'] ?? null,
+            ]);
         }
 
         return response()->json($bill, 200);

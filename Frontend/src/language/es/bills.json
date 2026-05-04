@@ -1,4 +1,5 @@
 {
     "bills": "Facturas",
-    "new_bill": "Nueva Factura"
+    "new_bill": "Nueva Factura",
+    "no_bills": "No hay Facturas"
 }
