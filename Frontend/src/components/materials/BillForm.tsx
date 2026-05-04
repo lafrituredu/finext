@@ -150,16 +150,12 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     <form onSubmit={handleSubmit(onSubmit)}>
 
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4"
-        onClick={close}>
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
         <div
           className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto
             bg-background dark:bg-dark-background
-            rounded-2xl shadow-2xl
-            ring-1 ring-black/5 dark:ring-white/10
-            p-6 sm:p-8
-            flex flex-col gap-5
-            inter"
+            rounded-2xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10
+            p-6 sm:p-8 flex flex-col gap-5 inter"
           onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}

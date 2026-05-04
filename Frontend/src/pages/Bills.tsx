@@ -8,7 +8,7 @@ import { getTransactionsByBill } from '../api/TransactionService'
 
 function Bills() {
   const [bills, setBills] = useState<Bill[]>([])
-  const [billsPaid, setBillsPaid] = useState<Record<number, number>>({})
+  const [billsPaid, setBillsPaid] = useState<Record<number, number | null>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showBillForm, setShowBillForm] = useState(false)
@@ -19,20 +19,23 @@ function Bills() {
   const { t } = useTranslation("bills")
 
   const fetchBillTransactions = async (bills: Bill[]) => {
-    const results: Record<number, number> = {}
-    await Promise.all(
-      bills.map(async (bill) => {
-        try {
-          const transactions = await getTransactionsByBill(bill.id)
-          const total = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0)
-          results[bill.id] = total
-        } catch {
-          results[bill.id] = 0
+  const results: Record<number, number | null> = {}
+  await Promise.all(
+    bills.map(async (bill) => {
+      try {
+        const transactions = await getTransactionsByBill(bill.id)
+        if (transactions.length === 0) {
+          results[bill.id] = null // sin plazos → no mostrar nada
+        } else {
+          results[bill.id] = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0)
         }
-      })
-    )
-    setBillsPaid(results)
-  }
+      } catch {
+        results[bill.id] = null
+      }
+    })
+  )
+  setBillsPaid(results)
+}
 
   const fetchBills = () => {
     getBills()
