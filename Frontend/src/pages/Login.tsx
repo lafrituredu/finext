@@ -84,7 +84,7 @@ const Login: React.FC = () => {
       <div className="w-full max-w-6xl bg-white dark:bg-dark-card rounded-3xl shadow-lg flex overflow-hidden">
         <div className="lg:w-[45%] w-full p-10 lg:p-12">
           <button
-            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors cursor-pointer"
             onClick={onGoToHome}
             type="button"
           >
@@ -151,7 +151,7 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !isFormComplete}
-              className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
+              className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium cursor-pointer ${
                 isFormComplete
                   ? "bg-primary hover:bg-primary/90 shadow-md"
                   : "bg-primary/60"
@@ -169,7 +169,7 @@ const Login: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
 
-          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors">
+          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer">
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"
@@ -192,7 +192,7 @@ const Login: React.FC = () => {
             <button
               type="button"
               onClick={onGoToRegister}
-              className="text-primary hover:text-primary/80 font-medium hover:underline"
+              className="text-primary hover:text-primary/80 font-medium hover:underline cursor-pointer"
             >
               {t("register")}
             </button>

@@ -1,7 +1,10 @@
 import api from './axiosInstance'
 
 export interface AuthResponse {
-  user?: any
+  user?: {
+    username: string
+    [key: string]: unknown
+  }
   token?: string
   message: string
   requires_verification?: boolean
@@ -28,6 +31,7 @@ export interface UserProfile {
   email: string
   email_verified_at?: string | null
   avatar?: string | null
+  avatar_url?: string | null
   autonomo?: AutonomoProfile | null
   gestor?: Record<string, unknown> | null
 }
@@ -92,6 +96,24 @@ export const updateCurrentUser = async (
   data: UpdateUserProfilePayload
 ): Promise<UserProfile> => {
   const response = await api.put<UserProfile>('/me', data);
+  return response.data;
+};
+
+export const uploadCurrentUserAvatar = async (avatar: File): Promise<UserProfile> => {
+  const formData = new FormData();
+  formData.append('avatar', avatar);
+
+  const response = await api.post<UserProfile>('/me/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};
+
+export const deleteCurrentUserAvatar = async (): Promise<UserProfile> => {
+  const response = await api.delete<UserProfile>('/me/avatar');
   return response.data;
 };
 

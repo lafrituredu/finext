@@ -2,8 +2,10 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
+  deleteCurrentUserAvatar,
   getCurrentUser,
   updateCurrentUser,
+  uploadCurrentUserAvatar,
   type UpdateUserProfilePayload,
   type UserProfile
 } from "../api/AuthServices";
@@ -30,12 +32,23 @@ export type ProfileFormData = {
   irpf: string;
 };
 
+const getApiErrorMessage = (err: unknown, fallback: string) => {
+  if (typeof err === "object" && err !== null && "response" in err) {
+    const response = (err as { response?: { data?: { message?: string } } })
+      .response;
+    return response?.data?.message || fallback;
+  }
+
+  return fallback;
+};
+
 function Profile() {
   const { t } = useTranslation("profile");
   const [user, setUser] = useState<UserProfile | null>(null);
   const [form, setForm] = useState<ProfileFormData>(emptyProfileForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [avatarSaving, setAvatarSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -66,6 +79,38 @@ function Profile() {
     setForm((current) => ({ ...current, rol: role }));
   };
 
+  const handleAvatarChange = async (file: File) => {
+    setAvatarSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const updatedUser = await uploadCurrentUserAvatar(file);
+      setUser(updatedUser);
+      setMessage(t("avatar_saved"));
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t("avatar_save_error")));
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
+  const handleAvatarDelete = async () => {
+    setAvatarSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const updatedUser = await deleteCurrentUserAvatar();
+      setUser(updatedUser);
+      setMessage(t("avatar_deleted"));
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t("avatar_delete_error")));
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSaving(true);
@@ -77,8 +122,8 @@ function Profile() {
       setUser(updatedUser);
       localStorage.setItem("user", updatedUser.username);
       setMessage(t("saved"));
-    } catch (err: any) {
-      setError(err.response?.data?.message || t("save_error"));
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t("save_error")));
     } finally {
       setSaving(false);
     }
@@ -102,7 +147,14 @@ function Profile() {
       </div>
 
       <div className="grid xl:grid-cols-[360px_1fr] grid-cols-1 gap-6">
-        <ProfileSummary form={form} user={user} roleLabel={roleLabel} />
+        <ProfileSummary
+          form={form}
+          user={user}
+          roleLabel={roleLabel}
+          avatarSaving={avatarSaving}
+          onAvatarChange={handleAvatarChange}
+          onAvatarDelete={handleAvatarDelete}
+        />
         <ProfileForm
           form={form}
           user={user}

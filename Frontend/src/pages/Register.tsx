@@ -254,9 +254,7 @@ const Register: React.FC = () => {
   const isStep3Complete =
     Boolean(formData.dni) &&
     Boolean(formData.birthdate) &&
-    Boolean(formData.modulo_iva) &&
-    Boolean(formData.empresa) &&
-    Boolean(formData.irpf);
+    Boolean(formData.empresa);
 
   const getRoleLabel = (role: string) => {
     switch (role) {
@@ -294,7 +292,7 @@ const Register: React.FC = () => {
       <div className="w-full max-w-6xl bg-white dark:bg-dark-card rounded-3xl shadow-lg flex overflow-hidden">
         <div className="lg:w-[45%] w-full p-10 lg:p-12">
           <button
-            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors cursor-pointer"
             onClick={onGoToHome}
             type="button"
           >
@@ -381,7 +379,7 @@ const Register: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
           </div>
 
-          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors">
+          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer">
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"
@@ -401,7 +399,7 @@ const Register: React.FC = () => {
             <button
               type="button"
               onClick={handleBackOrLogin}
-              className="text-primary hover:text-primary/80 font-medium hover:underline"
+              className="text-primary hover:text-primary/80 font-medium hover:underline cursor-pointer"
             >
               {t("login")}
             </button>

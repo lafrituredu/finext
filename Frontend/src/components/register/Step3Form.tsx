@@ -1,15 +1,10 @@
 import React from "react";
 
-import DropdownSelect from "../materials/DropdownSelect";
-import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
-
 type FormDataType = {
   dni: string;
   birthdate: string;
   empresa: string;
   estado_civil: string;
-  modulo_iva: string;
-  irpf: string;
 };
 
 type Props = {
@@ -141,41 +136,11 @@ const Step3Form: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="mb-6 flex gap-3">
-        <div className="flex-1">
-          <label className="text-sm text-gray-600 dark:text-gray-400 inter">
-            {t("modulo_iva_label")}
-          </label>
-          <DropdownSelect
-            name="modulo_iva"
-            value={formData.modulo_iva}
-            placeholder={t("select_option")}
-            options={ivaOptions}
-            onChange={(name, value) => handleChange({ target: { name, value } })}
-            buttonClassName="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all inter"
-          />
-        </div>
-
-        <div className="flex-1">
-          <label className="text-sm text-gray-600 dark:text-gray-400 inter">
-            {t("irpf_label")}
-          </label>
-          <DropdownSelect
-            name="irpf"
-            value={formData.irpf}
-            placeholder={t("select_option")}
-            options={irpfOptions}
-            onChange={(name, value) => handleChange({ target: { name, value } })}
-            buttonClassName="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all inter"
-          />
-        </div>
-      </div>
-
       <div className="flex gap-3">
         <button
           type="button"
           onClick={prevStep}
-          className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl transition-all inter font-medium"
+          className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl transition-all inter font-medium cursor-pointer"
         >
           {t("back")}
         </button>
@@ -183,7 +148,7 @@ const Step3Form: React.FC<Props> = ({
         <button
           type="submit"
           disabled={loading}
-          className={`flex-1 text-white py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
+          className={`flex-1 text-white py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed inter font-medium cursor-pointer ${
             isStep3Complete && !loading ? "bg-primary hover:bg-primary/90 shadow-md" : "bg-primary/60"
           }`}
         >

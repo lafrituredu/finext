@@ -75,7 +75,7 @@ const Step2Form: React.FC<Props> = ({
           <button
             type="button"
             onClick={() => setIsRolOpen(!isRolOpen)}
-            className="w-full mt-2 px-4 py-3 pr-10 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-left transition-all inter"
+            className="w-full mt-2 px-4 py-3 pr-10 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-left transition-all inter cursor-pointer"
           >
             {getRoleLabel(formData.rol)}
           </button>
@@ -126,7 +126,7 @@ const Step2Form: React.FC<Props> = ({
         <button
           type="button"
           onClick={prevStep}
-          className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl transition-all inter font-medium"
+          className="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl transition-all inter font-medium cursor-pointer"
         >
           {t("back")}
         </button>
@@ -135,7 +135,7 @@ const Step2Form: React.FC<Props> = ({
           type="button"
           onClick={nextStep}
           disabled={loading}
-          className={`flex-1 text-white py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
+          className={`flex-1 text-white py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed inter font-medium cursor-pointer ${
             isStep2Complete && !loading ? "bg-primary hover:bg-primary/90 shadow-md" : "bg-primary/60"
           }`}
         >

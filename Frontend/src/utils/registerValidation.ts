@@ -147,14 +147,6 @@ export const validateStep3 = (formData: RegisterFormData) => {
     return "Escribe el nombre de la empresa.";
   }
 
-  if (!formData.modulo_iva) {
-    return "Indica tu módulo de IVA.";
-  }
-
-  if (!formData.irpf) {
-    return "Indica tu IRPF.";
-  }
-
   return null;
 };
 

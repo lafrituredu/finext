@@ -177,7 +177,7 @@ const VerifyEmail: React.FC = () => {
       <div className="w-full max-w-5xl bg-white dark:bg-dark-card rounded-3xl shadow-lg flex overflow-hidden">
         <div className="w-full lg:w-[48%] p-10 lg:p-12">
           <button
-            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            className="mb-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors cursor-pointer"
             onClick={() => navigate("/")}
             type="button"
           >
@@ -227,7 +227,7 @@ const VerifyEmail: React.FC = () => {
           <button
             type="button"
             onClick={content.primaryAction}
-            className="w-full text-white py-3 rounded-xl bg-primary hover:bg-primary/90 shadow-md transition-all inter font-medium mb-3"
+            className="w-full text-white py-3 rounded-xl bg-primary hover:bg-primary/90 shadow-md transition-all inter font-medium mb-3 cursor-pointer"
           >
             {content.primaryLabel}
           </button>
@@ -237,7 +237,7 @@ const VerifyEmail: React.FC = () => {
               type="button"
               onClick={handleResend}
               disabled={loading}
-              className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? t("resending") : t("resend")}
             </button>
@@ -247,7 +247,7 @@ const VerifyEmail: React.FC = () => {
             <button
               type="button"
               onClick={goToRegister}
-              className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium mt-3"
+              className="w-full py-3 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-dark-background transition-all inter font-medium mt-3 cursor-pointer"
             >
               {t("secondary_register")}
             </button>

@@ -153,7 +153,7 @@ const Step1Form: React.FC<Props> = ({
         type="button"
         onClick={nextStep}
         disabled={checkingAvailability}
-        className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium ${
+        className={`w-full text-white py-3 rounded-xl transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed inter font-medium cursor-pointer ${
           isStep1Complete
             ? "bg-primary hover:bg-primary/90 shadow-md"
             : "bg-primary/60"

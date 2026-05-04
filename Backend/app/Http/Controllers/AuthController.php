@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 
@@ -29,10 +30,10 @@ class AuthController extends Controller
             'rol' => 'required|in:particular,gestor,autonomo',
             'dni' => 'required_if:rol,autonomo|nullable|string|max:255|unique:autonomos,dni',
             'birthdate' => 'required_if:rol,autonomo|nullable|date',
-            'modulo_iva' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+            'modulo_iva' => 'nullable|numeric|min:0|max:100',
             'estado_civil' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
             'empresa' => 'required_if:rol,autonomo|nullable|string|max:255',
-            'irpf' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+            'irpf' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $user = DB::transaction(function () use ($request) {
@@ -201,7 +202,7 @@ class AuthController extends Controller
     {
         $user = $request->user()->load(['autonomo', 'gestor']);
 
-        return response()->json($user);
+        return response()->json($this->withAvatarUrl($user));
     }
 
     public function updateProfile(Request $request)
@@ -266,7 +267,37 @@ class AuthController extends Controller
             }
         });
 
-        return response()->json($user->fresh()->load(['autonomo', 'gestor']));
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $user = $request->user();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store("avatars/{$user->id}", 'public');
+        $user->update(['avatar' => $path]);
+
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
+    }
+
+    public function deleteAvatar(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+            $user->update(['avatar' => null]);
+        }
+
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
     }
 
     public function logout(Request $request)
@@ -276,5 +307,15 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Logout correcto'
         ]);
+    }
+
+    private function withAvatarUrl(User $user): User
+    {
+        $user->setAttribute(
+            'avatar_url',
+            $user->avatar ? Storage::disk('public')->url($user->avatar) : null
+        );
+
+        return $user;
     }
 }

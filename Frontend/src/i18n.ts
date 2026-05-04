@@ -70,6 +70,7 @@ export const resources = {
     contact: contactES,
     utils: utilsES,
     bills: billsES,
+    profile: profileES,
   },
   en: {
     common: en,
@@ -88,6 +89,7 @@ export const resources = {
     contact: ContactEN,
     utils: utilsEN,
     bills: billsEN,
+    profile: profileEN,
   },
 } as const;
 
