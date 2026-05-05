@@ -51,7 +51,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
     setIsSubmitting(true)
     try {
       const { id, ...dataWithoutId } = data
-      console.log(data)
       if (transactionEdit != null) {
         await updateTransaction(dataWithoutId, id)
       } else {

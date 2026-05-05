@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import BillForm from "../components/materials/BillForm"
-import { getBills, deleteBill, type Bill } from '../api/BillService'
+import { deleteBill, type Bill } from '../api/BillService'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 import FileIcon from '/src/assets/icons/File.svg?react'
 import { getTransactionsByBill } from '../api/TransactionService'
+import { useBills, type BillsContextType } from '../contexts/BillContext'
 
 function Bills() {
-  const [bills, setBills] = useState<Bill[]>([])
+  const { bills, setBills, refetchBills } = useBills() as BillsContextType
   const [billsPaid, setBillsPaid] = useState<Record<number, number | null>>({})
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showBillForm, setShowBillForm] = useState(false)
   const [billToEdit, setBillToEdit] = useState<Bill | null>(null)
@@ -20,37 +21,33 @@ function Bills() {
   const { t } = useTranslation("bills")
 
   const fetchBillTransactions = async (bills: Bill[]) => {
-  const results: Record<number, number | null> = {}
-  await Promise.all(
-    bills.map(async (bill) => {
-      try {
-        const transactions = await getTransactionsByBill(bill.id)
-        if (transactions.length === 0) {
-          results[bill.id] = null // sin plazos → no mostrar nada
-        } else {
-          results[bill.id] = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0)
+    const results: Record<number, number | null> = {}
+    await Promise.all(
+      bills.map(async (bill) => {
+        try {
+          const transactions = await getTransactionsByBill(bill.id)
+          if (transactions.length === 0) {
+            results[bill.id] = null
+          } else {
+            results[bill.id] = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0)
+          }
+        } catch {
+          results[bill.id] = null
         }
-      } catch {
-        results[bill.id] = null
-      }
-    })
-  )
-  setBillsPaid(results)
-}
-
-  const fetchBills = () => {
-    getBills()
-      .then(data => {
-        setBills(data)
-        fetchBillTransactions(data)
       })
-      .catch(() => setError('Error al cargar las facturas'))
-      .finally(() => setLoading(false))
+    )
+    setBillsPaid(results)
   }
 
   useEffect(() => {
-    fetchBills()
+    refetchBills()
   }, [showBillForm])
+
+  useEffect(() => {
+    if (bills.length > 0) {
+      fetchBillTransactions(bills)
+    }
+  }, [bills])
 
   const isPending = (bill: Bill): boolean => {
     const paid = billsPaid[bill.id] ?? null
@@ -63,7 +60,7 @@ function Bills() {
     return paid > Number(bill.total_amount)
   }
 
-    function billWithIVA(amount:number, iva:any){
+  function billWithIVA(amount: number, iva: any) {
     if (amount < 0) throw new Error("Amount must be positive value");
     let i = amount * (iva / 100);
     const total = amount - i
@@ -83,7 +80,7 @@ function Bills() {
 
   return (
     <>
-      {showBillForm && (<BillForm close={() => setShowBillForm(false)} billEdit={billToEdit ?? undefined}/>)}
+      {showBillForm && (<BillForm close={() => setShowBillForm(false)} billEdit={billToEdit ?? undefined} />)}
 
       {/* --- Confirmacion eliminar PROVISIONAL --- */}
       {showConfirmation && billToDelete && (
@@ -138,7 +135,7 @@ function Bills() {
         )}
         {!loading && !error && bills.length === 0 && (
           <div className='flex flex-col justify-center items-center inter pt-40'>
-            <FileIcon className='w-24 h-24'/>
+            <FileIcon className='w-24 h-24' />
             <p className='text-xl'>{t('no_bills')}</p>
           </div>
         )}
@@ -159,14 +156,12 @@ function Bills() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex flex-col">
                     <div className='flex flex-row items-center gap-2'>
-                      {/* Si falta por pagar ping de aviso */}
                       {isPending(bill) ? (
                         <div className='flex'>
                           <div className='w-2.5 h-2.5 bg-indigo-500 rounded-full'></div>
                           <div className='w-2.5 h-2.5 bg-indigo-500 rounded-full animate-ping absolute'></div>
                         </div>
                       ) : null}
-                      {/* Si se ha pagado de mas ping de aviso */}
                       {isHigher(bill) ? (
                         <div className='flex'>
                           <div className='w-2.5 h-2.5 bg-red-500 rounded-full'></div>
@@ -198,7 +193,6 @@ function Bills() {
                   </div>
                 </div>
 
-
                 {/* Amount */}
                 <div className="flex items-baseline gap-2">
                   <span className={`text-2xl font-bold ${bill.type === 'recibida' ? 'text-emerald-500' : 'text-red-500'}`}>
@@ -209,7 +203,7 @@ function Bills() {
                   {bill.iva_percent > 0 && (
                     <div className='flex flex-row gap-2 items-baseline'>
                       <span className={`text-md ${bill.type === 'recibida' ? 'text-emerald-300' : 'text-red-300'}`}>
-                        {bill.type !== 'recibida' && '-'}{Number(billWithIVA(bill.total_amount, bill.iva_percent))} € 
+                        {bill.type !== 'recibida' && '-'}{Number(billWithIVA(bill.total_amount, bill.iva_percent))} €
                       </span>
                       <span className="text-xs text-gray-400 dark:text-gray-500">
                         IVA {bill.iva_percent}%

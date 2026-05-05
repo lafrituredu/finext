@@ -2,16 +2,11 @@ import { useEffect, useState } from "react";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
-import { getCategories, type Category } from '../../api/CategoryService'
 import { createBill, updateBill, type Bill } from "../../api/BillService"
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form"
-import { getTransactionsByBill } from '../../api/TransactionService'
-
-type Installment = {
-  amount: number | string
-  date: string
-}
+import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
+import { useTransactions, type TransactionsContextType } from '../../contexts/TransactionContext'
 
 type BillFormValues = {
   id: number
@@ -31,10 +26,10 @@ type BillFormValues = {
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const [select, setSelected] = useState<any>(billEdit?.type || 'recibida');
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { categories } = useCategories() as CategoriesContextType
+  const { transactions, refetchTransactions } = useTransactions() as TransactionsContextType
 
   const [billName, setBillName] = useState<string>(billEdit?.name || '')
   const [billImport, setBillImport] = useState<number | string>(billEdit?.total_amount || '')
@@ -61,30 +56,24 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     }
   })
 
-  // ── useFieldArray para los plazos ──
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'installments'
   })
 
-  // ── Cargar installments al editar ──
   useEffect(() => {
     if (billEdit?.id) {
-      getTransactionsByBill(billEdit.id)
-        .then(transactions => {
-          if (transactions.length > 1) {
-            setIsInstallment(true)
-            replace(transactions.map(t => ({
-              amount: t.total_amount,
-              date: t.date
-            })))
-          }
-        })
-        .catch(() => console.error('Error al cargar los plazos'))
+      const billTransactions = transactions.filter(t => t.bill_id === billEdit.id)
+      if (billTransactions.length > 1) {
+        setIsInstallment(true)
+        replace(billTransactions.map(t => ({
+          amount: t.total_amount,
+          date: t.date
+        })))
+      }
     }
-  }, [billEdit])
+  }, [billEdit, transactions])
 
-  // ── Installments remaining amount ──
   const watchedInstallments = watch('installments') ?? []
   const totalInstallments = watchedInstallments.reduce(
     (sum, inst) => sum + (parseFloat(inst.amount as string) || 0), 0
@@ -108,6 +97,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
       } else {
         await createBill(payload)
       }
+      await refetchTransactions()
       close()
     } catch (error: any) {
       console.error('Status:', error.response?.status)
@@ -117,10 +107,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   }
 
   useEffect(() => {
-    getCategories()
-      .then(data => setCategories(data))
-      .catch(() => setError('Error al cargar las categorias'))
-      .finally(() => setLoading(false));
     setValue("type", select);
     if (billEdit) {
       setValue("id", billEdit.id)
@@ -144,8 +130,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
 
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
         <div
           className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto
             bg-background dark:bg-dark-background
@@ -264,22 +249,16 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
             </div>
             <div>
               <label className={labelCls}>Categoría</label>
-              {!loading ? (
-                <select
-                  {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className={inputCls}>
-                  <option value="">Sin categoría</option>
-                  {categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              ) : (
-                <div className={`${inputCls} animate-pulse text-gray-400 dark:text-gray-500`}>
-                  Cargando categorías…
-                </div>
-              )}
+              <select
+                {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className={inputCls}>
+                <option value="">Sin categoría</option>
+                {categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -368,8 +347,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                       <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 dark:bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">
                         {index + 1}
                       </span>
-
-                      {/* ── Importe del plazo ── */}
                       <input
                         type="number"
                         step="0.10"
@@ -381,15 +358,12 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                           min: { value: 0.01, message: "Debe ser mayor que 0" }
                         })}
                         className={`${inputCls} flex-1`} />
-
-                      {/* ── Fecha del plazo ── */}
                       <input
                         type="date"
                         {...register(`installments.${index}.date`, {
                           required: "La fecha del plazo es obligatoria"
                         })}
                         className={`${inputCls} flex-1`} />
-
                       {fields.length > 1 && (
                         <button
                           type="button"
@@ -402,8 +376,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                         </button>
                       )}
                     </div>
-
-                    {/* ── Errores por plazo ── */}
                     {(errors.installments?.[index]?.amount || errors.installments?.[index]?.date) && (
                       <div className="flex gap-2 pl-8">
                         {errors.installments?.[index]?.amount && (
