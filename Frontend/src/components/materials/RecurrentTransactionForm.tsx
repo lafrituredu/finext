@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import RecurrentIcon from "/src/assets/icons/Recurrent.svg?react";
@@ -40,6 +41,7 @@ export function RecurrentTransactionForm({
   recurrentEdit?: RecurrentTransaction | null,
   onSaved?: () => void
 }) {
+  const { t } = useTranslation("recurrent");
   const dateInputValue = (value?: string | null) => value ? value.slice(0, 10) : '';
   const [select, setSelected] = useState(recurrentEdit?.type || 'expense');
   const [categories, setCategories] = useState<Category[]>([]);
@@ -73,9 +75,9 @@ export function RecurrentTransactionForm({
   useEffect(() => {
     getCategories()
       .then(data => setCategories(data))
-      .catch(() => setError('Error al cargar las categorias'))
+      .catch(() => setError(t('errors.loadCategories')))
       .finally(() => setLoading(false));
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     setValue("type", select);
@@ -156,27 +158,27 @@ export function RecurrentTransactionForm({
     transition-all duration-150`;
 
   const frequencyOptions = [
-    { label: "Semanal", value: "weekly" },
-    { label: "Mensual", value: "monthly" },
-    { label: "Trimestral", value: "quarterly" },
-    { label: "Anual", value: "yearly" },
+    { label: t("frequency.weekly"), value: "weekly" },
+    { label: t("frequency.monthly"), value: "monthly" },
+    { label: t("frequency.quarterly"), value: "quarterly" },
+    { label: t("frequency.yearly"), value: "yearly" },
   ];
 
   const ivaOptions = [
-    { label: "Sin IVA - 0%", value: "0" },
-    { label: "Superreducido - 4%", value: "4.00" },
-    { label: "Reducido - 10%", value: "10.00" },
-    { label: "General - 21%", value: "21.00" },
+    { label: t("iva.none"), value: "0" },
+    { label: t("iva.superreduced"), value: "4.00" },
+    { label: t("iva.reduced"), value: "10.00" },
+    { label: t("iva.general"), value: "21.00" },
   ];
 
   const paymentOptions = [
-    { label: "Tarjeta", value: "card" },
-    { label: "Efectivo", value: "cash" },
-    { label: "Transferencia", value: "transfer" },
+    { label: t("payment.card"), value: "card" },
+    { label: t("payment.cash"), value: "cash" },
+    { label: t("payment.transfer"), value: "transfer" },
   ];
 
   const categoryOptions = [
-    { label: "Sin categoria", value: "" },
+    { label: t("placeholders.noCategory"), value: "" },
     ...categories.map((category) => ({
       label: category.name,
       value: String(category.id),
@@ -197,7 +199,7 @@ export function RecurrentTransactionForm({
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <RecurrentIcon className="w-7 h-7" />
-              {recurrentEdit == null ? 'Nuevo movimiento fijo' : 'Editar movimiento fijo'}
+              {recurrentEdit == null ? t('new_recurrent') : t('edit_recurrent')}
             </h2>
             <button type="button" onClick={close}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer">
@@ -212,8 +214,8 @@ export function RecurrentTransactionForm({
             <div className="flex items-center gap-1.5 p-1.5 bg-gray-100 dark:bg-[#0F1732]
               rounded-2xl border border-gray-200 dark:border-gray-700 montserrat">
               {[
-                { id: 'income', label: 'Ingreso', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'expense', label: 'Gasto', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+                { id: 'income', label: t('form.income'), Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+                { id: 'expense', label: t('form.expense'), Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
               ].map(({ id, label, Icon, activeColor }) => (
                 <button key={id} type="button" onClick={() => setSelected(id as 'income' | 'expense')}
                   className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold
@@ -229,13 +231,13 @@ export function RecurrentTransactionForm({
           </div>
 
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('form.name')} *</label>
             <input {...register("name", {
-              required: "El nombre es obligatorio",
-              maxLength: { value: 40, message: "El nombre no puede superar 40 caracteres" },
-              pattern: { value: namePattern, message: "Solo se permiten letras, numeros y espacios" }
+              required: t('errors.nameRequired'),
+              maxLength: { value: 40, message: t('errors.nameMax') },
+              pattern: { value: namePattern, message: t('errors.namePattern') }
             })}
-              type="text" placeholder="Ej. Alquiler local"
+              type="text" placeholder={t('placeholders.name')}
               value={name} onChange={(e) => setName(e.target.value)}
               className={inputCls} />
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
@@ -243,25 +245,25 @@ export function RecurrentTransactionForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Importe *</label>
+              <label className={labelCls}>{t('form.amount')} *</label>
               <input type="number" step="0.10"
                 {...register("total_amount", {
-                  required: "El importe es obligatorio",
+                  required: t('errors.amountRequired'),
                   valueAsNumber: true,
-                  min: { value: 0.01, message: "El importe debe ser mayor que 0" },
-                  max: { value: 1_000_000, message: "El importe no puede superar 1.000.000" }
+                  min: { value: 0.01, message: t('errors.amountMin') },
+                  max: { value: 1_000_000, message: t('errors.amountMax') }
                 })}
-                placeholder="0.00 EUR" value={amount}
+                placeholder={t('placeholders.amount')} value={amount}
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                 className={inputCls} />
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Frecuencia *</label>
+              <label className={labelCls}>{t('form.frequency')} *</label>
               <DropdownSelect
                 name="frequency"
                 value={frequency}
-                placeholder="Selecciona frecuencia"
+                placeholder={t('placeholders.frequency')}
                 options={frequencyOptions}
                 onChange={(_, value) => setFrequency(value as any)}
                 buttonClassName={dropdownButtonCls}
@@ -271,15 +273,15 @@ export function RecurrentTransactionForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Inicio *</label>
-              <input type="date" {...register("start_date", { required: "La fecha de inicio es obligatoria" })}
+              <label className={labelCls}>{t('form.start')} *</label>
+              <input type="date" {...register("start_date", { required: t('errors.startRequired') })}
                 value={startDate} onChange={(e) => setStartDate(e.target.value)}
                 className={inputCls} />
               {errors.start_date && <p className="mt-1 text-xs text-red-400">{errors.start_date.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Proxima ejecucion *</label>
-              <input type="date" {...register("next_run_date", { required: "La proxima fecha es obligatoria" })}
+              <label className={labelCls}>{t('form.nextRun')} *</label>
+              <input type="date" {...register("next_run_date", { required: t('errors.nextRequired') })}
                 value={nextRunDate} onChange={(e) => setNextRunDate(e.target.value)}
                 className={inputCls} />
               {errors.next_run_date && <p className="mt-1 text-xs text-red-400">{errors.next_run_date.message}</p>}
@@ -288,17 +290,17 @@ export function RecurrentTransactionForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Fin opcional</label>
+              <label className={labelCls}>{t('form.end')}</label>
               <input type="date" {...register("end_date", { setValueAs: (v) => v === "" ? null : v })}
                 value={endDate} onChange={(e) => setEndDate(e.target.value)}
                 className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>IVA</label>
+              <label className={labelCls}>{t('form.iva')}</label>
               <DropdownSelect
                 name="iva_percent"
                 value={String(iva)}
-                placeholder="Selecciona IVA"
+                placeholder={t('placeholders.iva')}
                 options={ivaOptions}
                 onChange={(_, value) => setIva(value)}
                 buttonClassName={dropdownButtonCls}
@@ -308,29 +310,29 @@ export function RecurrentTransactionForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Categoria</label>
+              <label className={labelCls}>{t('form.category')}</label>
               {!loading ? (
                 <DropdownSelect
                   name="category_id"
                   value={String(category)}
-                  placeholder="Sin categoria"
+                  placeholder={t('placeholders.noCategory')}
                   options={categoryOptions}
                   onChange={(_, value) => setCategory(value)}
                   buttonClassName={dropdownButtonCls}
                 />
               ) : (
                 <div className={`${inputCls} animate-pulse text-gray-400 dark:text-gray-500`}>
-                  Cargando categorias...
+                  {t('placeholders.loadingCategories')}
                 </div>
               )}
               {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
             </div>
             <div>
-              <label className={labelCls}>Metodo de pago</label>
+              <label className={labelCls}>{t('form.paymentMethod')}</label>
               <DropdownSelect
                 name="payment_method"
                 value={paymentMethod}
-                placeholder="Selecciona metodo"
+                placeholder={t('placeholders.paymentMethod')}
                 options={paymentOptions}
                 onChange={(_, value) => setPaymentMethod(value)}
                 buttonClassName={dropdownButtonCls}
@@ -339,18 +341,18 @@ export function RecurrentTransactionForm({
           </div>
 
           <div>
-            <label className={labelCls}>Descripcion</label>
-            <input {...register("description", { maxLength: { value: 100, message: "La descripcion no puede superar 100 caracteres" } })}
-              type="text" placeholder="Descripcion opcional"
+            <label className={labelCls}>{t('form.description')}</label>
+            <input {...register("description", { maxLength: { value: 100, message: t('errors.descriptionMax') } })}
+              type="text" placeholder={t('placeholders.description')}
               value={description} onChange={(e) => setDescription(e.target.value)}
               className={inputCls} />
             {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
 
           <div>
-            <label className={labelCls}>{select === 'income' ? 'Cliente' : 'Proveedor'}</label>
-            <input {...register("client", { maxLength: { value: 50, message: "No puede superar 50 caracteres" } })}
-              type="text" placeholder={select === 'income' ? 'Ej. Cliente mensual' : 'Ej. Arrendador, Netflix, gestoria...'}
+            <label className={labelCls}>{select === 'income' ? t('form.client') : t('form.provider')}</label>
+            <input {...register("client", { maxLength: { value: 50, message: t('errors.clientMax') } })}
+              type="text" placeholder={select === 'income' ? t('placeholders.client') : t('placeholders.provider')}
               value={client} onChange={(e) => setClient(e.target.value)}
               className={inputCls} />
             {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
@@ -363,7 +365,7 @@ export function RecurrentTransactionForm({
                   {...register("active")}
                   onChange={(e) => setActive(e.target.checked)}
                   className="w-4 h-4 accent-primary" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Activa</span>
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('form.active')}</span>
               </label>
               {select === 'expense' && (
                 <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
@@ -371,7 +373,7 @@ export function RecurrentTransactionForm({
                     {...register("is_deductible")}
                     onChange={(e) => setIsDeductible(e.target.checked)}
                     className="w-4 h-4 accent-primary" />
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Deducible</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('form.deductible')}</span>
                 </label>
               )}
             </div>
@@ -379,7 +381,7 @@ export function RecurrentTransactionForm({
             {select === 'expense' && isDeductible && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelCls}>% deducible</label>
+                  <label className={labelCls}>{t('form.deductiblePercent')}</label>
                   <input type="number" step="0.01" min="0" max="100"
                     {...register("deductible_percent", { valueAsNumber: true })}
                     value={deductiblePercent}
@@ -387,9 +389,9 @@ export function RecurrentTransactionForm({
                     className={inputCls} />
                 </div>
                 <div>
-                  <label className={labelCls}>Nota fiscal</label>
+                  <label className={labelCls}>{t('form.taxNote')}</label>
                   <input {...register("tax_note")}
-                    type="text" placeholder="Ej. Local de trabajo"
+                    type="text" placeholder={t('placeholders.taxNote')}
                     value={taxNote} onChange={(e) => setTaxNote(e.target.value)}
                     className={inputCls} />
                 </div>
@@ -402,14 +404,14 @@ export function RecurrentTransactionForm({
               className="flex-1 bg-primary text-white font-semibold py-2.5 px-6 rounded-xl shadow-md
                 hover:brightness-110 active:scale-[0.98] transition-all duration-150 ease-in-out cursor-pointer
                 disabled:opacity-50 disabled:cursor-not-allowed">
-              {recurrentEdit == null ? 'Crear movimiento' : 'Actualizar'}
+              {recurrentEdit == null ? t('create_movement') : t('update')}
             </button>
             <button type="button" onClick={close}
               className="flex-1 sm:flex-none sm:w-36 bg-background dark:bg-dark-background
                 ring-1 ring-gray-200 dark:ring-gray-700 text-gray-600 dark:text-gray-300 font-semibold
                 py-2.5 px-6 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
                 transition-all duration-150 ease-in-out cursor-pointer">
-              Cancelar
+              {t('form.cancel')}
             </button>
           </div>
         </div>

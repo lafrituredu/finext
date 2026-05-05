@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import RecurrentTransactionForm from '../components/materials/RecurrentTransactionForm';
 import Confirmation from '../components/materials/Confirmation';
 import {
@@ -21,14 +22,8 @@ import CoinIcon from '/src/assets/icons/Coin.svg?react';
 import BankIcon from '/src/assets/icons/Bank.svg?react';
 import LoadingIcon from '/src/assets/icons/Loading.svg?react';
 
-const frequencyLabels: Record<string, string> = {
-  weekly: 'Semanal',
-  monthly: 'Mensual',
-  quarterly: 'Trimestral',
-  yearly: 'Anual'
-};
-
 function Recurrent() {
+  const { t } = useTranslation("recurrent");
   const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +40,7 @@ function Recurrent() {
     setError(null);
     getRecurrentTransactions()
       .then(data => setRecurrentTransactions(data))
-      .catch(() => setError('Error al cargar los movimientos fijos'))
+      .catch(() => setError(t('messages.loadError')))
       .finally(() => setLoading(false));
   };
 
@@ -65,7 +60,7 @@ function Recurrent() {
       await deleteRecurrentTransaction(id);
       setRecurrentTransactions(prev => prev.filter(item => item.id !== id));
     } catch (error: any) {
-      setError('Error al eliminar el movimiento fijo');
+      setError(t('messages.deleteError'));
     }
   };
 
@@ -78,7 +73,7 @@ function Recurrent() {
         item.id === id ? response.recurrent_transaction : item
       ));
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Error al generar la transaccion');
+      setError(error.response?.data?.message || t('messages.generateError'));
     } finally {
       setGeneratingId(null);
     }
@@ -89,10 +84,10 @@ function Recurrent() {
   const recurrentAmount = (item: RecurrentTransaction) => Number(item.total_amount);
 
   const summaryLabel = () => {
-    if (select === 'incomes') return 'Ingresos fijos activos';
-    if (select === 'expenses') return 'Gastos fijos activos';
-    if (select === 'deductible') return 'Deducible fijo activo';
-    return 'Balance fijo activo';
+    if (select === 'incomes') return t('summary.incomes');
+    if (select === 'expenses') return t('summary.expenses');
+    if (select === 'deductible') return t('summary.deductible');
+    return t('summary.total');
   };
 
   const summaryAmount = () => {
@@ -151,7 +146,7 @@ function Recurrent() {
       setRecurrentTransactions(prev => prev.map(current =>
         current.id === item.id ? { ...current, active: item.active } : current
       ));
-      setError('Error al actualizar el estado');
+      setError(t('messages.statusError'));
     }
   };
 
@@ -185,24 +180,24 @@ function Recurrent() {
           Icon={TrashcanIcon}
           close={() => setRecurrentToDelete(null)}
           onConfirm={() => { handleDelete(recurrentToDelete.id); setRecurrentToDelete(null); }}>
-          Estas seguro de que quieres eliminar <span className='font-bold'>{recurrentToDelete.name}</span>?
+          {t('messages.deleteConfirm')} <span className='font-bold'>{recurrentToDelete.name}</span>?
         </Confirmation>
       )}
 
       <div className='p-10 inter'>
         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
           <div>
-            <h2 className='mont_semibold text-4xl'>Movimientos fijos</h2>
-            <p className='text-sm text-gray-400 mt-1'>Pagos e ingresos periodicos que generan transacciones reales.</p>
+            <h2 className='mont_semibold text-4xl'>{t('recurrent')}</h2>
+            <p className='text-sm text-gray-400 mt-1'>{t('subtitle')}</p>
           </div>
           <button
             onClick={() => { setShowForm(true); setRecurrentToEdit(null); }}
             className="inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
             <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
-              Nuevo movimiento
+              {t('new_movement')}
             </span>
             <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-              Crear
+              {t('create')}
             </span>
           </button>
         </div>
@@ -210,10 +205,10 @@ function Recurrent() {
         {recurrentTransactions.length !== 0 && (
           <div className='md:py-10 pt-10 pb-5'>
             <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat select-none'>
-              <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
-              <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Ingresos</div>
-              <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Gastos</div>
-              <div id='deductible' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'deductible' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Deducibles</div>
+              <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.total')}</div>
+              <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.incomes')}</div>
+              <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.expenses')}</div>
+              <div id='deductible' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'deductible' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.deductible')}</div>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div className='bg-gray-100 dark:bg-dark-card rounded-2xl p-5 ring-2 ring-gray-200 dark:ring-[#101a3d]'>
@@ -222,11 +217,11 @@ function Recurrent() {
                   {summaryAmount().toFixed(2)} EUR
                 </p>
                 <p className='text-xs text-gray-400 mt-1'>
-                  {activeFilteredRecurrent.length} movimiento{activeFilteredRecurrent.length !== 1 ? 's' : ''} activo{activeFilteredRecurrent.length !== 1 ? 's' : ''}
+                  {activeFilteredRecurrent.length} {t('summary.movement')}{activeFilteredRecurrent.length !== 1 ? 's' : ''} {t('summary.active')}{activeFilteredRecurrent.length !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
-            <p className='inter capitalize text-gray-400 mt-4'>{select} movimientos {'->'} <span className='font-bold'>{filteredRecurrent.length}</span></p>
+            <p className='inter capitalize text-gray-400 mt-4'>{t(`filters.${select}`)} {t('messages.countLabel')} {'->'} <span className='font-bold'>{filteredRecurrent.length}</span></p>
           </div>
         )}
 
@@ -239,7 +234,7 @@ function Recurrent() {
         ) : recurrentTransactions.length === 0 ? (
           <div className='flex flex-col justify-center items-center inter pt-40'>
             <RecurrentIcon className='w-24 h-24' />
-            <p className='text-xl'>No hay movimientos fijos</p>
+            <p className='text-xl'>{t('no_recurrent')}</p>
           </div>
         ) : (
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-5 text-text dark:text-dark-text'>
@@ -259,7 +254,7 @@ function Recurrent() {
                     </div>
                     <div className='truncate'>
                       <p className='mont_semibold text-lg truncate'>{item.name}</p>
-                      <p className='text-xs text-gray-400'>{frequencyLabels[item.frequency]}</p>
+                      <p className='text-xs text-gray-400'>{t(`frequency.${item.frequency}`)}</p>
                     </div>
                   </div>
 
@@ -269,7 +264,7 @@ function Recurrent() {
                       onClick={() => handleToggleActive(item)}
                       className={`relative w-10 h-5 rounded-full transition-colors duration-200 cursor-pointer shrink-0
                         ${item.active ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
-                      aria-label={item.active ? 'Desactivar movimiento fijo' : 'Activar movimiento fijo'}>
+                      aria-label={item.active ? t('card.disable') : t('card.enable')}>
                       <span className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200
                         ${item.active ? 'translate-x-5' : 'translate-x-0'}`} />
                     </button>
@@ -301,7 +296,7 @@ function Recurrent() {
 
                 <div className='flex flex-col gap-3 pt-4 text-sm flex-1'>
                   <div className='flex justify-between gap-2 text-gray-400'>
-                    <span>Proxima</span>
+                    <span>{t('card.next')}</span>
                     <span className={nextRunIsDue(item.next_run_date) ? 'text-primary font-semibold' : ''}>
                       {dayjs(item.next_run_date).format('DD-MM-YYYY')}
                     </span>
@@ -312,7 +307,7 @@ function Recurrent() {
                       ${item.active
                         ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'
                         : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                      {item.active ? 'Activa' : 'Pausada'}
+                      {item.active ? t('card.active') : t('card.paused')}
                     </span>
 
                     {item.category !== null && (
@@ -325,7 +320,7 @@ function Recurrent() {
 
                   {item.is_deductible && (
                     <div className='rounded-xl bg-primary/10 dark:bg-primary/15 text-primary px-3 py-2 text-xs'>
-                      <span className='font-semibold'>Deducible {Number(item.deductible_percent ?? 100)}%</span>
+                      <span className='font-semibold'>{t('card.deductible')} {Number(item.deductible_percent ?? 100)}%</span>
                       {item.tax_note && <span> - {item.tax_note}</span>}
                     </div>
                   )}
@@ -338,7 +333,7 @@ function Recurrent() {
                       hover:bg-white dark:hover:bg-[#1a2957] hover:text-primary
                       active:scale-[0.98] transition-all duration-150 ease-in-out cursor-pointer
                       disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-500'>
-                    {generatingId === item.id ? 'Generando...' : 'Generar ahora'}
+                    {generatingId === item.id ? t('card.generating') : t('card.generateNow')}
                   </button>
                 </div>
               </div>

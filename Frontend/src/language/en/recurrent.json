@@ -1,6 +1,107 @@
 {
   "recurrent": "Fixed movements",
+  "subtitle": "Recurring payments and income that create real transactions.",
   "new_recurrent": "New fixed movement",
+  "new_movement": "New movement",
+  "edit_recurrent": "Edit fixed movement",
   "create": "Create",
-  "no_recurrent": "No fixed movements"
+  "create_movement": "Create movement",
+  "update": "Update",
+  "no_recurrent": "No fixed movements",
+  "filters": {
+    "total": "Total",
+    "incomes": "Income",
+    "expenses": "Expenses",
+    "deductible": "Deductible"
+  },
+  "summary": {
+    "incomes": "Active fixed income",
+    "expenses": "Active fixed expenses",
+    "deductible": "Active fixed deductible",
+    "total": "Active fixed balance",
+    "movement": "movement",
+    "active": "active"
+  },
+  "messages": {
+    "loadError": "Error loading fixed movements",
+    "deleteError": "Error deleting fixed movement",
+    "generateError": "Error generating transaction",
+    "statusError": "Error updating status",
+    "deleteConfirm": "Are you sure you want to delete",
+    "countLabel": "movements"
+  },
+  "card": {
+    "next": "Next",
+    "active": "Active",
+    "paused": "Paused",
+    "deductible": "Deductible",
+    "generateNow": "Generate now",
+    "generating": "Generating...",
+    "enable": "Enable fixed movement",
+    "disable": "Disable fixed movement"
+  },
+  "frequency": {
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly"
+  },
+  "form": {
+    "income": "Income",
+    "expense": "Expense",
+    "name": "Name",
+    "amount": "Amount",
+    "frequency": "Frequency",
+    "start": "Start",
+    "nextRun": "Next run",
+    "end": "Optional end",
+    "iva": "VAT",
+    "category": "Category",
+    "paymentMethod": "Payment method",
+    "description": "Description",
+    "client": "Client",
+    "provider": "Provider",
+    "active": "Active",
+    "deductible": "Deductible",
+    "deductiblePercent": "% deductible",
+    "taxNote": "Tax note",
+    "cancel": "Cancel"
+  },
+  "placeholders": {
+    "name": "E.g. Office rent",
+    "amount": "0.00 EUR",
+    "frequency": "Select frequency",
+    "iva": "Select VAT",
+    "noCategory": "No category",
+    "loadingCategories": "Loading categories...",
+    "paymentMethod": "Select method",
+    "description": "Optional description",
+    "client": "E.g. Monthly client",
+    "provider": "E.g. Landlord, Netflix, accountant...",
+    "taxNote": "E.g. Workplace office"
+  },
+  "payment": {
+    "card": "Card",
+    "cash": "Cash",
+    "transfer": "Bank transfer"
+  },
+  "iva": {
+    "none": "No VAT - 0%",
+    "superreduced": "Super-reduced - 4%",
+    "reduced": "Reduced - 10%",
+    "general": "General - 21%"
+  },
+  "errors": {
+    "loadCategories": "Error loading categories",
+    "nameRequired": "Name is required",
+    "nameMax": "Name cannot exceed 40 characters",
+    "namePattern": "Only letters, numbers and spaces are allowed",
+    "amountRequired": "Amount is required",
+    "amountMin": "Amount must be greater than 0",
+    "amountMax": "Amount cannot exceed 1,000,000",
+    "startRequired": "Start date is required",
+    "nextRequired": "Next run date is required",
+    "descriptionMax": "Description cannot exceed 100 characters",
+    "clientMax": "Cannot exceed 50 characters"
+  }
 }

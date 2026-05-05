@@ -1,6 +1,107 @@
 {
   "recurrent": "Movimientos fijos",
+  "subtitle": "Pagos e ingresos periodicos que generan transacciones reales.",
   "new_recurrent": "Nuevo movimiento fijo",
+  "new_movement": "Nuevo movimiento",
+  "edit_recurrent": "Editar movimiento fijo",
   "create": "Crear",
-  "no_recurrent": "No hay movimientos fijos"
+  "create_movement": "Crear movimiento",
+  "update": "Actualizar",
+  "no_recurrent": "No hay movimientos fijos",
+  "filters": {
+    "total": "Total",
+    "incomes": "Ingresos",
+    "expenses": "Gastos",
+    "deductible": "Deducibles"
+  },
+  "summary": {
+    "incomes": "Ingresos fijos activos",
+    "expenses": "Gastos fijos activos",
+    "deductible": "Deducible fijo activo",
+    "total": "Balance fijo activo",
+    "movement": "movimiento",
+    "active": "activo"
+  },
+  "messages": {
+    "loadError": "Error al cargar los movimientos fijos",
+    "deleteError": "Error al eliminar el movimiento fijo",
+    "generateError": "Error al generar la transaccion",
+    "statusError": "Error al actualizar el estado",
+    "deleteConfirm": "Estas seguro de que quieres eliminar",
+    "countLabel": "movimientos"
+  },
+  "card": {
+    "next": "Proxima",
+    "active": "Activa",
+    "paused": "Pausada",
+    "deductible": "Deducible",
+    "generateNow": "Generar ahora",
+    "generating": "Generando...",
+    "enable": "Activar movimiento fijo",
+    "disable": "Desactivar movimiento fijo"
+  },
+  "frequency": {
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "quarterly": "Trimestral",
+    "yearly": "Anual"
+  },
+  "form": {
+    "income": "Ingreso",
+    "expense": "Gasto",
+    "name": "Nombre",
+    "amount": "Importe",
+    "frequency": "Frecuencia",
+    "start": "Inicio",
+    "nextRun": "Proxima ejecucion",
+    "end": "Fin opcional",
+    "iva": "IVA",
+    "category": "Categoria",
+    "paymentMethod": "Metodo de pago",
+    "description": "Descripcion",
+    "client": "Cliente",
+    "provider": "Proveedor",
+    "active": "Activa",
+    "deductible": "Deducible",
+    "deductiblePercent": "% deducible",
+    "taxNote": "Nota fiscal",
+    "cancel": "Cancelar"
+  },
+  "placeholders": {
+    "name": "Ej. Alquiler local",
+    "amount": "0.00 EUR",
+    "frequency": "Selecciona frecuencia",
+    "iva": "Selecciona IVA",
+    "noCategory": "Sin categoria",
+    "loadingCategories": "Cargando categorias...",
+    "paymentMethod": "Selecciona metodo",
+    "description": "Descripcion opcional",
+    "client": "Ej. Cliente mensual",
+    "provider": "Ej. Arrendador, Netflix, gestoria...",
+    "taxNote": "Ej. Local de trabajo"
+  },
+  "payment": {
+    "card": "Tarjeta",
+    "cash": "Efectivo",
+    "transfer": "Transferencia"
+  },
+  "iva": {
+    "none": "Sin IVA - 0%",
+    "superreduced": "Superreducido - 4%",
+    "reduced": "Reducido - 10%",
+    "general": "General - 21%"
+  },
+  "errors": {
+    "loadCategories": "Error al cargar las categorias",
+    "nameRequired": "El nombre es obligatorio",
+    "nameMax": "El nombre no puede superar 40 caracteres",
+    "namePattern": "Solo se permiten letras, numeros y espacios",
+    "amountRequired": "El importe es obligatorio",
+    "amountMin": "El importe debe ser mayor que 0",
+    "amountMax": "El importe no puede superar 1.000.000",
+    "startRequired": "La fecha de inicio es obligatoria",
+    "nextRequired": "La proxima fecha es obligatoria",
+    "descriptionMax": "La descripcion no puede superar 100 caracteres",
+    "clientMax": "No puede superar 50 caracteres"
+  }
 }
