@@ -95,7 +95,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
               {...register("color", {
                 required: "Obligatorio"
               })}
-              className={`${inputCls} py-0.5!`}
+              className={`border border-gray-300 w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50`}
             />
             {errors.color && <p className="text-red-400 text-xs">{errors.color.message}</p>}
           </div>

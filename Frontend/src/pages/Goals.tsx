@@ -8,26 +8,31 @@ import { deleteTransaction, getTransactions, type Transaction } from '../api/Tra
 import  { GoalAmountForm } from "../components/materials/GoalAmountForm"
 import  { GoalForm } from "../components/materials/GoalForm"
 import Confirmation from '../components/materials/Confirmation';
+import { useGoals, type GoalsContextType } from '../contexts/GoalContext';
+import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
 
 function Goals() {
-  const [goals,setGoals] = useState<Goal[]>();
+  const { goals, setGoals, refetchGoals } = useGoals() as GoalsContextType;
+  const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;
   const [goalEdit,setGoalEdit] = useState<Goal>();
   const [goalDelete,setGoalDelete] = useState<Goal>();
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  // const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<any>(null)
   const [showGoalAmountForm, setShowGoalAmountForm] = useState(false)
   const [showGoalForm, setShowGoalForm] = useState(false)
 
   useEffect(() => {
-    getGoals()
-    .then(value => setGoals(value))
-    .catch(err => err)
+    // getGoals()
+    // .then(value => setGoals(value))
+    // .catch(err => err)
 
-    getTransactions()
-      .then(data => setTransactions(data))
-      .catch(() => setError('Error al cargar las transacciones'))
-      .finally(() => setLoading(false));
+    // getTransactions()
+    //   .then(data => setTransactions(data))
+    //   .catch(() => setError('Error al cargar las transacciones'))
+    //   .finally(() => setLoading(false));
+    refetchGoals()
+    refetchTransactions()
   },[showGoalAmountForm,goalDelete,showGoalForm]);
   
   function calculateCashflow(){
@@ -99,7 +104,8 @@ function Goals() {
           onConfirm={() => {destroyGoal(goalDelete!);setGoalDelete(undefined)}}>
           Estas seguro de que quieres eliminar <span className='font-bold'>{goalDelete?.name}</span>?
         </Confirmation>)}
-        {showGoalForm && <GoalForm close={() => {setGoalEdit(undefined);setShowGoalForm(false)} } goalEdit={goalEdit} />}
+        {showGoalForm && <GoalForm close={() => {setShowGoalForm(false);setGoalEdit(undefined)} } goalEdit={goalEdit} />}
+        {showGoalForm && goalEdit == null && <GoalForm close={() => setShowGoalForm(false)}/>}
     </>
   )
 }

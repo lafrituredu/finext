@@ -118,7 +118,7 @@ function Categories() {
                 <td className='capitalize'>{category.name}</td>
                 <td><div className='size-5 rounded-full' style={{backgroundColor: category.color ?? '#f3f4f5' }} /></td>
                 <td>{category.user_id == null ? 'Default' : 'Own'}</td>
-                <td className='flex flex-row items-center gap-2'>{category.user_id != null ? <EditIcon onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}} className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text '/> : <Padlock className='text-primary' /> }
+                <td className='flex flex-row items-center gap-2'>{category.user_id != null ? <EditIcon onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}} className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text '/>: ''}
                 {category.user_id != null ? <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /> : <Padlock className='text-primary' /> }
                 </td>
               </tr>

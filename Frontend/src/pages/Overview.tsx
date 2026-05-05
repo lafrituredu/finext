@@ -8,6 +8,7 @@ import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
 import { getGoals, getRecomendation, type Goal } from '../api/GoalService';
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
+import { useGoals, type GoalsContextType } from '../contexts/GoalContext';
 
 
 function Overview() {
@@ -16,24 +17,14 @@ const { t: tUtils } = useTranslation("utils");
 
 const [select,setSeleceted] = useState<any>('cashflow');
 const { transactions, setTransactions } = useTransactions() as TransactionsContextType;
+const { goals, setGoals } = useGoals() as GoalsContextType;
 // const [transactions, setTransactions] = useState<Transaction[]>(useTransactions())
 // const transactions:Transaction[] = useTransactions();
-const [goals, setGoals] = useState<Goal[]>([])
+// const [goals, setGoals] = useState<Goal[]>([])
 
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
-
-useEffect(() => {
-// getTransactions()
-//     .then(data => setTransactions(data))
-//     .catch(() => setError('Error al cargar las transacciones'))
-//     .finally(() => setLoading(false));
-getGoals()
-    .then(data => setGoals(data))
-    .catch(() => setError('Error al cargar los Goals'))
-    .finally(() => setLoading(false));
-}, [])
 
 
 
@@ -41,6 +32,9 @@ let filtered:any[] = [];
 
 transactions.forEach( element => {
     let date:number = new Date(element.date).getMonth();
+    if (new Date().getFullYear() != new Date(element.date).getFullYear()) {
+        return;
+    }
     if (element.type == 'income') {
         let total:number = filtered[date]?.incomes == undefined ? element.total_amount : Number(filtered[date].incomes) + Number(element.total_amount);
         filtered[date] = {incomes: total, expenses: filtered[date]?.expenses}
