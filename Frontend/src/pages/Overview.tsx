@@ -21,32 +21,45 @@ const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
 
-const sum = (a:number,b:number) => {
-    return a+b;
-}
+useEffect(() => {
+getTransactions()
+    .then(data => setTransactions(data))
+    .catch(() => setError('Error al cargar las transacciones'))
+    .finally(() => setLoading(false));
+getGoals()
+    .then(data => setGoals(data))
+    .catch(() => setError('Error al cargar los Goals'))
+    .finally(() => setLoading(false));
+}, [])
 
+
+
+let filtered:any[] = [];
+
+transactions.forEach( element => {
+    let date:number = new Date(element.date).getMonth();
+    if (element.type == 'income') {
+        let total:number = filtered[date]?.incomes == undefined ? element.total_amount : Number(filtered[date].incomes) + Number(element.total_amount);
+        filtered[date] = {incomes: total, expenses: filtered[date]?.expenses}
+    }else{
+        let total:number = filtered[date]?.expenses == undefined ? element.total_amount : Number(filtered[date].expenses) + Number(element.total_amount);
+        filtered[date] = {incomes: filtered[date]?.incomes , expenses: total}
+    }
+    
+})
+console.log(filtered)
 let months = [];
 for (let i = 0; i <= 11; i++) {
     let _months = ['january','february','march','april','may','june','july','august','september','october','november','december']
     let month = `months.${_months[i]}`
     let obj = {
         name: tUtils(month),
-        incomes: transactions.filter(t => new Date(t.date).getMonth() == i && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-        expense: transactions.filter(t => new Date(t.date).getMonth() == i && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
+        incomes: filtered[i]?.incomes ?? 0,
+        expense: filtered[i]?.expenses ?? 0,
     }
     
     months.push(obj);
 }
-
-let filtered:any = [];
-
-transactions.forEach( element => {
-    let date = new Date(element.date).getMonth();
-    if (element.type == 'income') {
-        let total = filtered[date].incomes + element.total_amount;
-    }
-    
-})
 
 // const months = [
 //     {
@@ -123,16 +136,7 @@ transactions.forEach( element => {
 //     }
 // ];
 
-useEffect(() => {
-getTransactions()
-    .then(data => setTransactions(data))
-    .catch(() => setError('Error al cargar las transacciones'))
-    .finally(() => setLoading(false));
-getGoals()
-    .then(data => setGoals(data))
-    .catch(() => setError('Error al cargar los Goals'))
-    .finally(() => setLoading(false));
-}, [])
+
 
 const config = {
     options: {
