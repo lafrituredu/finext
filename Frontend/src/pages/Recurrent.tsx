@@ -51,7 +51,7 @@ function Recurrent() {
   const filteredRecurrent = recurrentTransactions.filter(item => {
     if (select === 'incomes') return item.type === 'income';
     if (select === 'expenses') return item.type === 'expense';
-    if (select === 'deductible') return item.is_deductible;
+    if (select === 'deductible') return item.is_deductible && Number(item.iva_percent) > 0;
     return true;
   });
 
@@ -99,8 +99,8 @@ function Recurrent() {
 
     if (select === 'deductible') {
       return activeFilteredRecurrent.reduce((sum, item) => {
-        const deductiblePercent = Number(item.deductible_percent ?? 100) / 100;
-        return sum + (recurrentAmount(item) * deductiblePercent);
+        const ivaPercent = Number(item.iva_percent ?? 0) / 100;
+        return sum + (recurrentAmount(item) * ivaPercent);
       }, 0);
     }
 
@@ -318,10 +318,9 @@ function Recurrent() {
                     )}
                   </div>
 
-                  {item.is_deductible && (
+                  {item.is_deductible && Number(item.iva_percent) > 0 && (
                     <div className='rounded-xl bg-primary/10 dark:bg-primary/15 text-primary px-3 py-2 text-xs'>
-                      <span className='font-semibold'>{t('card.deductible')} {Number(item.deductible_percent ?? 100)}%</span>
-                      {item.tax_note && <span> - {item.tax_note}</span>}
+                      <span className='font-semibold'>{t('card.deductible')}</span>
                     </div>
                   )}
 

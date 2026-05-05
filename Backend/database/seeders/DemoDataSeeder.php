@@ -170,7 +170,7 @@ class DemoDataSeeder extends Seeder
                     'recurrent' => false,
                     'recurrent_timer' => null,
                     'is_deductible' => true,
-                    'deductible_percent' => 100,
+                    'deductible_percent' => 21,
                     'tax_note' => 'Proveedor profesional',
                 ]
             );
@@ -192,7 +192,7 @@ class DemoDataSeeder extends Seeder
                     'client' => 'Coworking Centre',
                     'payment' => 'transfer',
                     'deductible' => true,
-                    'deductible_percent' => 100,
+                    'deductible_percent' => 21,
                     'tax_note' => 'Espacio de trabajo',
                 ],
                 [
@@ -205,7 +205,7 @@ class DemoDataSeeder extends Seeder
                     'client' => 'SaaS Tools',
                     'payment' => 'card',
                     'deductible' => true,
-                    'deductible_percent' => 100,
+                    'deductible_percent' => 21,
                     'tax_note' => 'Herramienta profesional',
                 ],
                 [
@@ -218,7 +218,7 @@ class DemoDataSeeder extends Seeder
                     'client' => 'Taxi y metro',
                     'payment' => 'card',
                     'deductible' => true,
-                    'deductible_percent' => 100,
+                    'deductible_percent' => 10,
                     'tax_note' => 'Desplazamientos profesionales',
                 ],
             ];
@@ -271,7 +271,7 @@ class DemoDataSeeder extends Seeder
                     'recurrent' => false,
                     'recurrent_timer' => null,
                     'is_deductible' => true,
-                    'deductible_percent' => 100,
+                    'deductible_percent' => 21,
                     'tax_note' => 'Gasto profesional',
                 ]
             );
@@ -337,8 +337,8 @@ class DemoDataSeeder extends Seeder
                 'payment' => 'transfer',
                 'frequency' => 'monthly',
                 'day' => 1,
-                'deductible' => true,
-                'deductible_percent' => 100,
+                'deductible' => false,
+                'deductible_percent' => null,
                 'tax_note' => 'Local afecto a la actividad',
             ],
             [
@@ -352,8 +352,8 @@ class DemoDataSeeder extends Seeder
                 'payment' => 'transfer',
                 'frequency' => 'monthly',
                 'day' => 30,
-                'deductible' => true,
-                'deductible_percent' => 100,
+                'deductible' => false,
+                'deductible_percent' => null,
                 'tax_note' => 'Cuota profesional',
             ],
             [
@@ -368,7 +368,7 @@ class DemoDataSeeder extends Seeder
                 'frequency' => 'monthly',
                 'day' => 15,
                 'deductible' => true,
-                'deductible_percent' => 100,
+                'deductible_percent' => 21,
                 'tax_note' => 'Software profesional',
             ],
             [

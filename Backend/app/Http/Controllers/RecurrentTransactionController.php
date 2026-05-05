@@ -44,9 +44,9 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
-            'is_deductible' => $data['type'] === 'expense' ? ($data['is_deductible'] ?? false) : false,
-            'deductible_percent' => $data['type'] === 'expense' && ($data['is_deductible'] ?? false) ? ($data['deductible_percent'] ?? 100) : null,
-            'tax_note' => $data['type'] === 'expense' && ($data['is_deductible'] ?? false) ? ($data['tax_note'] ?? null) : null,
+            'is_deductible' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 ? ($data['is_deductible'] ?? false) : false,
+            'deductible_percent' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 && ($data['is_deductible'] ?? false) ? ($data['iva_percent'] ?? 0) : null,
+            'tax_note' => null,
         ]);
 
         return response()->json($recurrentTransaction->load(['category', 'user']), 201);
@@ -75,9 +75,9 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
-            'is_deductible' => $data['type'] === 'expense' ? ($data['is_deductible'] ?? false) : false,
-            'deductible_percent' => $data['type'] === 'expense' && ($data['is_deductible'] ?? false) ? ($data['deductible_percent'] ?? 100) : null,
-            'tax_note' => $data['type'] === 'expense' && ($data['is_deductible'] ?? false) ? ($data['tax_note'] ?? null) : null,
+            'is_deductible' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 ? ($data['is_deductible'] ?? false) : false,
+            'deductible_percent' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 && ($data['is_deductible'] ?? false) ? ($data['iva_percent'] ?? 0) : null,
+            'tax_note' => null,
         ]);
 
         return response()->json($recurrentTransaction->fresh(['category', 'user']));

@@ -62,8 +62,6 @@ export function RecurrentTransactionForm({
   const [endDate, setEndDate] = useState(dateInputValue(recurrentEdit?.end_date));
   const [active, setActive] = useState(recurrentEdit?.active ?? true);
   const [isDeductible, setIsDeductible] = useState(recurrentEdit?.is_deductible ?? false);
-  const [deductiblePercent, setDeductiblePercent] = useState<number | string>(recurrentEdit?.deductible_percent ?? 100);
-  const [taxNote, setTaxNote] = useState(recurrentEdit?.tax_note || '');
 
   const {
     register,
@@ -98,13 +96,11 @@ export function RecurrentTransactionForm({
   }, [nextRunDate, setValue, startDate]);
 
   useEffect(() => {
-    if (select === 'income') {
+    if (select === 'income' || Number(iva) <= 0) {
       setIsDeductible(false);
-      setDeductiblePercent(100);
-      setTaxNote('');
       setValue("is_deductible", false);
     }
-  }, [select, setValue]);
+  }, [iva, select, setValue]);
 
   const onSubmit = async (data: RecurrentFormValues) => {
     if (isSubmitting) return;
@@ -121,8 +117,8 @@ export function RecurrentTransactionForm({
       payment_method: paymentMethod,
       category_id: category === '' ? null : Number(category),
       end_date: endDate || null,
-      deductible_percent: select === 'expense' && isDeductible ? Number(deductiblePercent || 100) : null,
-      tax_note: select === 'expense' && isDeductible ? taxNote || null : null,
+      deductible_percent: select === 'expense' && isDeductible ? Number(iva || 0) : null,
+      tax_note: null,
     };
 
     try {
@@ -367,7 +363,7 @@ export function RecurrentTransactionForm({
                   className="w-4 h-4 accent-primary" />
                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('form.active')}</span>
               </label>
-              {select === 'expense' && (
+              {select === 'expense' && Number(iva) > 0 && (
                 <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
                   <input type="checkbox" checked={isDeductible}
                     {...register("is_deductible")}
@@ -377,26 +373,6 @@ export function RecurrentTransactionForm({
                 </label>
               )}
             </div>
-
-            {select === 'expense' && isDeductible && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelCls}>{t('form.deductiblePercent')}</label>
-                  <input type="number" step="0.01" min="0" max="100"
-                    {...register("deductible_percent", { valueAsNumber: true })}
-                    value={deductiblePercent}
-                    onChange={(e) => setDeductiblePercent(e.target.value)}
-                    className={inputCls} />
-                </div>
-                <div>
-                  <label className={labelCls}>{t('form.taxNote')}</label>
-                  <input {...register("tax_note")}
-                    type="text" placeholder={t('placeholders.taxNote')}
-                    value={taxNote} onChange={(e) => setTaxNote(e.target.value)}
-                    className={inputCls} />
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
