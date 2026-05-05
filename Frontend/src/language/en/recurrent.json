@@ -1,6 +1,6 @@
 {
-  "recurrent": "Recurrent",
-  "new_recurrent": "New recurrent",
+  "recurrent": "Fixed movements",
+  "new_recurrent": "New fixed movement",
   "create": "Create",
-  "no_recurrent": "No recurrent transactions"
+  "no_recurrent": "No fixed movements"
 }

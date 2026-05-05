@@ -19,6 +19,7 @@ import TagIcon from '/src/assets/icons/Tag.svg?react';
 import CardIcon from '/src/assets/icons/Credit-card.svg?react';
 import CoinIcon from '/src/assets/icons/Coin.svg?react';
 import BankIcon from '/src/assets/icons/Bank.svg?react';
+import LoadingIcon from '/src/assets/icons/Loading.svg?react';
 
 const frequencyLabels: Record<string, string> = {
   weekly: 'Semanal',
@@ -44,7 +45,7 @@ function Recurrent() {
     setError(null);
     getRecurrentTransactions()
       .then(data => setRecurrentTransactions(data))
-      .catch(() => setError('Error al cargar las transacciones recurrentes'))
+      .catch(() => setError('Error al cargar los movimientos fijos'))
       .finally(() => setLoading(false));
   };
 
@@ -64,7 +65,7 @@ function Recurrent() {
       await deleteRecurrentTransaction(id);
       setRecurrentTransactions(prev => prev.filter(item => item.id !== id));
     } catch (error: any) {
-      setError('Error al eliminar la recurrente');
+      setError('Error al eliminar el movimiento fijo');
     }
   };
 
@@ -88,10 +89,10 @@ function Recurrent() {
   const recurrentAmount = (item: RecurrentTransaction) => Number(item.total_amount);
 
   const summaryLabel = () => {
-    if (select === 'incomes') return 'Ingresos recurrentes activos';
-    if (select === 'expenses') return 'Gastos recurrentes activos';
-    if (select === 'deductible') return 'Deducible recurrente activo';
-    return 'Balance recurrente activo';
+    if (select === 'incomes') return 'Ingresos fijos activos';
+    if (select === 'expenses') return 'Gastos fijos activos';
+    if (select === 'deductible') return 'Deducible fijo activo';
+    return 'Balance fijo activo';
   };
 
   const summaryAmount = () => {
@@ -191,14 +192,14 @@ function Recurrent() {
       <div className='p-10 inter'>
         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
           <div>
-            <h2 className='mont_semibold text-4xl'>Recurrentes</h2>
+            <h2 className='mont_semibold text-4xl'>Movimientos fijos</h2>
             <p className='text-sm text-gray-400 mt-1'>Pagos e ingresos periodicos que generan transacciones reales.</p>
           </div>
           <button
             onClick={() => { setShowForm(true); setRecurrentToEdit(null); }}
             className="inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
             <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
-              Nueva recurrente
+              Nuevo movimiento
             </span>
             <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
               Crear
@@ -221,26 +222,24 @@ function Recurrent() {
                   {summaryAmount().toFixed(2)} EUR
                 </p>
                 <p className='text-xs text-gray-400 mt-1'>
-                  {activeFilteredRecurrent.length} recurrente{activeFilteredRecurrent.length !== 1 ? 's' : ''} activa{activeFilteredRecurrent.length !== 1 ? 's' : ''}
+                  {activeFilteredRecurrent.length} movimiento{activeFilteredRecurrent.length !== 1 ? 's' : ''} activo{activeFilteredRecurrent.length !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
-            <p className='inter capitalize text-gray-400 mt-4'>{select} recurrentes {'->'} <span className='font-bold'>{filteredRecurrent.length}</span></p>
+            <p className='inter capitalize text-gray-400 mt-4'>{select} movimientos {'->'} <span className='font-bold'>{filteredRecurrent.length}</span></p>
           </div>
         )}
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-52 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
-            ))}
+          <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
+            <LoadingIcon className='size-15 animate-spin text-[#999]' />
           </div>
         ) : error ? (
           <p className="text-red-400 text-sm mt-8">{error}</p>
         ) : recurrentTransactions.length === 0 ? (
           <div className='flex flex-col justify-center items-center inter pt-40'>
             <RecurrentIcon className='w-24 h-24' />
-            <p className='text-xl'>No hay transacciones recurrentes</p>
+            <p className='text-xl'>No hay movimientos fijos</p>
           </div>
         ) : (
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-5 text-text dark:text-dark-text'>
@@ -270,7 +269,7 @@ function Recurrent() {
                       onClick={() => handleToggleActive(item)}
                       className={`relative w-10 h-5 rounded-full transition-colors duration-200 cursor-pointer shrink-0
                         ${item.active ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
-                      aria-label={item.active ? 'Desactivar recurrente' : 'Activar recurrente'}>
+                      aria-label={item.active ? 'Desactivar movimiento fijo' : 'Activar movimiento fijo'}>
                       <span className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200
                         ${item.active ? 'translate-x-5' : 'translate-x-0'}`} />
                     </button>

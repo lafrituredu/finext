@@ -1,6 +1,6 @@
 {
-  "recurrent": "Recurrentes",
-  "new_recurrent": "Nueva recurrente",
+  "recurrent": "Movimientos fijos",
+  "new_recurrent": "Nuevo movimiento fijo",
   "create": "Crear",
-  "no_recurrent": "No hay transacciones recurrentes"
+  "no_recurrent": "No hay movimientos fijos"
 }

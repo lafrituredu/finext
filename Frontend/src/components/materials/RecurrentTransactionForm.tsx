@@ -197,7 +197,7 @@ export function RecurrentTransactionForm({
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <RecurrentIcon className="w-7 h-7" />
-              {recurrentEdit == null ? 'Nueva recurrente' : 'Editar recurrente'}
+              {recurrentEdit == null ? 'Nuevo movimiento fijo' : 'Editar movimiento fijo'}
             </h2>
             <button type="button" onClick={close}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors cursor-pointer">
@@ -402,7 +402,7 @@ export function RecurrentTransactionForm({
               className="flex-1 bg-primary text-white font-semibold py-2.5 px-6 rounded-xl shadow-md
                 hover:brightness-110 active:scale-[0.98] transition-all duration-150 ease-in-out cursor-pointer
                 disabled:opacity-50 disabled:cursor-not-allowed">
-              {recurrentEdit == null ? 'Crear recurrente' : 'Actualizar'}
+              {recurrentEdit == null ? 'Crear movimiento' : 'Actualizar'}
             </button>
             <button type="button" onClick={close}
               className="flex-1 sm:flex-none sm:w-36 bg-background dark:bg-dark-background
