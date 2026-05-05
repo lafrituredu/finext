@@ -5,6 +5,7 @@ export interface Transaction {
     user_id: number
     category_id: number | null
     bill_id: number | null
+    recurrent_transaction_id: number | null
     name: string
     date: string
     type: 'income' | 'expense'
@@ -16,6 +17,9 @@ export interface Transaction {
     status: boolean | null
     recurrent: boolean
     recurrent_timer: string | null
+    is_deductible: boolean
+    deductible_percent: number | null
+    tax_note: string | null
     created_at: string
     user: {
         id: number

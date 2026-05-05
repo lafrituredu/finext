@@ -46,9 +46,9 @@ function DropdownSelect({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className={`${buttonClassName} pr-10 text-left`}
+        className={`${buttonClassName} pr-10 text-left flex items-center justify-between gap-2`}
       >
-        {selectedLabel}
+        <span className="truncate">{selectedLabel}</span>
       </button>
 
       <div className="absolute right-4 top-1/2 -translate-y-1/2 mt-1 pointer-events-none">
@@ -70,7 +70,7 @@ function DropdownSelect({
       </div>
 
       {isOpen && (
-        <div className="absolute z-20 w-full mt-2 bg-white dark:bg-dark-background border border-gray-200 dark:border-gray-600 rounded-2xl shadow-lg overflow-hidden">
+        <div className="absolute z-70 w-full mt-2 max-h-60 overflow-y-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f1b35] shadow-2xl ring-1 ring-black/5 dark:ring-white/10 p-1">
           {options.map((option) => (
             <button
               key={option.value}
@@ -79,13 +79,16 @@ function DropdownSelect({
                 onChange(name, option.value);
                 setIsOpen(false);
               }}
-              className={`w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-blue-900/30 transition inter ${
+              className={`w-full px-3 py-2.5 text-left rounded-xl hover:bg-blue-50 dark:hover:bg-[#1a2957] transition inter flex items-center justify-between gap-3 ${
                 value === option.value
-                  ? "bg-blue-50 dark:bg-blue-900/30 text-primary"
+                  ? "bg-blue-50 dark:bg-[#1a2957] text-primary font-semibold"
                   : "text-gray-700 dark:text-gray-300"
               }`}
             >
-              {option.label}
+              <span className="truncate">{option.label}</span>
+              {value === option.value && (
+                <span className="h-2 w-2 shrink-0 rounded-full bg-primary" />
+              )}
             </button>
           ))}
         </div>
@@ -95,4 +98,3 @@ function DropdownSelect({
 }
 
 export default DropdownSelect;
-

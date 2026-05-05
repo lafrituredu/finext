@@ -9,6 +9,7 @@ class Transaction extends Model
     protected $fillable = [
     'user_id',
     'bill_id',
+    'recurrent_transaction_id',
     'category_id',
     'name',
     'date',
@@ -20,7 +21,10 @@ class Transaction extends Model
     'payment_method',
     'status',
     'recurrent',
-    'recurrent_timer'
+    'recurrent_timer',
+    'is_deductible',
+    'deductible_percent',
+    'tax_note'
     ];
     public function user()
     {
@@ -35,5 +39,10 @@ class Transaction extends Model
     public function bill()
     {
         return $this->belongsTo(Bill::class, 'bill_id');
+    }
+
+    public function recurrentTransaction()
+    {
+        return $this->belongsTo(RecurrentTransaction::class, 'recurrent_transaction_id');
     }
 }

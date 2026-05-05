@@ -12,9 +12,7 @@ export interface Bill {
     client: string | null
     description: string | null
     payment_method: string | null
-    status: boolean | null
-    recurrent: boolean
-    recurrent_timer: string | null
+    plazos: number | null
     created_at: string
     user: {
         id: number

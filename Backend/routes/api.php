@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\RecurrentTransactionController;
 
 // AUTH
 Route::post('/register', [AuthController::class, 'register']);
@@ -32,6 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/transactions/{id}', [TransactionController::class,'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'delete']);
     Route::get('/transactions/bill/{billId}', [TransactionController::class, 'getByBill']);
+    // Recurrent transactions
+    Route::get('/recurrent-transactions', [RecurrentTransactionController::class, 'index']);
+    Route::post('/recurrent-transactions', [RecurrentTransactionController::class, 'store']);
+    Route::put('/recurrent-transactions/{id}', [RecurrentTransactionController::class, 'update']);
+    Route::delete('/recurrent-transactions/{id}', [RecurrentTransactionController::class, 'delete']);
+    Route::post('/recurrent-transactions/{id}/generate', [RecurrentTransactionController::class, 'generateNext']);
     // Bills
     Route::get('/bills', [BillController::class, 'index']);
     Route::post('/bills', [BillController::class,'store']);
