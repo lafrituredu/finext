@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react";
 import { createGoal, updateGoal, type Goal } from "../../api/GoalService";
@@ -20,7 +20,13 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
     }
   });
 
+  const [isSubmitting,setIsSubmitting] = useState(false); 
+
   const onSubmit = async (data: Goal) => {
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
     try {
       if (goalEdit) {
         await updateGoal(data);
@@ -30,6 +36,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
       close();
     } catch (err) {
       console.error(err);
+      setIsSubmitting(false)
     }
   };
 
@@ -169,6 +176,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
+              disabled={isSubmitting}
               className="flex-1 bg-primary text-white py-2 rounded-xl cursor-pointer"
             >
               {goalEdit ? "Actualizar" : "Crear"}
