@@ -70,7 +70,7 @@ function Categories() {
                           <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
                         </p>
                       </div>
-                      <div className='flex justify-center text-3xl'>
+                      <div className='flex justify-center lg:text-3xl text-2xl truncate'>
                         {category.name}
                       </div>
                       <div className='flex justify-between'>
@@ -95,7 +95,7 @@ function Categories() {
                           <p><TagIcon /></p>
                           <p><Padlock className='text-primary' /></p>
                         </div>
-                        <div className='capitalize flex justify-center text-3xl'>
+                        <div className='capitalize flex justify-center lg:text-3xl text-2xl truncate'>
                           {category.name}
                         </div>
                         <div className='flex justify-between'>
@@ -117,6 +117,7 @@ function Categories() {
           <thead>
             <tr className='border-b border-gray-200 dark:border-dark-text *:text-start montserrat *:py-2'>
               <th>Nombre</th>
+              <th>Color</th>
               <th>Tipo</th>
               <th>Acciones</th>
             </tr>
@@ -125,6 +126,7 @@ function Categories() {
             {categories.map( (category,key) => 
               <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
                 <td className='capitalize'>{category.name}</td>
+                <td><div className='size-5 rounded-full' style={{backgroundColor: category.color ?? '#f3f4f5' }} /></td>
                 <td>{category.user_id == null ? 'Default' : 'Own'}</td>
                 <td className='flex flex-row items-center gap-2'>{category.user_id != null ? <EditIcon onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}} className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text '/> : <Padlock className='text-primary' /> }
                 {category.user_id != null ? <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' /> : <Padlock className='text-primary' /> }
@@ -187,9 +189,9 @@ function Categories() {
             Estas seguro de que quieres eliminar <span className='font-semibold'>{categoryToDelete.name}</span>
           </Confirmation>)
         }
-        {showCategoryForm && categoryToEdit == null && <CategoryForm close={() => setShowCategoryForm(false)}/>}
+        {showCategoryForm && categoryToEdit == null && <CategoryForm categories={categories} close={() => setShowCategoryForm(false)}/>}
 
-        {showCategoryForm && categoryToEdit && <CategoryForm categoryEdit={categoryToEdit} close={() => {setShowCategoryForm(false);setCategoryToEdit(null)}  }/>}
+        {showCategoryForm && categoryToEdit && <CategoryForm categories={categories} categoryEdit={categoryToEdit} close={() => {setShowCategoryForm(false);setCategoryToEdit(null)}  }/>}
       </div>
     </>
 

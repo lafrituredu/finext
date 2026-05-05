@@ -6,7 +6,7 @@ import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
-import { getGoals, type Goal } from '../api/GoalService';
+import { getGoals, getRecomendation, type Goal } from '../api/GoalService';
 
 
 function Overview() {
@@ -60,83 +60,6 @@ for (let i = 0; i <= 11; i++) {
     
     months.push(obj);
 }
-
-// const months = [
-//     {
-//         month: 0,
-//         name: tUtils('months.january'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 0 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 0 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 1,
-//         name: tUtils('months.february'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 1 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 1 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 2,
-//         name: tUtils('months.march'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 2 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 2 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 3,
-//         name: tUtils('months.april'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 3 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 3 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 4,
-//         name: tUtils('months.may'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 4 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 4 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 5,
-//         name: tUtils('months.june'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 5 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 5 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 6,
-//         name: tUtils('months.july'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 6 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 6 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 7,
-//         name: tUtils('months.august'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 7 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 7 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 8,
-//         name: tUtils('months.september'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 8 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 8 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 9,
-//         name: tUtils('months.october'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 9 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 9 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 10,
-//         name: tUtils('months.november'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 10 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 10 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     },
-//     {
-//         month: 11,
-//         name: tUtils('months.december'),
-//         incomes: transactions.filter(t => new Date(t.date).getMonth() == 11 && t.type == 'income').reduce( (sum,t) => sum + t.total_amount, 0),
-//         expense: transactions.filter(t => new Date(t.date).getMonth() == 11 && t.type == 'expense').reduce( (sum,t) => sum + t.total_amount, 0),
-//     }
-// ];
-
-
 
 const config = {
     options: {
@@ -288,7 +211,42 @@ function calculateCashflow(){
         {/* Financial goals + summary */}
         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
             {/* FINANCIAL GOALS */}
-            <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344]'>
+            <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] flex flex-col gap-4'>
+                {goals?.map( (goal,key) => 
+                    {
+                    const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
+                    const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
+                    const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
+                    
+                    if (key == 2) {
+                        return;
+                    }
+
+                    return (
+                    <div key={key} className='inter flex flex-col gap-2'>
+                        <p className='font-semibold montserrat flex justify-between'>{goal.name}
+                            <span className='flex gap-1 items-center'>
+                            </span>
+                        </p>
+                        <div>
+                            <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} días</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
+                            <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
+                            <div className="bg-[#00540C] h-full" style={{ width: `${progress}%` }} /> 
+                            </div>
+                        </div>
+
+                        <div className={`${recomendation.bg} p-2`}>
+                            <p>{recomendation.message}</p>
+                        </div>
+                    </div>)
+                    }
+                )}
+                { goals.length > 2 && <a className='text-primary underline hover:text-blue-500' href='/dashboard/goals'>Ver las demás metas</a>}
+                { goals.length == 0 && <p>No tienes metas abiertas aún</p>}
+            </div>
+
+
+            {/* <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344]'>
                 <p className='flex items-center montserrat font-semibold gap-2 mb-3'><Goals className='size-6' /> {t('financial_goals')}</p>
                 
                 <div className='mb-8'>
@@ -310,7 +268,7 @@ function calculateCashflow(){
                     after:bg-[#641895] after:w-1/12 after:h-full after:absolute after:bg-clip-border'></div>
                     <p className='text-[#FF9D00]'>You need to save 375€/m. But your average cashflow is about 1100€/m.</p>
                 </div>
-            </div>
+            </div> */}
 
             {/* SUMMARY */}
             <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-dark-text'>

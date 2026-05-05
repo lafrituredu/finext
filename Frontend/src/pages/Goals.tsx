@@ -49,7 +49,7 @@ function Goals() {
             onClick={(e) => setShowGoalForm(true)}
             className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
-                Nueva categoria
+                Nueva meta
               </span>
               <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
                 Crear
