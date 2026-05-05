@@ -150,7 +150,7 @@ function Bills() {
               <div
                 key={bill.id}
                 className="
-                  bg-background dark:bg-dark-background
+                  bg-background dark:bg-dark-card
                   rounded-2xl shadow-sm
                   ring-1 ring-black/5 dark:ring-white/10
                   p-5 flex flex-col gap-2">
@@ -173,7 +173,7 @@ function Bills() {
                           <div className='w-2.5 h-2.5 bg-red-500 rounded-full animate-ping absolute'></div>
                         </div>
                       ) : null}
-                      <span className="font-semibold text-gray-800 dark:text-gray-100 text-base leading-tight">
+                      <span className="font-semibold text-gray-800 dark:text-gray-100 text-base leading-tight truncate">
                         {bill.name}
                       </span>
                     </div>

@@ -5,7 +5,7 @@ import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 import { getCategories, type Category } from '../../api/CategoryService'
 import { createBill, updateBill, type Bill } from "../../api/BillService"
 import React from "react";
-import { useForm } from "react-hook-form"
+import { useForm, useFieldArray } from "react-hook-form"
 import { getTransactionsByBill } from '../../api/TransactionService'
 
 type Installment = {
@@ -26,6 +26,7 @@ type BillFormValues = {
   status: boolean
   category_id?: number
   plazos?: number
+  installments: { amount: number | string; date: string }[]
 };
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
@@ -44,9 +45,27 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const [billPaymentMethod, setBillPaymentMethod] = useState<string>(billEdit?.payment_method || '')
   const [category, setCategory] = useState<number | string>(billEdit?.category_id ?? '')
 
-  // ── Installments ──
   const [isInstallment, setIsInstallment] = useState<boolean>(false)
-  const [installments, setInstallments] = useState<Installment[]>([{ amount: '', date: '' }])
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    watch,
+    formState: { errors }
+  } = useForm<BillFormValues>({
+    defaultValues: {
+      type: billEdit?.type || 'recibida',
+      installments: [{ amount: '', date: '' }]
+    }
+  })
+
+  // ── useFieldArray para los plazos ──
+  const { fields, append, remove, replace } = useFieldArray({
+    control,
+    name: 'installments'
+  })
 
   // ── Cargar installments al editar ──
   useEffect(() => {
@@ -55,7 +74,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
         .then(transactions => {
           if (transactions.length > 1) {
             setIsInstallment(true)
-            setInstallments(transactions.map(t => ({
+            replace(transactions.map(t => ({
               amount: t.total_amount,
               date: t.date
             })))
@@ -65,37 +84,13 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     }
   }, [billEdit])
 
-  const addInstallment = () => {
-    setInstallments(prev => [...prev, { amount: '', date: '' }])
-  }
-
-  const removeInstallment = (index: number) => {
-    setInstallments(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const updateInstallment = (index: number, field: keyof Installment, value: string) => {
-    setInstallments(prev =>
-      prev.map((inst, i) =>
-        i === index ? { ...inst, [field]: field === 'amount' ? parseFloat(value) || '' : value } : inst
-      )
-    )
-  }
-
   // ── Installments remaining amount ──
-  const totalInstallments = installments.reduce((sum, inst) => sum + (parseFloat(inst.amount as string) || 0), 0)
+  const watchedInstallments = watch('installments') ?? []
+  const totalInstallments = watchedInstallments.reduce(
+    (sum, inst) => sum + (parseFloat(inst.amount as string) || 0), 0
+  )
   const remaining = (parseFloat(billImport as string) || 0) - totalInstallments
   const isOverBudget = remaining < 0
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors }
-  } = useForm<BillFormValues>({
-    defaultValues: {
-      type: billEdit?.type || 'recibida'
-    }
-  })
 
   const onSubmit = async (data: BillFormValues) => {
     if (isSubmitting) return
@@ -105,8 +100,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
       const payload = {
         ...dataWithoutId,
         type: select,
-        plazos: isInstallment ? installments.length : null,
-        installments: isInstallment ? installments : []
+        plazos: isInstallment ? data.installments.length : null,
+        installments: isInstallment ? data.installments : []
       }
       if (billEdit != null) {
         await updateBill(payload, billEdit.id)
@@ -175,6 +170,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
             </button>
           </div>
           <input type="hidden" {...register("id")} />
+
           {/* Recibida / Emitida */}
           <div className="flex justify-center">
             <div className="
@@ -216,7 +212,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               placeholder="Ej. Factura cliente"
               value={billName}
               onChange={(e) => setBillName(e.target.value)}
-              className={inputCls}/>
+              className={inputCls} />
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
 
@@ -236,7 +232,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 placeholder="0.00 €"
                 value={billImport}
                 onChange={(e) => setBillImport(parseFloat(e.target.value))}
-                className={inputCls}/>
+                className={inputCls} />
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
             <div>
@@ -246,7 +242,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 {...register("date", { required: "La fecha es obligatoria" })}
                 value={billDate}
                 onChange={(e) => setBillDate(e.target.value)}
-                className={inputCls}/>
+                className={inputCls} />
               {errors.date && <p className="mt-1 text-xs text-red-400">{errors.date.message}</p>}
             </div>
           </div>
@@ -293,13 +289,13 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
             <input
               {...register("description", {
                 maxLength: { value: 100, message: "La descripción no puede superar 100 caracteres" },
-                pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]*$/, message: "Solo se permiten letras, números y espacios" }
+                pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s,\.]*$/, message: "Solo se permiten letras, números y espacios" }
               })}
               type="text"
               placeholder="Descripción opcional"
               value={billDescription}
               onChange={(e) => setBillDescription(e.target.value)}
-              className={inputCls}/>
+              className={inputCls} />
             {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
 
@@ -316,7 +312,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 placeholder="Nombre del cliente"
                 value={billClient}
                 onChange={(e) => setBillClient(e.target.value)}
-                className={inputCls}/>
+                className={inputCls} />
               {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
             </div>
             <div>
@@ -344,7 +340,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                   type="checkbox"
                   checked={isInstallment}
                   onChange={(e) => setIsInstallment(e.target.checked)}
-                  className="sr-only peer"/>
+                  className="sr-only peer" />
                 <div className="w-10 h-5 rounded-full bg-gray-200 dark:bg-gray-700 peer-checked:bg-primary transition-colors duration-200" />
                 <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 peer-checked:translate-x-5" />
               </div>
@@ -356,7 +352,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
             {isInstallment && (
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs font-medium text-gray-400 dark:text-gray-500 px-1">
-                  <span>{installments.length} plazo{installments.length !== 1 ? 's' : ''}</span>
+                  <span>{fields.length} plazo{fields.length !== 1 ? 's' : ''}</span>
                   <span className={isOverBudget ? 'text-red-400' : remaining === 0 ? 'text-emerald-500' : ''}>
                     {remaining === 0
                       ? '✓ Importe cubierto'
@@ -366,41 +362,68 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                   </span>
                 </div>
 
-                {installments.map((inst, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 dark:bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">
-                      {index + 1}
-                    </span>
-                    <input
-                      type="number"
-                      step="0.10"
-                      min="0"
-                      placeholder="0.00 €"
-                      value={inst.amount}
-                      onChange={(e) => updateInstallment(index, 'amount', e.target.value)}
-                      className={`${inputCls} flex-1`}/>
-                    <input
-                      type="date"
-                      value={inst.date}
-                      onChange={(e) => updateInstallment(index, 'date', e.target.value)}
-                      className={`${inputCls} flex-1`}/>
-                    {installments.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeInstallment(index)}
-                        className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-150">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24"
-                          fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                      </button>
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 dark:bg-primary/20 text-primary text-xs font-bold flex items-center justify-center">
+                        {index + 1}
+                      </span>
+
+                      {/* ── Importe del plazo ── */}
+                      <input
+                        type="number"
+                        step="0.10"
+                        min="0"
+                        placeholder="0.00 €"
+                        {...register(`installments.${index}.amount`, {
+                          required: "El importe del plazo es obligatorio",
+                          valueAsNumber: true,
+                          min: { value: 0.01, message: "Debe ser mayor que 0" }
+                        })}
+                        className={`${inputCls} flex-1`} />
+
+                      {/* ── Fecha del plazo ── */}
+                      <input
+                        type="date"
+                        {...register(`installments.${index}.date`, {
+                          required: "La fecha del plazo es obligatoria"
+                        })}
+                        className={`${inputCls} flex-1`} />
+
+                      {fields.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-150">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* ── Errores por plazo ── */}
+                    {(errors.installments?.[index]?.amount || errors.installments?.[index]?.date) && (
+                      <div className="flex gap-2 pl-8">
+                        {errors.installments?.[index]?.amount && (
+                          <p className="flex-1 text-xs text-red-400">
+                            {errors.installments[index].amount.message}
+                          </p>
+                        )}
+                        {errors.installments?.[index]?.date && (
+                          <p className="flex-1 text-xs text-red-400">
+                            {errors.installments[index].date.message}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 ))}
 
                 <button
                   type="button"
-                  onClick={addInstallment}
+                  onClick={() => append({ amount: '', date: '' })}
                   className="flex items-center justify-center gap-2 w-full py-2 rounded-xl border border-dashed border-primary/40 dark:border-primary/30 text-primary text-sm font-semibold hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-150 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -18,6 +18,7 @@ import CardIcon from '/src/assets/icons/Credit-card.svg?react'
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
 import BankIcon from '/src/assets/icons/Bank.svg?react'
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext'
+
 function Transactions() {
   // const [transactions, setTransactions] = useState<Transaction[]>([])
   const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;

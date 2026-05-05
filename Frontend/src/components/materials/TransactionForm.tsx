@@ -51,6 +51,7 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
     setIsSubmitting(true)
     try {
       const { id, ...dataWithoutId } = data
+      console.log(data)
       if (transactionEdit != null) {
         await updateTransaction(dataWithoutId, id)
       } else {
@@ -58,7 +59,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
       }
       close()
     } catch (error) {
-      console.error(error)
       setIsSubmitting(false)
     }
   }
@@ -252,7 +252,7 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
                 message: t('errors.descriptionTooLong')
               },
               pattern: {
-                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s,\.]*$/,
                 message: t('errors.descriptionInvalidChars')
               }
               })}
