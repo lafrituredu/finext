@@ -17,9 +17,11 @@ import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 import CardIcon from '/src/assets/icons/Credit-card.svg?react'
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
 import BankIcon from '/src/assets/icons/Bank.svg?react'
+import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext'
 function Transactions() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
+  // const [transactions, setTransactions] = useState<Transaction[]>([])
+  const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const { t } = useTranslation("transactions")
@@ -30,10 +32,11 @@ function Transactions() {
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
   const [transactionToEdit, setTransactionToEdit] = useState<Transaction | null>(null)
   useEffect(() => {
-    getTransactions()
-      .then(data => setTransactions(data))
-      .catch(() => setError('Error al cargar las transacciones'))
-      .finally(() => setLoading(false));
+    // getTransactions()
+    //   .then(data => setTransactions(data))
+    //   .catch(() => setError('Error al cargar las transacciones'))
+    //   .finally(() => setLoading(false));
+    refetchTransactions()
   }, [showTransactionForm])
 
   const handleDelete = async (id: number) => {
@@ -54,7 +57,7 @@ function Transactions() {
     return total
   }
 
-  console.log(transactions)
+  // console.log(transactions)
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'

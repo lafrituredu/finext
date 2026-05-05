@@ -3,6 +3,7 @@ import DashboardSidebar from '../components/layout/DashboardSidebar'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import DashboardNavbar from '../components/layout/DashboardNavbar'
 import Notifications from '../components/materials/Notifications';
+import { DashboardProvider } from '../contexts/DashboardContext';
 
 
 function Dashboard() {
@@ -27,7 +28,10 @@ function Dashboard() {
         <div className='flex justify-center items-center'>
           {/*<Notifications type="alert" duration={500} open={true}>Transaction successfully deleted!</Notifications>*/}
         </div>
-        <Outlet />
+        <DashboardProvider>
+          <Outlet />
+        </DashboardProvider>
+        
       </div>
       
     </div>

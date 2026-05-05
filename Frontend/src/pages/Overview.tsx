@@ -7,6 +7,7 @@ import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
 import { getGoals, getRecomendation, type Goal } from '../api/GoalService';
+import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
 
 
 function Overview() {
@@ -14,7 +15,9 @@ const { t } = useTranslation("overview");
 const { t: tUtils } = useTranslation("utils");
 
 const [select,setSeleceted] = useState<any>('cashflow');
-const [transactions, setTransactions] = useState<Transaction[]>([])
+const { transactions, setTransactions } = useTransactions() as TransactionsContextType;
+// const [transactions, setTransactions] = useState<Transaction[]>(useTransactions())
+// const transactions:Transaction[] = useTransactions();
 const [goals, setGoals] = useState<Goal[]>([])
 
 const [loading, setLoading] = useState(true)
@@ -22,10 +25,10 @@ const [error, setError] = useState<string | null>(null)
 const today = new Date();
 
 useEffect(() => {
-getTransactions()
-    .then(data => setTransactions(data))
-    .catch(() => setError('Error al cargar las transacciones'))
-    .finally(() => setLoading(false));
+// getTransactions()
+//     .then(data => setTransactions(data))
+//     .catch(() => setError('Error al cargar las transacciones'))
+//     .finally(() => setLoading(false));
 getGoals()
     .then(data => setGoals(data))
     .catch(() => setError('Error al cargar los Goals'))
@@ -47,7 +50,7 @@ transactions.forEach( element => {
     }
     
 })
-console.log(filtered)
+
 let months = [];
 for (let i = 0; i <= 11; i++) {
     let _months = ['january','february','march','april','may','june','july','august','september','october','november','december']

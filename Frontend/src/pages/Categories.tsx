@@ -12,10 +12,12 @@ import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 import { getCategories, createCategory, deleteCategory, type Category } from '../api/CategoryService'
 import Confirmation from '../components/materials/Confirmation'
 import CategoryForm from '../components/materials/CategoryForm'
+import { useCategories, type CategoriesContextType } from '../contexts/CategoryContext'
 
 function Categories() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true)
+    // const [categories, setCategories] = useState<Category[]>([]);
+    const { categories, setCategories, refetchCategories } = useCategories() as CategoriesContextType;
+    const [loading, setLoading] = useState(false)
     const [select,setSelected] = useState('squares')
     const [filter,setFilter] = useState('')
     const [order,setOrder] = useState('')
@@ -26,19 +28,7 @@ function Categories() {
     const [userid,setUserId] = useState<number | undefined>();
 
     useEffect(() => {
-
-      const fetchData = async () => {
-        // VERSIÓN SIN USAR EL USERID (LO OBTIENE EL SERVICIO)
-        try {
-          setCategories(await getCategories())
-          setLoading(false)
-        } catch (error) {
-          console.log(error)
-          setLoading(false)
-        }
-      };
-
-      fetchData();
+      refetchCategories()
     },[showCategoryForm])
 
     // const categoriasPropias = categories.filter(c => c.user_id == userid);
