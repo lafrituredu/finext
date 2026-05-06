@@ -143,7 +143,7 @@ function Transactions() {
 
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
         {filteredTransactions.map(t => (
-          <div key={t.id} className= {`flex flex-col ${t.bill_id != null ? "bg-blue-50 ring-blue-100" : "bg-gray-100 ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-2 dark:ring-[#101a3d]
+          <div key={t.id} className= {`flex flex-col ${t.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#101a3d]
             hover:scale-102 transition-transform ease-in-out w-full h-full`}>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <div className='flex flex-row items-center truncate gap-2'>
@@ -187,7 +187,7 @@ function Transactions() {
               <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
               {t.category !== null && (
               <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center`}
-              style={{ backgroundColor: t.category.color.concat(`30`), border: `1px solid ${t.category?.color}`, color: `${t.category?.color}`}}>
+              style={{ backgroundColor: t.category.color.concat(`30`), color: `${t.category?.color}`}}>
                 <TagIcon className='w-4 mr-1 h-4'/><p>{t.category.name}</p>
               </div>)}
             </div>

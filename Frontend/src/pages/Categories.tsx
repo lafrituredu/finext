@@ -51,10 +51,10 @@ function Categories() {
               <div className='min-h-40 grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
               {categoriasPropias.map( (category,key) => 
                   <div key={key} className={`flex flex-col justify-around items-between min-h-40 max-h-40
-                  rounded-2xl p-4 ring-2 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
-                    hover:scale-102 transition-transform ease-in-out `} style={{ background: category?.color?.concat(`55`) ??'#f3f4f6' , border: `1px solid ${category?.color}`}}>
+                  rounded-2xl p-4 ring-1 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
+                    hover:scale-102 transition-transform ease-in-out `}>
                       <div className='flex justify-between'>
-                        <p><TagIcon /></p>
+                        <p><TagIcon style={{ color: category?.color ??'#f3f4f6'}}/></p>
                         <p className='flex items-center gap-1'>
                           <EditIcon onClick={() => {setCategoryToEdit(category);setShowCategoryForm(true)}} className='cursor-pointer text-gray-700 hover:scale-110 transition-all ease-in-out dark:text-dark-text '/>
                           <TrashcanIcon onClick={() => {setCategoryToDelete(category)}} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
@@ -65,32 +65,36 @@ function Categories() {
                       </div>
                       <div className='flex justify-between'>
                           <>
-                            <p>Own</p>
+                            <p className='text-gray-400'>Own</p>
                           </>
                       </div>
                   </div>
                 )}
                 {/* <button className='flex justify-center items-center text-2xl bg-blue-200 ring-2 ring-blue-300 rounded-full w-20 h-20'> + </button> */}
                 <div className='flex w-full h-full justify-center items-center'>
-                  <button onClick={() => setShowCategoryForm(true)} className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
+                  <button onClick={() => setShowCategoryForm(true)} className='flex flex-col justify-center items-center 
+                  bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all 
+                  w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'><span className=''>+</span></button>
                 </div>
               </div>
               <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto</p>
               <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
                 {categoriasDefault.map( (category,key) =>
                 <div key={category.id}>
-                    <div key={key} className='flex flex-col dark:bg-dark-card rounded-2xl p-4 ring-2 ring-gray-200 dark:ring-gray-800
-                      hover:scale-102 transition-transform ease-in-out gap-6' style={{ background: category?.color?.concat(`55`) ??'#f3f4f6' , border: `1px solid ${category?.color}`}}>
+                    <div key={key} className='flex flex-col dark:bg-dark-card rounded-2xl p-4 dark:ring-gray-800
+                      hover:scale-102 transition-transform ease-in-out gap-6 ring-1 ring-gray-200 bg-gray-100'>
                         <div className='flex justify-between'>
-                          <p><TagIcon /></p>
+                          <p><TagIcon style={{ color: category?.color ??'#f3f4f6'}}/></p>
                           <p><Padlock className='text-primary' /></p>
                         </div>
-                        <div className='capitalize flex justify-center lg:text-3xl text-2xl truncate'>
-                          {category.name}
+                        <div className='flex flex-row items-center justify-center gap-2'>
+                          <div className='capitalize flex justify-center lg:text-3xl text-2xl truncate'>
+                            {category.name}
+                          </div>
                         </div>
                         <div className='flex justify-between'>
                             <>
-                              <p>Default</p>
+                              <p className='text-gray-400'>Default</p>
                             </>
                         </div>
                     </div>
