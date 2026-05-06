@@ -48,7 +48,7 @@ function Categories() {
       return (<>
             <div className='inter'>
               <p className='mb-2 inter capitalize text-gray-400'>Categorias propias → <span className='font-bold'>{categoriasPropias.length}</span></p>
-              <div className='min-h-40 grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
+              <div className='min-h-40 grid xl:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
               {categoriasPropias.map( (category,key) => 
                   <div key={key} className={`flex flex-col justify-around items-between min-h-40 max-h-40
                   rounded-2xl p-4 ring-1 dark:bg-dark-card  ring-gray-200 dark:ring-gray-800
@@ -78,7 +78,7 @@ function Categories() {
                 </div>
               </div>
               <p className='mb-2 inter capitalize text-gray-400'>Categorias por defecto</p>
-              <div className='grid md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
+              <div className='grid xl:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
                 {categoriasDefault.map( (category,key) =>
                 <div key={category.id}>
                     <div key={key} className='flex flex-col dark:bg-dark-card rounded-2xl p-4 dark:ring-gray-800

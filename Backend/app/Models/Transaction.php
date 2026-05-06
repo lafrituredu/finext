@@ -22,9 +22,6 @@ class Transaction extends Model
     'status',
     'recurrent',
     'recurrent_timer',
-    'is_deductible',
-    'deductible_percent',
-    'tax_note'
     ];
     public function user()
     {

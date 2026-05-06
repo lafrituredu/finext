@@ -93,9 +93,6 @@ class TransactionController extends Controller
             'description'  => 'nullable|string',
             'payment_method' => 'required|string',
             'status'       => 'nullable|boolean',
-            'is_deductible' => 'nullable|boolean',
-            'deductible_percent' => 'nullable|numeric|min:0|max:100',
-            'tax_note' => 'nullable|string|max:255',
             'category_id'  => 'nullable|exists:categories,id',
             'bill_id' => 'nullable|exists:bills,id',
         ]);
@@ -110,9 +107,6 @@ class TransactionController extends Controller
             'description'  => $data['description'] ?? null,
             'payment_method' => $data['payment_method'],
             'status'       => $data['status'] ?? true,
-            'is_deductible' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 ? ($data['is_deductible'] ?? false) : false,
-            'deductible_percent' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 && ($data['is_deductible'] ?? false) ? ($data['iva_percent'] ?? 0) : null,
-            'tax_note' => null,
             'category_id'  => $data['category_id'] ?? null,
             'bill_id' => $data['bill_id'] ?? null,
         ]);
