@@ -52,7 +52,6 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
         <form onSubmit={handleSubmit(onSubmit)}>
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4"
-        onClick={close}
       >
         <div
           className="w-full max-w-lg bg-background dark:bg-dark-background p-6 rounded-2xl flex flex-col gap-5"
@@ -73,9 +72,13 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
             <input
               {...register("name", {
                 required: "El nombre es obligatorio",
+                pattern: {
+                  value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                  message: "Nombre no valido."//t('errors.nameInvalidChars')
+                },
                   validate: (value) => {
                     const exists = categories.some(c => 
-                      c.name.toLowerCase() === value.toLowerCase() &&
+                      c.name.trim().toLowerCase() === value.trim().toLowerCase() &&
                       c.id !== categoryEdit?.id
                     );
 
@@ -84,7 +87,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
               })}
               className={inputCls}
             />
-            {errors.name && <p className="text-red-400 text-xs">{errors.name.message}</p>}
+            {errors.name && <p className="text-red-400 text-xs pt-2">{errors.name.message}</p>}
           </div>
 
           {/* TARGET */}

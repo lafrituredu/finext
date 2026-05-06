@@ -146,12 +146,8 @@ function Bills() {
             {bills.map(bill => (
               <div
                 key={bill.id}
-                className="
-                  bg-background dark:bg-dark-card
-                  rounded-2xl shadow-sm
-                  ring-1 ring-black/5 dark:ring-white/10
-                  p-5 flex flex-col gap-2">
-
+                className="bg-background dark:bg-dark-card rounded-2xl shadow-sm ring-1 ring-black/5 
+                  dark:ring-white/10 p-5 flex flex-col gap-2">
                 {/* Top row */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex flex-col">
