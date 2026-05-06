@@ -215,7 +215,7 @@ function calculateCashflow(){
                     const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
                     const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
                     
-                    if (key == 2) {
+                    if (key >= 2) {
                         return;
                     }
 
