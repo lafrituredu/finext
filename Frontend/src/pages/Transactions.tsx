@@ -45,8 +45,6 @@ function Transactions() {
       await deleteTransaction(id)
       setTransactions(prev => prev.filter(t => t.id !== id))
     } catch (error: any) {
-      console.log('Status:', error.response?.status)
-      console.log('Mensaje:', error.response?.data)
       setError('Error al eliminar la transaccion')
     }
   }
@@ -58,7 +56,6 @@ function Transactions() {
     return total
   }
 
-  // console.log(transactions)
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
     if (select === 'incomes') return t.type === 'income'

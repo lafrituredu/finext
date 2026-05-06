@@ -15,7 +15,6 @@ function Navbar() {
     const [opened, setOpened] = useState(false);
     const toggleMenu = () => {
         setOpened(!opened);
-        console.log("Opened? "+ !opened)
     };
 
   return (

@@ -58,8 +58,6 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
     try {
       const { id, ...dataWithoutId } = data
       if (transactionEdit != null) {
-        console.log("ID:", id)
-        console.log("Data enviada:", dataWithoutId)
         await updateTransaction(dataWithoutId, id)
       } else {
         await createTransaction(dataWithoutId)
@@ -73,7 +71,6 @@ export function TransctionForm({ close, transactionEdit }: {close:any, transacti
       .then(data => setCategories(data))
       .catch(() => setError('Error al cargar las categorias'))
       .finally(() => setLoading(false));
-    console.log(select)
     setValue("type", select);
     if (transactionEdit) {
       setValue("id", transactionEdit.id)
