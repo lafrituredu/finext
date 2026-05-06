@@ -28,9 +28,9 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
     }
     setIsSubmitting(true);
     try {
+      console.log('data:')
+      console.log(data)
       if (goalEdit) {
-        console.log('data:')
-        console.log(data);
         await updateGoal(data);
       } else {
         await createGoal(data);

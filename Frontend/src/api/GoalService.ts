@@ -16,14 +16,14 @@ export const getGoals = async (): Promise<Goal[]> => {
     return response.data
 }
 
-export const createGoal = async (data: Goal): Promise<Goal[]> => {
-    const response = await api.post<Goal[]>(`/goals/`,data)
+export const createGoal = async (data: Goal): Promise<Goal> => {
+    const response = await api.post<Goal>(`/goals`,data)
     console.log(response.data)
     return response.data
 }
 
-export const updateGoal = async (data: Goal): Promise<Goal[]> => {
-    const response = await api.put<Goal[]>(`/goals/${data.id}`, data)
+export const updateGoal = async (data: Goal): Promise<Goal> => {
+    const response = await api.put<Goal>(`/goals/${data.id}`, data)
     console.log(response.data)
     return response.data
 }
