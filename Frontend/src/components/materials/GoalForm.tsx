@@ -28,8 +28,6 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
     }
     setIsSubmitting(true);
     try {
-      console.log('data:')
-      console.log(data)
       if (goalEdit) {
         await updateGoal(data);
       } else {
