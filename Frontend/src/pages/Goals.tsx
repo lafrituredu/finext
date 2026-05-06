@@ -116,7 +116,7 @@ function Goals() {
           onConfirm={() => {destroyGoal(goalDelete!);setGoalDelete(undefined)}}>
           {t('confirm.deleteMessage')} <span className='font-bold'>{goalDelete?.name}</span>?
         </Confirmation>)}
-        {showGoalForm && <GoalForm close={() => {setShowGoalForm(false);setGoalEdit(undefined)} } goalEdit={goalEdit} />}
+        {showGoalForm && goalEdit != null &&  <GoalForm close={() => {setShowGoalForm(false);setGoalEdit(undefined)} } goalEdit={goalEdit} />}
         {showGoalForm && goalEdit == null && <GoalForm close={() => setShowGoalForm(false)}/>}
     </>
   )
