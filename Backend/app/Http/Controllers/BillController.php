@@ -64,7 +64,7 @@ class BillController extends Controller
                 Transaction::create([
                     'user_id'        => $user->id,
                     'bill_id'        => $bill->id,
-                    'name'           => $data['name'].' P-'.$num,
+                    'name'           => 'P-'.$num.' '.$data['name'],
                     'date'           => $installment['date'],
                     'type'           => $data['type'] === 'recibida' ? 'income' : 'expense',
                     'total_amount'   => $installment['amount'],
@@ -146,7 +146,7 @@ class BillController extends Controller
                 Transaction::create([
                     'user_id'        => $user->id,
                     'bill_id'        => $bill->id,
-                    'name'           => $data['name'].' P-'.$num,
+                    'name'           => 'P-'.$num.' '.$data['name'],
                     'date'           => $installment['date'],
                     'type'           => $data['type'] === 'recibida' ? 'income' : 'expense',
                     'total_amount'   => $installment['amount'],

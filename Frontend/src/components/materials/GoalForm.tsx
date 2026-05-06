@@ -60,7 +60,6 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
     <form onSubmit={handleSubmit(onSubmit)}>
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4"
-        onClick={close}
       >
         <div
           className="w-full max-w-lg bg-background dark:bg-dark-background p-6 rounded-2xl flex flex-col gap-5"
@@ -80,7 +79,11 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
             <label className={labelCls}>Nombre *</label>
             <input
               {...register("name", {
-                required: "El nombre es obligatorio"
+                required: "El nombre es obligatorio",
+                pattern: {
+                  value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
+                  message: "Nombre no valido."//t('errors.nameInvalidChars')
+                },
               })}
               className={inputCls}
             />
