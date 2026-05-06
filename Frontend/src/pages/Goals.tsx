@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
+import GoalIcon from '/src/assets/icons/Goals.svg?react'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 
 import { getGoals, getRecomendation, destroyGoal , type Goal } from '../api/GoalService';
@@ -94,7 +95,16 @@ function Goals() {
             }
           
             )}
+
           </div>
+          
+          {goals.length == 0 &&
+            <div className='flex flex-col justify-center items-center inter pt-40'>
+              <GoalIcon className='w-24 h-24' />
+              <p className='text-xl'>No hay metas aún.</p>
+            </div>
+          }
+
         </div>
         {showGoalAmountForm && <GoalAmountForm close={() => {setShowGoalAmountForm(false);setGoalEdit(undefined)}} goalEdit={goalEdit}/> }
         {goalDelete !== undefined && (
