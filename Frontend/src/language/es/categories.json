@@ -1,0 +1,57 @@
+{
+  "title": "Categorías",
+  "newCategory": "Nueva categoría",
+  "create": "Crear",
+  "category": "Categoría",
+
+  "sections": {
+    "own": "Categorías propias",
+    "default": "Categorías por defecto"
+  },
+
+  "labels": {
+    "own": "Propia",
+    "default": "Predeterminada"
+  },
+
+  "table": {
+    "name": "Nombre",
+    "color": "Color",
+    "type": "Tipo",
+    "actions": "Acciones"
+  },
+
+  "states": {
+    "loading": "Cargando..."
+  },
+
+  "confirm": {
+    "deleteTitle": "Eliminar categoría",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar",
+    "deleteButton": "Eliminar"
+  },
+
+  "buttons": {
+    "add": "+",
+    "createCategory": "Crear categoría"
+  },
+
+  "status": {
+    "own": "Propia",
+    "default": "Predeterminada"
+  },
+
+  "form": {
+    "buttons": {
+      "createCategory": "Crear",
+      "deleteCategory": "Eliminar",
+      "updateCategory": "Actualizar",
+      "cancel": "Cancelar"
+    },
+
+    "labels": {
+      "color": "Color",
+      "name": "Nombre"
+    }
+  }
+}

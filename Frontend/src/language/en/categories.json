@@ -1,0 +1,58 @@
+{
+  "title": "Categories",
+  "newCategory": "New category",
+  "create": "Create",
+  "category": "Category",
+
+  "sections": {
+    "own": "Own categories",
+    "default": "Default categories"
+  },
+
+  "labels": {
+    "own": "Own",
+    "default": "Default"
+  },
+
+  "table": {
+    "name": "Name",
+    "color": "Color",
+    "type": "Type",
+    "actions": "Actions"
+  },
+
+  "states": {
+    "loading": "Loading..."
+  },
+
+  "confirm": {
+    "deleteTitle": "Delete category",
+    "deleteMessage": "Are you sure you want to delete",
+    "deleteButton": "Delete"
+  },
+
+  "buttons": {
+    "add": "+",
+    "createCategory": "Create category"
+  },
+
+  "status": {
+    "own": "Own",
+    "default": "Default"
+  },
+
+  "form" : {
+    "buttons": {
+      "createCategory":"Create",
+      "deleteCategory":"Delete",
+      "updateCategory":"Update",
+      "cancel":"Cancel"
+    },
+
+    "labels": {
+      "color": "Color",
+      "name": "Name"
+    }
+  }
+  
+}

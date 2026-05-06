@@ -1,0 +1,70 @@
+{
+  "title": "Metas",
+  "newGoal": "Nuevo meta",
+  "create": "Crear",
+  "goal": "meta",
+  "days": "días",
+  "contribute": "Aportar",
+
+  "sections": {
+    "active": "metas activas",
+    "completed": "metas completados"
+  },
+
+  "labels": {
+    "name": "Nombre",
+    "targetAmount": "Cantidad meta",
+    "currentAmount": "Cantidad actual",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "completed": "Completado"
+  },
+
+  "table": {
+    "name": "Nombre",
+    "targetAmount": "meta",
+    "currentAmount": "Progreso",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+
+  "states": {
+    "loading": "Cargando..."
+  },
+
+  "status": {
+    "completed": "Completado",
+    "inProgress": "En progreso"
+  },
+
+  "confirm": {
+    "deleteTitle": "Eliminar meta",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar",
+    "deleteButton": "Eliminar"
+  },
+
+  "buttons": {
+    "add": "+",
+    "createGoal": "Crear meta",
+    "updateGoal": "Actualizar",
+    "deleteGoal": "Eliminar",
+    "cancel": "Cancelar"
+  },
+
+  "form": {
+    "labels": {
+      "name": "Nombre",
+      "targetAmount": "Cantidad meta",
+      "currentAmount": "Cantidad actual",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin"
+    }
+  },
+    "recommendations": {
+        "belowTarget": "Vas por debajo del ritmo recomendado. Deberías aumentar tu aportación mensual para alcanzar la meta a tiempo.",
+        "aboveTarget": "Vas por encima del ritmo recomendado. Podrías reducir ligeramente tus aportaciones o alcanzarás la meta antes de lo previsto.",
+        "onTrack": "Vas en buen camino. Tu ritmo de aportación es adecuado para alcanzar la meta."
+    }
+}

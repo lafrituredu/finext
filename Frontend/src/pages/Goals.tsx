@@ -11,6 +11,7 @@ import  { GoalForm } from "../components/materials/GoalForm"
 import Confirmation from '../components/materials/Confirmation';
 import { useGoals, type GoalsContextType } from '../contexts/GoalContext';
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
+import { useTranslation } from 'react-i18next';
 
 function Goals() {
   const { goals, setGoals, refetchGoals } = useGoals() as GoalsContextType;
@@ -22,6 +23,7 @@ function Goals() {
   const [error, setError] = useState<any>(null)
   const [showGoalAmountForm, setShowGoalAmountForm] = useState(false)
   const [showGoalForm, setShowGoalForm] = useState(false)
+  const { t } = useTranslation("goals");
 
   useEffect(() => {
     // getGoals()
@@ -50,15 +52,15 @@ function Goals() {
     <>
         <div className='p-10'>
          <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
-            <p className='mont_semibold text-4xl'>Goals</p>
+            <p className='mont_semibold text-4xl'>{t('title')}</p>
             <button 
             onClick={(e) => setShowGoalForm(true)}
             className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
-                Nueva meta
+                {t('newGoal')}
               </span>
               <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-                Crear
+                {t('create')}
               </span>
             </button>
           </div>
@@ -77,7 +79,7 @@ function Goals() {
                     </span>
                   </p>
                   <div>
-                    <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} días</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
+                    <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} {t('days')}</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
                     <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
                       <div className="bg-[#00540C] h-full" style={{ width: `${progress}%` }} /> 
                     </div>
@@ -89,7 +91,7 @@ function Goals() {
                     {/* <p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p> */}
 
                   <div className='w-full h-px bg-slate-200' />
-                  <button  disabled={goal.completed == 1} onClick={() => {setGoalEdit(goal);setShowGoalAmountForm(true)} } className='w-full p-2 bg-black text-white dark:bg-primary cursor-pointer hover:scale-[102%] transition rounded-lg disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:scale-100'>Aportar</button>
+                  <button  disabled={goal.completed == 1} onClick={() => {setGoalEdit(goal);setShowGoalAmountForm(true)} } className='w-full p-2 bg-black text-white dark:bg-primary cursor-pointer hover:scale-[102%] transition rounded-lg disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:scale-100'>{t('contribute')}</button>
                 </div>
               )
             }
@@ -101,7 +103,7 @@ function Goals() {
           {goals.length == 0 &&
             <div className='flex flex-col justify-center items-center inter pt-40'>
               <GoalIcon className='w-24 h-24' />
-              <p className='text-xl'>No hay metas aún.</p>
+              <p className='text-xl'>No {t('goal')}</p>
             </div>
           }
 
@@ -112,7 +114,7 @@ function Goals() {
           Icon={TrashcanIcon}
           close={() => setGoalDelete(undefined)}
           onConfirm={() => {destroyGoal(goalDelete!);setGoalDelete(undefined)}}>
-          Estas seguro de que quieres eliminar <span className='font-bold'>{goalDelete?.name}</span>?
+          {t('confirm.deleteMessage')} <span className='font-bold'>{goalDelete?.name}</span>?
         </Confirmation>)}
         {showGoalForm && <GoalForm close={() => {setShowGoalForm(false);setGoalEdit(undefined)} } goalEdit={goalEdit} />}
         {showGoalForm && goalEdit == null && <GoalForm close={() => setShowGoalForm(false)}/>}

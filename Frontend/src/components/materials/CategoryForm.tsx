@@ -4,11 +4,13 @@ import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 import { createCategory, updateCategory, type Category } from "../../api/CategoryService";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 export function CategoryForm({ close, categories, categoryEdit }: {close:any,categories:Category[],categoryEdit?:Category}) {
   const [select, setSeleceted] = useState<any>('income');
   const [category,setCategory] = useState<string>(categoryEdit?.name || '');
   const [color,setColor] = useState<string>(categoryEdit?.color || '#f3f4f6');
-  
+  const { t } = useTranslation("categories");
+
   const {
     register,
     handleSubmit,
@@ -61,14 +63,14 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
           <div className="flex justify-between items-center">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <MoneyBagIcon className="w-6 h-6" />
-              {categoryEdit ? "Editar Categoria" : "Crear Categoria"}
+              {categoryEdit ? t('form.buttons.updateCategory') +" " + t('category') : t('form.buttons.createCategory') +" " + t('category') }
             </h2>
             <button className="cursor-pointer" onClick={close}>✕</button>
           </div>
 
           {/* NAME */}
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('form.labels.name')} *</label>
             <input
               {...register("name", {
                 required: "El nombre es obligatorio",
@@ -92,7 +94,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
 
           {/* TARGET */}
           <div>
-            <label className={labelCls}>Color *</label>
+            <label className={labelCls}>{t('form.labels.color')} *</label>
             <input
               type="color"
               {...register("color", {
@@ -112,7 +114,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
               type="submit"
               className="flex-1 bg-primary text-white py-2 rounded-xl cursor-pointer hover:brightness-110 active:scale-[0.98]"
             >
-              {categoryEdit ? "Actualizar" : "Crear"}
+              {categoryEdit ? t('form.buttons.updateCategory') : t('form.buttons.createCategory')}
             </button>
 
             <button

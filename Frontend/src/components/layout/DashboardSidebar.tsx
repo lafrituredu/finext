@@ -159,6 +159,7 @@ const menuItems = [{
               id={'logout'}
               icon={ExitIcon }
               label={t('logout')}
+              to='/'
               />
             </button>
               <div className='flex'><DarkModeToggle /></div>

@@ -2,5 +2,7 @@
     "transactions": "Transactions",
     "new_transaction":"New Transaction",
     "create":"Create",
-    "no_transactions":"There are no transactions"
+    "no_transactions":"There are no transactions",
+    "income": "Income",
+    "expense": "Expense"
 }

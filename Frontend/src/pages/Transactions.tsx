@@ -139,53 +139,53 @@ function Transactions() {
       (
 
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
-        {filteredTransactions.map(t => (
-          <div key={t.id} className= {`flex flex-col ${t.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#101a3d]
+        {filteredTransactions.map(trans => (
+          <div key={trans.id} className= {`flex flex-col ${trans.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#101a3d]
             hover:scale-102 transition-transform ease-in-out w-full h-full`}>
             <div className='flex flex-row justify-between items-center w-full pb-6'>
               <div className='flex flex-row items-center truncate gap-2'>
               <div>
-                {t.payment_method == "card" && (<CardIcon className='text-text dark:text-dark-text'/>)}
-                {t.payment_method == "cash" && (<CoinIcon className='text-text dark:text-dark-text'/>)}
-                {t.payment_method =="transfer" && (<BankIcon className='text-text dark:text-dark-text'/>)}
+                {trans.payment_method == "card" && (<CardIcon className='text-text dark:text-dark-text'/>)}
+                {trans.payment_method == "cash" && (<CoinIcon className='text-text dark:text-dark-text'/>)}
+                {trans.payment_method =="transfer" && (<BankIcon className='text-text dark:text-dark-text'/>)}
               </div>
-              <p className='mont_semibold text-xl truncate mr-2'>{t.name}</p>
+              <p className='mont_semibold text-xl truncate mr-2'>{trans.name}</p>
               </div>
               <div className='flex flex-row gap-2 items-center'>
-                <div className={t.type == 'income' ?
+                <div className={trans.type == 'income' ?
                   'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
                   'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
                   <p className='flex justify-center items-center capitalize'>
-                    {t.type == 'income'?<Trending_up className='lg:mr-2 text-green-600 w-5'/>:
-                    <Trending_down className='lg:mr-2 text-red-600 w-5'/>}<span className='lg:flex hidden'>{t.type}</span>
+                    {trans.type == 'income'?<Trending_up className='lg:mr-2 text-green-600 w-5'/>:
+                    <Trending_down className='lg:mr-2 text-red-600 w-5'/>}<span className='lg:flex hidden'>{trans.type == 'income' ? t('income') : t('expense')}</span>
                   </p>
                 </div>
-                {t.bill_id == null && (
+                {trans.bill_id == null && (
                 <div className='flex flex-row justify-center items-center gap-2'>
                   <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
-                  onClick={() => {setTransactionToEdit(t);setShowTransactionForm(true)}}/>
+                  onClick={() => {setTransactionToEdit(trans);setShowTransactionForm(true)}}/>
                   <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
-                  onClick={()=>setTransactionToDelete(t)}/>
+                  onClick={()=>setTransactionToDelete(trans)}/>
                 </div>
                 )}
               </div>
               
             </div>
-            <div className={t.type == 'income'?'text-green-400':'text-red-400'}>
-              <p className='inter text-4xl'>{t.type != 'income' && <span>-</span>}{t.total_amount}€</p>
+            <div className={trans.type == 'income'?'text-green-400':'text-red-400'}>
+              <p className='inter text-4xl'>{trans.type != 'income' && <span>-</span>}{trans.total_amount}€</p>
                 <div className='flex flex-row gap-2'>
-                  {t.iva_percent > 0 &&
-                  <p className={t.type == 'income'?'text-green-400':'text-red-400'}>{transactionWithIVA(t.total_amount, t.iva_percent).toFixed(2)}€</p>
+                  {trans.iva_percent > 0 &&
+                  <p className={trans.type == 'income'?'text-green-400':'text-red-400'}>{transactionWithIVA(trans.total_amount, trans.iva_percent).toFixed(2)}€</p>
                   }
-                  <span className='text-gray-400'>IVA {Math.round(t.iva_percent)}%</span>
+                  <span className='text-gray-400'>IVA {Math.round(trans.iva_percent)}%</span>
                 </div>
             </div>
             <div className='flex flex-row justify-between items-center w-full pt-1'>
-              <p className='inter text-gray-400 text-lg '>{dayjs(t.date).format('DD-MM-YYYY')}</p>
-              {t.category !== null && (
+              <p className='inter text-gray-400 text-lg '>{dayjs(trans.date).format('DD-MM-YYYY')}</p>
+              {trans.category !== null && (
               <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center`}
-              style={{ backgroundColor: t.category.color.concat(`30`), color: `${t.category?.color}`}}>
-                <TagIcon className='w-4 mr-1 h-4'/><p>{t.category.name}</p>
+              style={{ backgroundColor: trans.category.color.concat(`30`), color: `${trans.category?.color}`}}>
+                <TagIcon className='w-4 mr-1 h-4'/><p>{trans.category.name}</p>
               </div>)}
             </div>
           </div>

@@ -55,6 +55,12 @@ import recurrentEN from "./language/en/recurrent.json";
 import transactionsFormES from "./language/es/transactionsForms.json";
 import transactionsFormEN from "./language/en/transactionsForm.json";
 
+import categoriesES from "./language/es/categories.json";
+import categoriesEN from "./language/en/categories.json";
+
+import goalsES from "./language/es/goals.json";
+import goalsEN from "./language/en/goals.json";
+
 export const resources = {
   es: {
     common: es,
@@ -75,6 +81,8 @@ export const resources = {
     bills: billsES,
     recurrent: recurrentES,
     profile: profileES,
+    categories: categoriesES,
+    goals: goalsES
   },
   en: {
     common: en,
@@ -95,6 +103,8 @@ export const resources = {
     bills: billsEN,
     recurrent: recurrentEN,
     profile: profileEN,
+    categories: categoriesEN,
+    goals: goalsEN
   },
 } as const;
 
