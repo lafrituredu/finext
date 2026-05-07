@@ -25,7 +25,7 @@ type BillFormValues = {
 };
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
-  const [select, setSelected] = useState<any>(billEdit?.type || 'recibida');
+  const [select, setSelected] = useState<any>(billEdit?.type || 'emitida');
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { categories } = useCategories() as CategoriesContextType
@@ -51,7 +51,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     formState: { errors }
   } = useForm<BillFormValues>({
     defaultValues: {
-      type: billEdit?.type || 'recibida',
+      type: billEdit?.type || 'emitida',
       installments: [{ amount: '', date: '' }]
     }
   })
@@ -164,8 +164,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               rounded-2xl border border-gray-200 dark:border-gray-700
               montserrat">
               {[
-                { id: 'recibida', label: 'Recibida', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'emitida', label: 'Emitida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+                { id: 'emitida', label: 'Emitida', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+                { id: 'recibida', label: 'Recibida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
               ].map(({ id, label, Icon, activeColor }) => (
                 <button
                   key={id}

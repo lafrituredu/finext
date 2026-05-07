@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('recurrent_transaction_id')
-                ->nullable()
-                ->constrained('recurrent_transactions')
-                ->nullOnDelete();
+            $table->foreignId('recurrent_transaction_id')->nullable()->constrained('recurrent_transactions')->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->foreignId('bill_id')->nullable()->constrained('bills')->nullOnDelete();
 

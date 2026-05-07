@@ -1,5 +1,9 @@
 {
     "bills": "Facturas",
     "new_bill": "Nueva Factura",
-    "no_bills": "No hay Facturas"
+    "no_bills": "No hay Facturas",
+    "confirm": {
+        "delete": "Eliminar factura",
+        "delete_trans": "y todas sus transacciones asociadas."
+  }
 }

@@ -16,6 +16,8 @@ import MoveUpIcon from '/src/assets/icons/Move-up.svg?react'
 
 import { getTransactionsByBill } from '../api/TransactionService'
 import { useBills, type BillsContextType } from '../contexts/BillContext'
+import dayjs from 'dayjs'
+import Confirmation from '../components/materials/Confirmation'
 
 function Bills() {
   const { bills, setBills, refetchBills } = useBills() as BillsContextType
@@ -28,6 +30,7 @@ function Bills() {
   const [billToDelete, setBillToDelete] = useState<Bill | null>(null)
 
   const { t } = useTranslation("bills")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fetchBillTransactions = async (bills: Bill[]) => {
     const results: Record<number, number | null> = {}
@@ -77,43 +80,33 @@ function Bills() {
   }
 
   const handleDelete = async (id: number) => {
+    if (isSubmitting) return
+    setIsSubmitting(true)
+    console.log(isSubmitting)
     try {
       await deleteBill(id)
       setBills(prev => prev.filter(b => b.id !== id))
       setShowConfirmation(false)
       setBillToDelete(null)
+      setIsSubmitting(false)
     } catch (error: any) {
       setError('Error al eliminar la factura')
+      setIsSubmitting(false)
     }
   }
 
   return (
     <>
       {showBillForm && (<BillForm close={() => setShowBillForm(false)} billEdit={billToEdit ?? undefined} />)}
-
-      {/* --- Confirmacion eliminar PROVISIONAL --- */}
+      {/* --- Confirmacion eliminar --- */}
       {showConfirmation && billToDelete && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4 inter">
-          <div className="bg-background dark:bg-dark-background rounded-2xl shadow-2xl ring-1 ring-black/5 dark:ring-white/10 p-6 flex flex-col gap-4 w-full max-w-sm">
-            <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">¿Eliminar factura?</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Se eliminará <span className="font-semibold">{billToDelete.name}</span> y todas sus transacciones asociadas.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => handleDelete(billToDelete.id)}
-                className="flex-1 bg-red-500 text-white font-semibold py-2 rounded-xl hover:brightness-110 transition-all cursor-pointer">
-                Eliminar
-              </button>
-              <button
-                onClick={() => { setShowConfirmation(false); setBillToDelete(null) }}
-                className="flex-1 ring-1 ring-gray-200 dark:ring-gray-700 text-gray-600 dark:text-gray-300 font-semibold py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Confirmation
+        Icon={TrashcanIcon}
+        close={() => { setShowConfirmation(false); setBillToDelete(null) }}
+        onConfirm={() => { handleDelete(billToDelete.id)}}
+      >
+        {t("confirm.delete")} <span className='font-semibold'>{billToDelete.name}</span> {t("confirm.delete_trans")}
+      </Confirmation>)}
       {/* -------------------------------------------------- */}
       <div className='p-10 inter'>
         {/* Header */}
@@ -178,7 +171,7 @@ function Bills() {
                         <CalendarIcon className='text-gray-500 w-4 h-4'/>
                         <span className='text-gray-500 text-sm'>Date</span>
                       </div>
-                      <span className='text-gray-800 text-md pl-1'>{bill.date}</span>
+                      <span className='text-gray-800 text-md pl-1'>{dayjs(bill.date).format('DD-MM-YYYY')}</span>
                     </div>
                     <div className='flex flex-col'>
                       <div className='flex flex-row items-center gap-1'>
@@ -205,10 +198,17 @@ function Bills() {
                     </div>
                     )}
                   </div>
+                  {bill.description != null ? (
                   <div className='flex flex-row bg-gray-100 w-full rounded-sm py-1 px-4 gap-2 ring-1 ring-gray-200'>
                     <InfoIcon className='text-gray-500 w-5 h-5'/>
                     <span className='text-gray-500 text-sm truncate'>{bill.description}</span>
                   </div>
+                  ):(
+                  <div className='flex flex-row bg-gray-100 w-full rounded-sm py-1 px-4 gap-2 ring-1 ring-gray-200'>
+                    <InfoIcon className='text-gray-500 w-5 h-5'/>
+                    <span className='text-gray-500 text-sm truncate'>No description...</span>
+                  </div>
+                  )}
                   <hr className="border-t border-gray-300 my-4"></hr>
                   <div className='flex flex-row justify-between items-end'>
                     <div className='flex flex-col'>
