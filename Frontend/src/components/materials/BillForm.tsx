@@ -64,7 +64,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   useEffect(() => {
     if (billEdit?.id) {
       const billTransactions = transactions.filter(t => t.bill_id === billEdit.id)
-      if (billTransactions.length > 1) {
+      if (billTransactions.length > 0) {
         setIsInstallment(true)
         replace(billTransactions.map(t => ({
           amount: t.total_amount,
