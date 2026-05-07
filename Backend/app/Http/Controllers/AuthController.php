@@ -113,7 +113,7 @@ class AuthController extends Controller
 
     public function verifyEmail(Request $request, int $id, string $hash)
     {
-        $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
+        $frontendUrl = rtrim(env('FRONTEND_URL', 'https://finext.cat'), '/');
 
         if (!URL::hasValidSignature($request)) {
             return redirect()->away($frontendUrl . '/verify-email?status=invalid');
