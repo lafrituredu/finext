@@ -11,13 +11,11 @@
   "filters": {
     "total": "Total",
     "incomes": "Ingresos",
-    "expenses": "Gastos",
-    "deductible": "Deducibles"
+    "expenses": "Gastos"
   },
   "summary": {
     "incomes": "Ingresos fijos activos",
     "expenses": "Gastos fijos activos",
-    "deductible": "Deducible fijo activo",
     "total": "Balance fijo activo",
     "movement": "movimiento",
     "active": "activo"
@@ -34,7 +32,6 @@
     "next": "Proxima",
     "active": "Activa",
     "paused": "Pausada",
-    "deductible": "Deducible",
     "generateNow": "Generar ahora",
     "generating": "Generando...",
     "enable": "Activar movimiento fijo",
@@ -62,9 +59,6 @@
     "client": "Cliente",
     "provider": "Proveedor",
     "active": "Activa",
-    "deductible": "Deducible",
-    "deductiblePercent": "% deducible",
-    "taxNote": "Nota fiscal",
     "cancel": "Cancelar"
   },
   "placeholders": {
@@ -77,8 +71,7 @@
     "paymentMethod": "Selecciona metodo",
     "description": "Descripcion opcional",
     "client": "Ej. Cliente mensual",
-    "provider": "Ej. Arrendador, Netflix, gestoria...",
-    "taxNote": "Ej. Local de trabajo"
+    "provider": "Ej. Arrendador, Netflix, gestoria..."
   },
   "payment": {
     "card": "Tarjeta",

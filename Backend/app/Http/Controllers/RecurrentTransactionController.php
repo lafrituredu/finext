@@ -44,9 +44,6 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
-            'is_deductible' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 ? ($data['is_deductible'] ?? false) : false,
-            'deductible_percent' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 && ($data['is_deductible'] ?? false) ? ($data['iva_percent'] ?? 0) : null,
-            'tax_note' => null,
         ]);
 
         return response()->json($recurrentTransaction->load(['category', 'user']), 201);
@@ -75,9 +72,6 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
-            'is_deductible' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 ? ($data['is_deductible'] ?? false) : false,
-            'deductible_percent' => $data['type'] === 'expense' && ($data['iva_percent'] ?? 0) > 0 && ($data['is_deductible'] ?? false) ? ($data['iva_percent'] ?? 0) : null,
-            'tax_note' => null,
         ]);
 
         return response()->json($recurrentTransaction->fresh(['category', 'user']));
@@ -146,9 +140,6 @@ class RecurrentTransactionController extends Controller
             'next_run_date' => 'required|date|after_or_equal:start_date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'active' => 'nullable|boolean',
-            'is_deductible' => 'nullable|boolean',
-            'deductible_percent' => 'nullable|numeric|min:0|max:100',
-            'tax_note' => 'nullable|string|max:255',
         ]);
     }
 

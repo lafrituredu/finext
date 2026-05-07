@@ -11,13 +11,11 @@
   "filters": {
     "total": "Total",
     "incomes": "Income",
-    "expenses": "Expenses",
-    "deductible": "Deductible"
+    "expenses": "Expenses"
   },
   "summary": {
     "incomes": "Active fixed income",
     "expenses": "Active fixed expenses",
-    "deductible": "Active fixed deductible",
     "total": "Active fixed balance",
     "movement": "movement",
     "active": "active"
@@ -34,7 +32,6 @@
     "next": "Next",
     "active": "Active",
     "paused": "Paused",
-    "deductible": "Deductible",
     "generateNow": "Generate now",
     "generating": "Generating...",
     "enable": "Enable fixed movement",
@@ -62,9 +59,6 @@
     "client": "Client",
     "provider": "Provider",
     "active": "Active",
-    "deductible": "Deductible",
-    "deductiblePercent": "% deductible",
-    "taxNote": "Tax note",
     "cancel": "Cancel"
   },
   "placeholders": {
@@ -77,8 +71,7 @@
     "paymentMethod": "Select method",
     "description": "Optional description",
     "client": "E.g. Monthly client",
-    "provider": "E.g. Landlord, Netflix, accountant...",
-    "taxNote": "E.g. Workplace office"
+    "provider": "E.g. Landlord, Netflix, accountant..."
   },
   "payment": {
     "card": "Card",

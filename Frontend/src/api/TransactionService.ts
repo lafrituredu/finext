@@ -17,9 +17,6 @@ export interface Transaction {
     status: boolean | null
     recurrent: boolean
     recurrent_timer: string | null
-    is_deductible: boolean
-    deductible_percent: number | null
-    tax_note: string | null
     created_at: string
     user: {
         id: number

@@ -31,9 +31,6 @@ class RecurrentTransactionGenerator
             'status' => true,
             'recurrent' => true,
             'recurrent_timer' => $recurrentTransaction->frequency,
-            'is_deductible' => $recurrentTransaction->is_deductible && ($recurrentTransaction->iva_percent ?? 0) > 0,
-            'deductible_percent' => $recurrentTransaction->is_deductible && ($recurrentTransaction->iva_percent ?? 0) > 0 ? $recurrentTransaction->iva_percent : null,
-            'tax_note' => null,
             ]);
         }
 

@@ -51,7 +51,6 @@ function Recurrent() {
   const filteredRecurrent = recurrentTransactions.filter(item => {
     if (select === 'incomes') return item.type === 'income';
     if (select === 'expenses') return item.type === 'expense';
-    if (select === 'deductible') return item.is_deductible && Number(item.iva_percent) > 0;
     return true;
   });
 
@@ -86,7 +85,6 @@ function Recurrent() {
   const summaryLabel = () => {
     if (select === 'incomes') return t('summary.incomes');
     if (select === 'expenses') return t('summary.expenses');
-    if (select === 'deductible') return t('summary.deductible');
     return t('summary.total');
   };
 
@@ -95,13 +93,6 @@ function Recurrent() {
       return recurrentTransactions
         .filter(item => item.active)
         .reduce((sum, item) => sum + (item.type === 'income' ? recurrentAmount(item) : -recurrentAmount(item)), 0);
-    }
-
-    if (select === 'deductible') {
-      return activeFilteredRecurrent.reduce((sum, item) => {
-        const ivaPercent = Number(item.iva_percent ?? 0) / 100;
-        return sum + (recurrentAmount(item) * ivaPercent);
-      }, 0);
     }
 
     if (select === 'expenses') {
@@ -125,9 +116,6 @@ function Recurrent() {
     next_run_date: item.next_run_date?.slice(0, 10),
     end_date: item.end_date ? item.end_date.slice(0, 10) : null,
     active,
-    is_deductible: item.is_deductible,
-    deductible_percent: item.deductible_percent,
-    tax_note: item.tax_note,
   });
 
   const handleToggleActive = async (item: RecurrentTransaction) => {
@@ -161,7 +149,6 @@ function Recurrent() {
   };
 
   const summaryColor = () => {
-    if (select === 'deductible') return 'text-primary';
     return summaryAmount() >= 0 ? 'text-green-400' : 'text-red-400';
   };
 
@@ -208,7 +195,6 @@ function Recurrent() {
               <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.total')}</div>
               <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.incomes')}</div>
               <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.expenses')}</div>
-              <div id='deductible' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'deductible' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('filters.deductible')}</div>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div className='bg-gray-100 dark:bg-dark-card rounded-2xl p-5 ring-2 ring-gray-200 dark:ring-[#101a3d]'>
@@ -317,12 +303,6 @@ function Recurrent() {
                       </span>
                     )}
                   </div>
-
-                  {item.is_deductible && Number(item.iva_percent) > 0 && (
-                    <div className='rounded-xl bg-primary/10 dark:bg-primary/15 text-primary px-3 py-2 text-xs'>
-                      <span className='font-semibold'>{t('card.deductible')}</span>
-                    </div>
-                  )}
 
                   <button
                     onClick={() => handleGenerate(item.id)}

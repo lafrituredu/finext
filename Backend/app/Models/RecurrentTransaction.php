@@ -21,15 +21,11 @@ class RecurrentTransaction extends Model
         'next_run_date',
         'end_date',
         'active',
-        'is_deductible',
-        'deductible_percent',
-        'tax_note',
         'last_generated_at',
     ];
 
     protected $casts = [
         'active' => 'boolean',
-        'is_deductible' => 'boolean',
         'start_date' => 'date',
         'next_run_date' => 'date',
         'end_date' => 'date',

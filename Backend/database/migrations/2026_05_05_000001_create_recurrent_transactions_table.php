@@ -32,10 +32,6 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->boolean('active')->default(true);
 
-            $table->boolean('is_deductible')->default(false);
-            $table->decimal('deductible_percent', 5, 2)->nullable();
-            $table->string('tax_note')->nullable();
-
             $table->timestamp('last_generated_at')->nullable();
 
             $table->timestamps();

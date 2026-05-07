@@ -19,9 +19,6 @@ export interface RecurrentTransaction {
   next_run_date: string
   end_date: string | null
   active: boolean
-  is_deductible: boolean
-  deductible_percent: number | null
-  tax_note: string | null
   last_generated_at: string | null
   created_at: string
   user: {
