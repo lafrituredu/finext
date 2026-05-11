@@ -98,7 +98,7 @@ const config = {
             <table>
                 <thead>
                     <tr className='*:text-start *:text-3xl'>
-                        <th>Mes - año</th>
+                        <th>Mes</th>
                         <th>Ingresos</th>
                         <th>Gastos</th>
                         <th>Fluoj</th>
@@ -107,7 +107,7 @@ const config = {
                 <tbody>
                     {months.map( month => 
                         <tr className='text-3xl'>
-                            <td>{month.name} {new Date().getFullYear()}</td>
+                            <td>{month.name}</td>
                             <td>{month.incomes}€</td>
                             <td>{month.expense}€</td>
                             <td>{month.incomes - month.expense}€</td>
