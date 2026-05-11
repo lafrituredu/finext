@@ -117,7 +117,7 @@ const config = {
             </table>
         </div>
 
-        <p className='text-5xl mb-3'>Grafica General</p>
+        <p className='text-5xl mb-3'>Gráfica General</p>
         <Chart
         options={config.options}
         series={config.series}
