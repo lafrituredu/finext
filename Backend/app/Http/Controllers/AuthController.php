@@ -68,7 +68,10 @@ class AuthController extends Controller
         });
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->sendEmailVerificationNotification();
+
+        app()->terminating(function () use ($user) {
+            $user->sendEmailVerificationNotification();
+        });
 
         return response()->json([
             'message' => 'Te hemos enviado un correo para verificar tu cuenta.',
@@ -155,7 +158,9 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->sendEmailVerificationNotification();
+        app()->terminating(function () use ($user) {
+            $user->sendEmailVerificationNotification();
+        });
 
         return response()->json([
             'message' => 'Te hemos reenviado el correo de verificación.',
