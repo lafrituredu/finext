@@ -18,6 +18,7 @@ import {
   type RegisterFormData
 } from "../utils/registerValidation";
 import { buildRegisterPayload } from "../utils/registerPayload";
+import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 type FormDataType = RegisterFormData;
 
@@ -100,6 +101,8 @@ const Register: React.FC = () => {
       [name]: value
     }));
 
+    setError("");
+
     if (name === "email" || name === "username") {
       setAvailability((current) => ({
         ...current,
@@ -113,8 +116,10 @@ const Register: React.FC = () => {
     setError("");
 
     try {
-      const emailData = await checkEmail(formData.email);
-      const usernameData = await checkUsername(formData.username);
+      const [emailData, usernameData] = await Promise.all([
+        checkEmail(formData.email),
+        checkUsername(formData.username)
+      ]);
 
       setAvailability({
         email: emailData.available,
@@ -234,7 +239,7 @@ const Register: React.FC = () => {
         }
       );
     } catch (err: any) {
-      setError(err.response?.data?.message || "Error al registrarse");
+      setError(getFriendlyApiError(err, "Ha ocurrido un error inesperado al registrarte."));
     } finally {
       setLoading(false);
     }

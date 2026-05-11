@@ -6,6 +6,7 @@ import FiNextIcon from "/src/assets/icons/finext.svg?react";
 import { sendPasswordResetEmail } from "../api/AuthServices";
 import DarkButton from "../components/buttons/DarkButton";
 import Language from "../components/buttons/Lang";
+import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 const ForgotPassword: React.FC = () => {
   const { t } = useTranslation("forgotPassword");
@@ -44,7 +45,7 @@ const ForgotPassword: React.FC = () => {
       const response = await sendPasswordResetEmail(email.trim());
       setMessage(response.message);
     } catch (err: any) {
-      setError(err.response?.data?.message || t("send_error"));
+      setError(getFriendlyApiError(err, t("send_error")));
     } finally {
       setLoading(false);
     }
@@ -108,7 +109,12 @@ const ForgotPassword: React.FC = () => {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                  setMessage("");
+                }}
+                autoComplete="email"
                 className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
               />
             </div>

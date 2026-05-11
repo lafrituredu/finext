@@ -6,6 +6,7 @@ import FiNextIcon from "/src/assets/icons/finext.svg?react";
 import { resendVerificationEmail } from "../api/AuthServices";
 import DarkButton from "../components/buttons/DarkButton";
 import Language from "../components/buttons/Lang";
+import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 const EMAIL_VERIFICATION_STORAGE_KEY = "email-verification-event";
 
@@ -161,7 +162,7 @@ const VerifyEmail: React.FC = () => {
       const response = await resendVerificationEmail(email);
       setMessage(response.message);
     } catch (err: any) {
-      setError(err.response?.data?.message || t("resend_error"));
+      setError(getFriendlyApiError(err, t("resend_error")));
     } finally {
       setLoading(false);
     }

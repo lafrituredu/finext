@@ -6,6 +6,7 @@ import FiNextIcon from "/src/assets/icons/finext.svg?react";
 import { loginUser } from "../api/AuthServices";
 import DarkButton from "../components/buttons/DarkButton.tsx";
 import Language from "../components/buttons/Lang.tsx";
+import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("login");
@@ -16,11 +17,15 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(
+    (location.state as { message?: string } | null)?.message || ""
+  );
 
   useEffect(() => {
     const stateMessage = (location.state as { message?: string } | null)?.message;
     if (stateMessage) {
       setError("");
+      setSuccessMessage(stateMessage);
     }
   }, [location.state]);
 
@@ -80,7 +85,9 @@ const Login: React.FC = () => {
         return;
       }
 
-      setError(responseData?.message || "Error al iniciar sesión");
+      setError(
+        getFriendlyApiError(err, "Ha ocurrido un error inesperado al iniciar sesión.")
+      );
     } finally {
       setLoading(false);
     }
@@ -129,9 +136,9 @@ const Login: React.FC = () => {
             </div>
           )}
 
-          {(location.state as { message?: string } | null)?.message && !error && (
+          {successMessage && !error && (
             <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-700 dark:text-green-400">
-              {(location.state as { message?: string }).message}
+              {successMessage}
             </div>
           )}
 
@@ -143,7 +150,12 @@ const Login: React.FC = () => {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                  setSuccessMessage("");
+                }}
+                autoComplete="email"
                 className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
               />
             </div>
@@ -156,7 +168,12 @@ const Login: React.FC = () => {
                 <input
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                    setSuccessMessage("");
+                  }}
+                  autoComplete="current-password"
                   className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
                 />
               </div>

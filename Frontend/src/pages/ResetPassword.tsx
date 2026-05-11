@@ -6,6 +6,7 @@ import FiNextIcon from "/src/assets/icons/finext.svg?react";
 import { resetUserPassword } from "../api/AuthServices";
 import DarkButton from "../components/buttons/DarkButton";
 import Language from "../components/buttons/Lang";
+import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 const hasSpecialCharacter = (value: string) =>
   /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value);
@@ -84,7 +85,7 @@ const ResetPassword: React.FC = () => {
         });
       }, 1400);
     } catch (err: any) {
-      setError(err.response?.data?.message || t("reset_error"));
+      setError(getFriendlyApiError(err, t("reset_error")));
     } finally {
       setLoading(false);
     }
@@ -155,7 +156,12 @@ const ResetPassword: React.FC = () => {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                  setMessage("");
+                }}
+                autoComplete="new-password"
                 className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
               />
             </div>
@@ -167,7 +173,12 @@ const ResetPassword: React.FC = () => {
               <input
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError("");
+                  setMessage("");
+                }}
+                autoComplete="new-password"
                 className="w-full mt-2 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-background text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 transition-all"
               />
             </div>
