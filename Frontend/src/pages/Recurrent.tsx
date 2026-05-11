@@ -22,11 +22,15 @@ import CoinIcon from '/src/assets/icons/Coin.svg?react';
 import BankIcon from '/src/assets/icons/Bank.svg?react';
 import LoadingIcon from '/src/assets/icons/Loading.svg?react';
 
+let recurrentTransactionsCache: RecurrentTransaction[] | null = null;
+let recurrentTransactionsRequest: Promise<RecurrentTransaction[]> | null = null;
+
 function Recurrent() {
   const { t } = useTranslation("recurrent");
-  const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>(recurrentTransactionsCache ?? []);
+  const [loading, setLoading] = useState(recurrentTransactionsCache === null);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [select, setSelected] = useState('total');
   const [showForm, setShowForm] = useState(false);
   const [recurrentToEdit, setRecurrentToEdit] = useState<RecurrentTransaction | null>(null);
@@ -38,15 +42,35 @@ function Recurrent() {
       setLoading(true);
     }
     setError(null);
-    getRecurrentTransactions()
-      .then(data => setRecurrentTransactions(data))
+    recurrentTransactionsRequest ??= getRecurrentTransactions();
+    recurrentTransactionsRequest
+      .then(data => {
+        recurrentTransactionsCache = data;
+        setRecurrentTransactions(data);
+      })
       .catch(() => setError(t('messages.loadError')))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        recurrentTransactionsRequest = null;
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
+    if (recurrentTransactionsCache) {
+      setRecurrentTransactions(recurrentTransactionsCache);
+      setLoading(false);
+      return;
+    }
+
     fetchRecurrentTransactions(true);
   }, []);
+
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timeout = window.setTimeout(() => setSuccessMessage(null), 2500);
+    return () => window.clearTimeout(timeout);
+  }, [successMessage]);
 
   const filteredRecurrent = recurrentTransactions.filter(item => {
     if (select === 'incomes') return item.type === 'income';
@@ -57,7 +81,11 @@ function Recurrent() {
   const handleDelete = async (id: number) => {
     try {
       await deleteRecurrentTransaction(id);
-      setRecurrentTransactions(prev => prev.filter(item => item.id !== id));
+      setRecurrentTransactions(prev => {
+        const next = prev.filter(item => item.id !== id);
+        recurrentTransactionsCache = next;
+        return next;
+      });
     } catch (error: any) {
       setError(t('messages.deleteError'));
     }
@@ -68,9 +96,15 @@ function Recurrent() {
     setGeneratingId(id);
     try {
       const response = await generateRecurrentTransaction(id);
-      setRecurrentTransactions(prev => prev.map(item =>
-        item.id === id ? response.recurrent_transaction : item
-      ));
+      setRecurrentTransactions(prev => {
+        const next = prev.map(item =>
+          item.id === id ? response.recurrent_transaction : item
+        );
+        recurrentTransactionsCache = next;
+        return next;
+      });
+      setError(null);
+      setSuccessMessage(t('messages.generatedSuccess'));
     } catch (error: any) {
       setError(error.response?.data?.message || t('messages.generateError'));
     } finally {
@@ -128,13 +162,21 @@ function Recurrent() {
 
     try {
       const updated = await updateRecurrentTransaction(recurrentPayload(item, nextActive), item.id);
-      setRecurrentTransactions(prev => prev.map(current =>
-        current.id === item.id ? updated : current
-      ));
+      setRecurrentTransactions(prev => {
+        const next = prev.map(current =>
+          current.id === item.id ? updated : current
+        );
+        recurrentTransactionsCache = next;
+        return next;
+      });
     } catch (error: any) {
-      setRecurrentTransactions(prev => prev.map(current =>
-        current.id === item.id ? { ...current, active: item.active } : current
-      ));
+      setRecurrentTransactions(prev => {
+        const next = prev.map(current =>
+          current.id === item.id ? { ...current, active: item.active } : current
+        );
+        recurrentTransactionsCache = next;
+        return next;
+      });
       setError(t('messages.statusError'));
     }
   };
@@ -153,13 +195,31 @@ function Recurrent() {
     return summaryAmount() >= 0 ? 'text-green-400' : 'text-red-400';
   };
 
+  const handleSaved = (savedRecurrent: RecurrentTransaction) => {
+    setRecurrentTransactions(prev => {
+      const exists = prev.some(item => item.id === savedRecurrent.id);
+      const next = exists
+        ? prev.map(item => item.id === savedRecurrent.id ? savedRecurrent : item)
+        : [...prev, savedRecurrent].sort((a, b) => dayjs(a.next_run_date).valueOf() - dayjs(b.next_run_date).valueOf());
+
+      recurrentTransactionsCache = next;
+      return next;
+    });
+  };
+
   return (
     <>
+      {successMessage && (
+        <div className='fixed top-5 left-1/2 -translate-x-1/2 z-100 inter rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 px-5 py-2 text-sm font-semibold shadow-md dark:bg-emerald-900/30 dark:text-emerald-300 dark:ring-emerald-700'>
+          {successMessage}
+        </div>
+      )}
+
       {showForm && (
         <RecurrentTransactionForm
           close={() => { setShowForm(false); setRecurrentToEdit(null); }}
           recurrentEdit={recurrentToEdit}
-          onSaved={() => fetchRecurrentTransactions(false)}
+          onSaved={handleSaved}
         />
       )}
 

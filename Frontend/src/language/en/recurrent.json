@@ -24,6 +24,7 @@
     "loadError": "Error loading fixed movements",
     "deleteError": "Error deleting fixed movement",
     "generateError": "Error generating transaction",
+    "generatedSuccess": "Movement generated",
     "statusError": "Error updating status",
     "deleteConfirm": "Are you sure you want to delete",
     "countLabel": "movements"

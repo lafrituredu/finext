@@ -10,32 +10,26 @@ use Illuminate\Support\Facades\DB;
 
 class RecurrentTransactionGenerator
 {
-    public function generateNext(RecurrentTransaction $recurrentTransaction): Transaction
+    public function generateNext(RecurrentTransaction $recurrentTransaction, ?Carbon $dueThrough = null): ?Transaction
     {
-        return DB::transaction(function () use ($recurrentTransaction) {
+        return DB::transaction(function () use ($recurrentTransaction, $dueThrough) {
+            $recurrentTransaction = RecurrentTransaction::whereKey($recurrentTransaction->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($dueThrough && $recurrentTransaction->next_run_date->gt($dueThrough)) {
+                return null;
+            }
+
             $generationDate = $recurrentTransaction->next_run_date->toDateString();
             $transaction = Transaction::where('recurrent_transaction_id', $recurrentTransaction->id)
                 ->whereDate('date', $generationDate)
                 ->first();
 
             if (!$transaction) {
-                $bill = null;
-
-                if ($recurrentTransaction->creates_bill) {
-                    $bill = Bill::create([
-                        'user_id' => $recurrentTransaction->user_id,
-                        'category_id' => $recurrentTransaction->category_id,
-                        'name' => $recurrentTransaction->name,
-                        'date' => $generationDate,
-                        'type' => $recurrentTransaction->type === 'income' ? 'emitida' : 'recibida',
-                        'total_amount' => $recurrentTransaction->total_amount,
-                        'iva_percent' => $recurrentTransaction->iva_percent ?? 0,
-                        'client' => $recurrentTransaction->client,
-                        'description' => $recurrentTransaction->description,
-                        'payment_method' => $recurrentTransaction->payment_method,
-                        'plazos' => null,
-                    ]);
-                }
+                $bill = $recurrentTransaction->creates_bill
+                    ? $this->createBill($recurrentTransaction, $generationDate)
+                    : null;
 
                 $transaction = Transaction::create([
                     'user_id' => $recurrentTransaction->user_id,
@@ -54,6 +48,9 @@ class RecurrentTransactionGenerator
                     'recurrent' => true,
                     'recurrent_timer' => $recurrentTransaction->frequency,
                 ]);
+            } elseif ($recurrentTransaction->creates_bill && !$transaction->bill_id) {
+                $bill = $this->createBill($recurrentTransaction, $generationDate);
+                $transaction->update(['bill_id' => $bill->id]);
             }
 
             $nextRunDate = $this->nextRunDate($recurrentTransaction->next_run_date, $recurrentTransaction->frequency);
@@ -67,6 +64,23 @@ class RecurrentTransactionGenerator
 
             return $transaction;
         });
+    }
+
+    private function createBill(RecurrentTransaction $recurrentTransaction, string $generationDate): Bill
+    {
+        return Bill::create([
+            'user_id' => $recurrentTransaction->user_id,
+            'category_id' => $recurrentTransaction->category_id,
+            'name' => $recurrentTransaction->name,
+            'date' => $generationDate,
+            'type' => $recurrentTransaction->type === 'income' ? 'emitida' : 'recibida',
+            'total_amount' => $recurrentTransaction->total_amount,
+            'iva_percent' => $recurrentTransaction->iva_percent ?? 0,
+            'client' => $recurrentTransaction->client,
+            'description' => $recurrentTransaction->description,
+            'payment_method' => $recurrentTransaction->payment_method,
+            'plazos' => null,
+        ]);
     }
 
     public function nextRunDate(Carbon $date, string $frequency): string

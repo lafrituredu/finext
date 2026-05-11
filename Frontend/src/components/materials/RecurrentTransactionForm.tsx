@@ -37,7 +37,7 @@ export function RecurrentTransactionForm({
 }: {
   close: () => void,
   recurrentEdit?: RecurrentTransaction | null,
-  onSaved?: () => void
+  onSaved?: (recurrentTransaction: RecurrentTransaction) => void
 }) {
   const { t } = useTranslation("recurrent");
   const dateInputValue = (value?: string | null) => value ? value.slice(0, 10) : '';
@@ -115,12 +115,14 @@ export function RecurrentTransactionForm({
     };
 
     try {
+      let savedRecurrent: RecurrentTransaction;
+
       if (recurrentEdit) {
-        await updateRecurrentTransaction(payload, recurrentEdit.id);
+        savedRecurrent = await updateRecurrentTransaction(payload, recurrentEdit.id);
       } else {
-        await createRecurrentTransaction(payload);
+        savedRecurrent = await createRecurrentTransaction(payload);
       }
-      onSaved?.();
+      onSaved?.(savedRecurrent);
       close();
     } catch (error: any) {
       console.error('Status:', error.response?.status);

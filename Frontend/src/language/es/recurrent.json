@@ -24,6 +24,7 @@
     "loadError": "Error al cargar los movimientos fijos",
     "deleteError": "Error al eliminar el movimiento fijo",
     "generateError": "Error al generar la transaccion",
+    "generatedSuccess": "Movimiento generado",
     "statusError": "Error al actualizar el estado",
     "deleteConfirm": "Estas seguro de que quieres eliminar",
     "countLabel": "movimientos"
