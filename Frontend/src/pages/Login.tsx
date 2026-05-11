@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FiNextIcon from "/src/assets/icons/finext.svg?react";
 
@@ -10,11 +10,19 @@ import Language from "../components/buttons/Lang.tsx";
 const Login: React.FC = () => {
   const { t } = useTranslation("login");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const stateMessage = (location.state as { message?: string } | null)?.message;
+    if (stateMessage) {
+      setError("");
+    }
+  }, [location.state]);
 
   const isFormComplete = Boolean(email.trim()) && Boolean(password);
 
@@ -30,6 +38,10 @@ const Login: React.FC = () => {
 
   const onGoToRegister = () => {
     navigate("/register");
+  };
+
+  const onGoToForgotPassword = () => {
+    navigate("/forgot-password");
   };
 
   const handleLogin = async (e?: React.FormEvent) => {
@@ -117,6 +129,12 @@ const Login: React.FC = () => {
             </div>
           )}
 
+          {(location.state as { message?: string } | null)?.message && !error && (
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-700 dark:text-green-400">
+              {(location.state as { message?: string }).message}
+            </div>
+          )}
+
           <form onSubmit={handleLogin}>
             <div className="mb-5">
               <label className="text-sm text-gray-600 dark:text-gray-400 inter">
@@ -144,9 +162,13 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-6 cursor-pointer hover:underline inter">
+            <button
+              type="button"
+              onClick={onGoToForgotPassword}
+              className="text-xs text-gray-400 dark:text-gray-500 mb-6 cursor-pointer hover:underline inter"
+            >
               {t("forgot_password")}
-            </p>
+            </button>
 
             <button
               type="submit"

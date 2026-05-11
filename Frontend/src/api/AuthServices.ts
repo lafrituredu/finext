@@ -86,6 +86,25 @@ export const resendVerificationEmail = async (email: string): Promise<AuthRespon
   return response.data
 }
 
+export const sendPasswordResetEmail = async (email: string): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>('/forgot-password', {
+    email,
+  })
+
+  return response.data
+}
+
+export const resetUserPassword = async (data: {
+  token: string
+  email: string
+  password: string
+  password_confirmation: string
+}): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>('/reset-password', data)
+
+  return response.data
+}
+
 // GET CURRENT USER
 export const getCurrentUser = async (): Promise<UserProfile> => {
   const response = await api.get<UserProfile>('/me');

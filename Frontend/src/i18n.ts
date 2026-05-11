@@ -15,6 +15,10 @@ import registerES from "./language/es/register.json";
 import registerEN from "./language/en/register.json";
 import verifyEmailES from "./language/es/verifyEmail.json";
 import verifyEmailEN from "./language/en/verifyEmail.json";
+import forgotPasswordES from "./language/es/forgotPassword.json";
+import forgotPasswordEN from "./language/en/forgotPassword.json";
+import resetPasswordES from "./language/es/resetPassword.json";
+import resetPasswordEN from "./language/en/resetPassword.json";
 
 import navES from "./language/es/nav.json";
 import navEN from "./language/en/nav.json";
@@ -75,6 +79,8 @@ export const resources = {
     login: loginES,
     register: registerES,
     verifyEmail: verifyEmailES,
+    forgotPassword: forgotPasswordES,
+    resetPassword: resetPasswordES,
     about: aboutES,
     contact: contactES,
     utils: utilsES,
@@ -97,6 +103,8 @@ export const resources = {
     login: loginEN,
     register: registerEN,
     verifyEmail: verifyEmailEN,
+    forgotPassword: forgotPasswordEN,
+    resetPassword: resetPasswordEN,
     about: aboutEN,
     contact: ContactEN,
     utils: utilsEN,

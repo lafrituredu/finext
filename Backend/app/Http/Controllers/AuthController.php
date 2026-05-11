@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Autonomo;
 use App\Models\Gestor;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -164,6 +167,64 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Te hemos reenviado el correo de verificación.',
+        ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            return response()->json([
+                'message' => 'No hemos podido enviar el correo de recuperación a esa dirección.',
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'Te hemos enviado un correo para restablecer tu contraseña.',
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+            'email' => 'required|email',
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
+            ],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                $user->tokens()->delete();
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return response()->json([
+                'message' => 'El enlace de recuperación no es válido o ya ha caducado.',
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'Tu contraseña se ha actualizado correctamente.',
         ]);
     }
 
