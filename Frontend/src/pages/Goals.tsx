@@ -65,7 +65,7 @@ function Goals() {
             </button>
           </div>
 
-          <div className='w-full grid grid-cols-2 gap-15'>
+          <div className='w-full grid md:grid-cols-2 grid-cols-1 gap-15'>
             {goals?.map( (goal,key) => 
             { const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
               const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )

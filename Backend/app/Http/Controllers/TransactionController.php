@@ -108,12 +108,17 @@ class TransactionController extends Controller
         return response()->json($transaction->fresh());
     }
     
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         $transaction = Transaction::find($id);
 
         if (!$transaction) {
             return response()->json(['message' => 'Transaction not found'], 404);
+        }
+        
+        $user = $request->user();
+        if ($user->id != $transaction->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $transaction->delete();
