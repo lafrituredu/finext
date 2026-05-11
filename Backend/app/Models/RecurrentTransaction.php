@@ -21,11 +21,13 @@ class RecurrentTransaction extends Model
         'next_run_date',
         'end_date',
         'active',
+        'creates_bill',
         'last_generated_at',
     ];
 
     protected $casts = [
         'active' => 'boolean',
+        'creates_bill' => 'boolean',
         'start_date' => 'date',
         'next_run_date' => 'date',
         'end_date' => 'date',

@@ -44,6 +44,7 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
+            'creates_bill' => $data['creates_bill'] ?? false,
         ]);
 
         return response()->json($recurrentTransaction->load(['category', 'user']), 201);
@@ -72,6 +73,7 @@ class RecurrentTransactionController extends Controller
             'category_id' => $data['category_id'] ?? null,
             'end_date' => $data['end_date'] ?? null,
             'active' => $data['active'] ?? true,
+            'creates_bill' => $data['creates_bill'] ?? false,
         ]);
 
         return response()->json($recurrentTransaction->fresh(['category', 'user']));
@@ -119,7 +121,7 @@ class RecurrentTransactionController extends Controller
         $transaction = $this->generator->generateNext($recurrentTransaction);
 
         return response()->json([
-            'transaction' => $transaction->load(['category', 'user']),
+            'transaction' => $transaction->load(['category', 'user', 'bill']),
             'recurrent_transaction' => $recurrentTransaction->fresh(['category', 'user']),
         ], 201);
     }
@@ -140,6 +142,7 @@ class RecurrentTransactionController extends Controller
             'next_run_date' => 'required|date|after_or_equal:start_date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'active' => 'nullable|boolean',
+            'creates_bill' => 'nullable|boolean',
         ]);
     }
 

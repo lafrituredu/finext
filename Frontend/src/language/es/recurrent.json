@@ -32,6 +32,8 @@
     "next": "Proxima",
     "active": "Activa",
     "paused": "Pausada",
+    "deductible": "Genera factura recibida",
+    "billable": "Genera factura emitida",
     "generateNow": "Generar ahora",
     "generating": "Generando...",
     "enable": "Activar movimiento fijo",
@@ -59,6 +61,8 @@
     "client": "Cliente",
     "provider": "Proveedor",
     "active": "Activa",
+    "deductible": "Deducible",
+    "billable": "Facturable",
     "cancel": "Cancelar"
   },
   "placeholders": {

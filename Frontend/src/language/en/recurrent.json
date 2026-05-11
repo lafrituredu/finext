@@ -32,6 +32,8 @@
     "next": "Next",
     "active": "Active",
     "paused": "Paused",
+    "deductible": "Creates received bill",
+    "billable": "Creates issued bill",
     "generateNow": "Generate now",
     "generating": "Generating...",
     "enable": "Enable fixed movement",
@@ -59,6 +61,8 @@
     "client": "Client",
     "provider": "Provider",
     "active": "Active",
+    "deductible": "Deductible",
+    "billable": "Billable",
     "cancel": "Cancel"
   },
   "placeholders": {

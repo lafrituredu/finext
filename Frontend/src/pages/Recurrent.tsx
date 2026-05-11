@@ -116,6 +116,7 @@ function Recurrent() {
     next_run_date: item.next_run_date?.slice(0, 10),
     end_date: item.end_date ? item.end_date.slice(0, 10) : null,
     active,
+    creates_bill: item.creates_bill,
   });
 
   const handleToggleActive = async (item: RecurrentTransaction) => {
@@ -296,13 +297,21 @@ function Recurrent() {
                       {item.active ? t('card.active') : t('card.paused')}
                     </span>
 
-                    {item.category !== null && (
+                  {item.category !== null && (
                       <span className='inter capitalize rounded-full text-sm py-[2px] px-3 flex flex-row items-center truncate'
                         style={{ backgroundColor: item.category.color.concat(`30`), border: `1px solid ${item.category.color}`, color: `${item.category.color}` }}>
                         <TagIcon className='w-4 mr-1 h-4 shrink-0' /><span className='truncate'>{item.category.name}</span>
                       </span>
                     )}
                   </div>
+
+                  {item.creates_bill && (
+                    <div className='rounded-xl bg-primary/10 dark:bg-primary/15 text-primary px-3 py-2 text-xs'>
+                      <span className='font-semibold'>
+                        {item.type === 'income' ? t('card.billable') : t('card.deductible')}
+                      </span>
+                    </div>
+                  )}
 
                   <button
                     onClick={() => handleGenerate(item.id)}

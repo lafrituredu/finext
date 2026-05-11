@@ -19,6 +19,7 @@ export interface RecurrentTransaction {
   next_run_date: string
   end_date: string | null
   active: boolean
+  creates_bill: boolean
   last_generated_at: string | null
   created_at: string
   user: {

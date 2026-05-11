@@ -31,6 +31,7 @@ return new class extends Migration
             $table->date('next_run_date');
             $table->date('end_date')->nullable();
             $table->boolean('active')->default(true);
+            $table->boolean('creates_bill')->default(false);
 
             $table->timestamp('last_generated_at')->nullable();
 

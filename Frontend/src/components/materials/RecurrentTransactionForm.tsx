@@ -27,6 +27,7 @@ type RecurrentFormValues = {
   next_run_date: string
   end_date?: string | null
   active: boolean
+  creates_bill: boolean
 }
 
 export function RecurrentTransactionForm({
@@ -58,6 +59,7 @@ export function RecurrentTransactionForm({
   const [nextRunDate, setNextRunDate] = useState(dateInputValue(recurrentEdit?.next_run_date || recurrentEdit?.start_date));
   const [endDate, setEndDate] = useState(dateInputValue(recurrentEdit?.end_date));
   const [active, setActive] = useState(recurrentEdit?.active ?? true);
+  const [createsBill, setCreatesBill] = useState(recurrentEdit?.creates_bill ?? false);
 
   const {
     register,
@@ -77,11 +79,12 @@ export function RecurrentTransactionForm({
     setValue("type", select);
     setValue("frequency", frequency);
     setValue("active", active);
+    setValue("creates_bill", createsBill);
     if (recurrentEdit) {
       setValue("id", recurrentEdit.id);
       setValue("category_id", recurrentEdit.category_id ?? null);
     }
-  }, [active, frequency, recurrentEdit, select, setValue]);
+  }, [active, createsBill, frequency, recurrentEdit, select, setValue]);
 
   useEffect(() => {
     if (!nextRunDate && startDate) {
@@ -104,6 +107,7 @@ export function RecurrentTransactionForm({
       type: select,
       frequency,
       active,
+      creates_bill: createsBill,
       iva_percent: Number(iva || 0),
       payment_method: paymentMethod,
       category_id: category === '' ? null : Number(category),
@@ -344,13 +348,22 @@ export function RecurrentTransactionForm({
           </div>
 
           <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-[#0f1b35]/50 p-4 flex flex-col gap-4">
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
                 <input type="checkbox" checked={active}
                   {...register("active")}
                   onChange={(e) => setActive(e.target.checked)}
                   className="w-4 h-4 accent-primary" />
                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('form.active')}</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+                <input type="checkbox" checked={createsBill}
+                  {...register("creates_bill")}
+                  onChange={(e) => setCreatesBill(e.target.checked)}
+                  className="w-4 h-4 accent-primary" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  {select === 'income' ? t('form.billable') : t('form.deductible')}
+                </span>
               </label>
             </div>
           </div>
