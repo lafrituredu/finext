@@ -52,7 +52,7 @@ function Reports() {
           <p className='relative flex gap-2 w-full'><InfoIcon />  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Animi molestias, totam tenetur assumenda porro quia quidem maiores consequuntur distinctio ducimus eum. Aspernatur officia sapiente doloribus esse error rem eaque quis.</p>
         </div>
 
-        <div>
+        <div className='p-5 border border-gray-300 rounded-2xl' >
           <label htmlFor="">Months: </label>
           <select onChange={(e) => setMonths(Number(e.currentTarget.value))} defaultValue={12}>
             <option value="12">12 months</option>
@@ -76,7 +76,7 @@ function Reports() {
           </select>
         </div>
 
-        <p>Preview</p>
+        <p className='inter text-2xl text-gray-600 mt-5'>Previsualización</p>
         <div className='border border-gray-300 rounded-2xl'>  
           <ReportPage monthCounter={months} types={types} categories={categoriesPDF} />
         </div>
