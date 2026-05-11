@@ -101,12 +101,12 @@ const config = {
                         <th>Mes</th>
                         <th>Ingresos</th>
                         <th>Gastos</th>
-                        <th>Fluoj</th>
+                        <th>Flujo</th>
                     </tr>
                 </thead>
                 <tbody>
                     {months.map( month => 
-                        <tr className='text-3xl'>
+                        <tr className='text-3xl *:pt-2'>
                             <td>{month.name}</td>
                             <td>{month.incomes}€</td>
                             <td>{month.expense}€</td>
