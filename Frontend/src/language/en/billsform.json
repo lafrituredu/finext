@@ -1,0 +1,89 @@
+{
+  "header": {
+    "create": "Add Invoice",
+    "edit": "Edit Invoice"
+  },
+
+  "type": {
+    "emitida": "Issued",
+    "recibida": "Received"
+  },
+
+  "fields": {
+    "name": {
+      "label": "Name",
+      "placeholder": "e.g. Client invoice",
+      "required": "Name is required",
+      "max_length": "Name cannot exceed 40 characters",
+      "pattern": "Only letters, numbers and spaces are allowed"
+    },
+    "amount": {
+      "label": "Amount",
+      "placeholder": "0.00 €",
+      "required": "Amount is required",
+      "min": "Amount must be greater than 0",
+      "max": "Amount cannot exceed 1,000,000"
+    },
+    "date": {
+      "label": "Date",
+      "required": "Date is required"
+    },
+    "iva": {
+      "label": "VAT type",
+      "options": {
+        "none": "No VAT — 0%",
+        "super_reduced": "Super reduced — 4%",
+        "reduced": "Reduced — 10%",
+        "general": "General — 21%"
+      }
+    },
+    "category": {
+      "label": "Category",
+      "none": "No category"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Optional description",
+      "max_length": "Description cannot exceed 100 characters",
+      "pattern": "Only letters, numbers and spaces are allowed"
+    },
+    "client": {
+      "label": "Client",
+      "placeholder": "Client name",
+      "max_length": "Client name cannot exceed 50 characters",
+      "pattern": "Only letters, numbers and spaces are allowed"
+    },
+    "payment_method": {
+      "label": "Payment method",
+      "options": {
+        "card": "Credit card",
+        "cash": "Cash",
+        "transfer": "Bank transfer"
+      }
+    }
+  },
+
+  "installments": {
+    "toggle": "Installment payment",
+    "singular": "installment",
+    "plural": "installments",
+    "add": "Add installment",
+    "amount_placeholder": "0.00 €",
+    "status": {
+      "covered": "✓ Amount covered",
+      "excess": "⚠ Excess:",
+      "remaining": "Remaining:"
+    },
+    "validation": {
+      "amount_required": "Installment amount is required",
+      "amount_min": "Must be greater than 0",
+      "date_required": "Installment date is required"
+    }
+  },
+
+  "actions": {
+    "create": "✓ Create invoice",
+    "update": "✓ Update",
+    "cancel": "Cancel"
+  }
+}

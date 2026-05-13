@@ -53,6 +53,9 @@ import profileEN from "./language/en/profile.json";
 import billsES from "./language/es/bills.json";
 import billsEN from "./language/en/bills.json";
 
+import billsformES from "./language/es/billsform.json";
+import billsformEN from "./language/en/billsform.json";
+
 import recurrentES from "./language/es/recurrent.json";
 import recurrentEN from "./language/en/recurrent.json";
 
@@ -85,6 +88,7 @@ export const resources = {
     contact: contactES,
     utils: utilsES,
     bills: billsES,
+    billsform: billsformES,
     recurrent: recurrentES,
     profile: profileES,
     categories: categoriesES,
@@ -109,6 +113,7 @@ export const resources = {
     contact: ContactEN,
     utils: utilsEN,
     bills: billsEN,
+    billsform: billsformEN,
     recurrent: recurrentEN,
     profile: profileEN,
     categories: categoriesEN,

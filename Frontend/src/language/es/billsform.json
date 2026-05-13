@@ -1,0 +1,89 @@
+{
+  "header": {
+    "create": "Añadir Factura",
+    "edit": "Editar Factura"
+  },
+
+  "type": {
+    "emitida": "Emitida",
+    "recibida": "Recibida"
+  },
+
+  "fields": {
+    "name": {
+      "label": "Nombre",
+      "placeholder": "Ej. Factura cliente",
+      "required": "El nombre es obligatorio",
+      "max_length": "El nombre no puede superar 40 caracteres",
+      "pattern": "Solo se permiten letras, números y espacios"
+    },
+    "amount": {
+      "label": "Importe",
+      "placeholder": "0.00 €",
+      "required": "El importe es obligatorio",
+      "min": "El importe debe ser mayor que 0",
+      "max": "El importe no puede superar 1.000.000"
+    },
+    "date": {
+      "label": "Fecha",
+      "required": "La fecha es obligatoria"
+    },
+    "iva": {
+      "label": "Tipo de IVA",
+      "options": {
+        "none": "Sin IVA — 0%",
+        "super_reduced": "Superreducido — 4%",
+        "reduced": "Reducido — 10%",
+        "general": "General — 21%"
+      }
+    },
+    "category": {
+      "label": "Categoría",
+      "none": "Sin categoría"
+    },
+    "description": {
+      "label": "Descripción",
+      "placeholder": "Descripción opcional",
+      "max_length": "La descripción no puede superar 100 caracteres",
+      "pattern": "Solo se permiten letras, números y espacios"
+    },
+    "client": {
+      "label": "Cliente",
+      "placeholder": "Nombre del cliente",
+      "max_length": "El cliente no puede superar 50 caracteres",
+      "pattern": "Solo se permiten letras, números y espacios"
+    },
+    "payment_method": {
+      "label": "Método de pago",
+      "options": {
+        "card": "Tarjeta de crédito",
+        "cash": "Efectivo",
+        "transfer": "Transferencia bancaria"
+      }
+    }
+  },
+
+  "installments": {
+    "toggle": "Pago a plazos",
+    "singular": "plazo",
+    "plural": "plazos",
+    "add": "Añadir plazo",
+    "amount_placeholder": "0.00 €",
+    "status": {
+      "covered": "✓ Importe cubierto",
+      "excess": "⚠ Exceso:",
+      "remaining": "Restante:"
+    },
+    "validation": {
+      "amount_required": "El importe del plazo es obligatorio",
+      "amount_min": "Debe ser mayor que 0",
+      "date_required": "La fecha del plazo es obligatoria"
+    }
+  },
+
+  "actions": {
+    "create": "✓ Crear factura",
+    "update": "✓ Actualizar",
+    "cancel": "Cancelar"
+  }
+}

@@ -7,6 +7,7 @@ import React from "react";
 import { useForm, useFieldArray } from "react-hook-form"
 import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
 import { useTransactions, type TransactionsContextType } from '../../contexts/TransactionContext'
+import { useTranslation } from 'react-i18next'
 
 type BillFormValues = {
   id: number
@@ -27,6 +28,8 @@ type BillFormValues = {
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const [select, setSelected] = useState<any>(billEdit?.type || 'emitida');
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { t } = useTranslation("billsform")
 
   const { categories } = useCategories() as CategoriesContextType
   const { transactions, refetchTransactions } = useTransactions() as TransactionsContextType
@@ -142,7 +145,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <MoneyBagIcon className="w-7 h-7" />
-              {billEdit == null ? 'Añadir Factura' : 'Editar Factura'}
+              {billEdit == null ? t('header.create') : t('header.edit')}
             </h2>
             <button
               type="button"
@@ -164,8 +167,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               rounded-2xl border border-gray-200 dark:border-gray-700
               montserrat">
               {[
-                { id: 'emitida', label: 'Emitida', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'recibida', label: 'Recibida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+                { id: 'emitida', label: t('type.emitida'), Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+                { id: 'recibida', label: t('type.recibida'), Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
               ].map(({ id, label, Icon, activeColor }) => (
                 <button
                   key={id}
@@ -186,15 +189,15 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
 
           {/* Name */}
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('fields.name.label')} *</label>
             <input
               {...register("name", {
-                required: "El nombre es obligatorio",
-                maxLength: { value: 40, message: "El nombre no puede superar 40 caracteres" },
-                pattern: { value: namePattern, message: "Solo se permiten letras, números y espacios" }
+                required: t('fields.name.required'),
+                maxLength: { value: 40, message: t('fields.name.max_length') },
+                pattern: { value: namePattern, message: t('fields.name.pattern') }
               })}
               type="text"
-              placeholder="Ej. Factura cliente"
+              placeholder={t('fields.name.placeholder')}
               value={billName}
               onChange={(e) => setBillName(e.target.value)}
               className={inputCls} />
@@ -204,27 +207,27 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
           {/* Amount - Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Importe *</label>
+              <label className={labelCls}>{t('fields.amount.label')} *</label>
               <input
                 type="number"
                 step="0.10"
                 {...register("total_amount", {
-                  required: "El importe es obligatorio",
+                  required: t('fields.amount.required'),
                   valueAsNumber: true,
-                  min: { value: 0.01, message: "El importe debe ser mayor que 0" },
-                  max: { value: 1_000_000, message: "El importe no puede superar 1.000.000" }
+                  min: { value: 0.01, message: t('fields.amount.min') },
+                  max: { value: 1_000_000, message: t('fields.amount.max') }
                 })}
-                placeholder="0.00 €"
+                placeholder={t('fields.amount.placeholder')}
                 value={billImport}
                 onChange={(e) => setBillImport(parseFloat(e.target.value))}
                 className={inputCls} />
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Fecha *</label>
+              <label className={labelCls}>{t('fields.date.label')} *</label>
               <input
                 type="date"
-                {...register("date", { required: "La fecha es obligatoria" })}
+                {...register("date", { required: t('fields.date.required') })}
                 value={billDate}
                 onChange={(e) => setBillDate(e.target.value)}
                 className={inputCls} />
@@ -235,26 +238,26 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
           {/* Iva - Category */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Tipo de IVA</label>
+              <label className={labelCls}>{t('fields.iva.label')}</label>
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
                 value={billIva}
                 onChange={(e) => setBillIva(e.currentTarget.value)}
                 className={inputCls}>
-                <option value="0">Sin IVA — 0%</option>
-                <option value="4.00">Superreducido — 4%</option>
-                <option value="10.00">Reducido — 10%</option>
-                <option value="21.00">General — 21%</option>
+                <option value="0">{t('fields.iva.options.none')}</option>
+                <option value="4.00">{t('fields.iva.options.super_reduced')}</option>
+                <option value="10.00">{t('fields.iva.options.reduced')}</option>
+                <option value="21.00">{t('fields.iva.options.general')}</option>
               </select>
             </div>
             <div>
-              <label className={labelCls}>Categoría</label>
+              <label className={labelCls}>{t('fields.category.label')}</label>
               <select
                 {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className={inputCls}>
-                <option value="">Sin categoría</option>
+                <option value="">{t('fields.category.none')}</option>
                 {categories.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -264,14 +267,14 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
 
           {/* Description */}
           <div>
-            <label className={labelCls}>Descripción</label>
+            <label className={labelCls}>{t('fields.description.label')}</label>
             <input
               {...register("description", {
-                maxLength: { value: 100, message: "La descripción no puede superar 100 caracteres" },
-                pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s,\.]*$/, message: "Solo se permiten letras, números y espacios" }
+                maxLength: { value: 100, message: t('fields.description.max_length') },
+                pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s,\.]*$/, message: t('fields.description.pattern') }
               })}
               type="text"
-              placeholder="Descripción opcional"
+              placeholder={t('fields.description.placeholder')}
               value={billDescription}
               onChange={(e) => setBillDescription(e.target.value)}
               className={inputCls} />
@@ -281,29 +284,29 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
           {/* Client - Payment method */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Cliente</label>
+              <label className={labelCls}>{t('fields.client.label')}</label>
               <input
                 {...register("client", {
-                  maxLength: { value: 50, message: "El cliente no puede superar 50 caracteres" },
-                  pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]*$/, message: "Solo se permiten letras, números y espacios" }
+                  maxLength: { value: 50, message: t('fields.client.max_length') },
+                  pattern: { value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]*$/, message: t('fields.client.pattern') }
                 })}
                 type="text"
-                placeholder="Nombre del cliente"
+                placeholder={t('fields.client.placeholder')}
                 value={billClient}
                 onChange={(e) => setBillClient(e.target.value)}
                 className={inputCls} />
               {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Método de pago</label>
+              <label className={labelCls}>{t('fields.payment_method.label')}</label>
               <select
                 {...register("payment_method")}
                 value={billPaymentMethod}
                 onChange={(e) => setBillPaymentMethod(e.currentTarget.value)}
                 className={inputCls}>
-                <option value="card">Tarjeta de credito</option>
-                <option value="cash">Efectivo</option>
-                <option value="transfer">Transferencia bancaria</option>
+                <option value="card">{t('fields.payment_method.options.card')}</option>
+                <option value="cash">{t('fields.payment_method.options.cash')}</option>
+                <option value="transfer">{t('fields.payment_method.options.transfer')}</option>
               </select>
             </div>
           </div>
@@ -324,20 +327,20 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 peer-checked:translate-x-5" />
               </div>
               <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                Pago a plazos
+                {t('installments.toggle')}
               </span>
             </label>
 
             {isInstallment && (
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs font-medium text-gray-400 dark:text-gray-500 px-1">
-                  <span>{fields.length} plazo{fields.length !== 1 ? 's' : ''}</span>
+                  <span>{fields.length} {fields.length !== 1 ? t('installments.plural') : t('installments.singular')}</span>
                   <span className={isOverBudget ? 'text-red-400' : remaining === 0 ? 'text-emerald-500' : ''}>
                     {remaining === 0
-                      ? '✓ Importe cubierto'
+                      ? t('installments.status.covered')
                       : isOverBudget
-                        ? `⚠ Exceso: ${Math.abs(remaining).toFixed(2)} €`
-                        : `Restante: ${remaining.toFixed(2)} €`}
+                        ? `${t('installments.status.excess')} ${Math.abs(remaining).toFixed(2)} €`
+                        : `${t('installments.status.remaining')} ${remaining.toFixed(2)} €`}
                   </span>
                 </div>
 
@@ -351,17 +354,17 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                         type="number"
                         step="0.10"
                         min="0"
-                        placeholder="0.00 €"
+                        placeholder={t('installments.amount_placeholder')}
                         {...register(`installments.${index}.amount`, {
-                          required: "El importe del plazo es obligatorio",
+                          required: t('installments.validation.amount_required'),
                           valueAsNumber: true,
-                          min: { value: 0.01, message: "Debe ser mayor que 0" }
+                          min: { value: 0.01, message: t('installments.validation.amount_min') }
                         })}
                         className={`${inputCls} flex-1`} />
                       <input
                         type="date"
                         {...register(`installments.${index}.date`, {
-                          required: "La fecha del plazo es obligatoria"
+                          required: t('installments.validation.date_required')
                         })}
                         className={`${inputCls} flex-1`} />
                       {fields.length > 1 && (
@@ -401,7 +404,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                     fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
                   </svg>
-                  Añadir plazo
+                  {t('installments.add')}
                 </button>
               </div>
             )}
@@ -419,7 +422,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 transition-all duration-150 ease-in-out
                 cursor-pointer
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">
-              {billEdit == null ? '✓ Crear factura' : '✓ Actualizar'}
+              {billEdit == null ? t('actions.create') : t('actions.update')}
             </button>
             <button
               type="button"
@@ -433,7 +436,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
                 transition-all duration-150 ease-in-out
                 cursor-pointer">
-              Cancelar
+              {t('actions.cancel')}
             </button>
           </div>
 

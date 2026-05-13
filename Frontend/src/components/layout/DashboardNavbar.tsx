@@ -17,7 +17,8 @@ function DashboardNavbar({ opened, onToggle }: DashboardNavbar){
                 <HamburgerMenu opened={opened} onToggle={onToggle}/>
             </div>
             <div className="lg:hidden flex">
-                <img src="/icons/finext.svg" alt="" className="w-12 h-12 min-w-10"/>
+                <FiNextIcon className='w-12 h-12 min-w-10' />
+                {/* <img src="/icons/finext.svg" alt="" className="w-12 h-12 min-w-10"/> */}
             </div>
 
                 <div className="lg:hidden flex">

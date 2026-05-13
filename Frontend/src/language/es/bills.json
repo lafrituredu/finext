@@ -1,9 +1,42 @@
 {
-    "bills": "Facturas",
-    "new_bill": "Nueva Factura",
-    "no_bills": "No hay Facturas",
-    "confirm": {
-        "delete": "Eliminar factura",
-        "delete_trans": "y todas sus transacciones asociadas."
+  "bills": "Facturas",
+  "new_bill": "Nueva factura",
+  "create": "Crear",
+  "no_bills": "No hay facturas",
+  "no_description": "Sin descripción...",
+
+  "type": {
+    "emitida": "Emitida",
+    "recibida": "Recibida"
+  },
+
+  "fields": {
+    "date": "Fecha",
+    "iva": "% IVA",
+    "plazos": "Plazos",
+    "plazo_singular": "Plazo",
+    "plazos_plural": "Plazos",
+    "client": "Cliente",
+    "base_imponible": "Base Imponible"
+  },
+
+  "payment": {
+    "card": "Tarjeta de crédito",
+    "cash": "Efectivo",
+    "transfer": "Transferencia bancaria"
+  },
+
+  "status": {
+    "pending_plazos": "Faltan plazos por añadir",
+    "overpaid": "Se ha pagado más del importe introducido"
+  },
+
+  "confirm": {
+    "delete": "¿Seguro que quieres eliminar",
+    "delete_trans": "y todas sus transacciones relacionadas?"
+  },
+
+  "error": {
+    "delete": "Error al eliminar la factura"
   }
 }

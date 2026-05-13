@@ -89,7 +89,7 @@ function ProfileForm({
             className={inputClass}
             name="username"
             value={form.username}
-            onChange={onChange}
+            disabled
             required
           />
         </label>

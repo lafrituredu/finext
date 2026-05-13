@@ -1,9 +1,42 @@
 {
-    "bills": "Bills",
-    "new_bill": "New Bill",
-    "no_bills": "There are no Bills",
-    "confirm": {
-        "delete": "Delete bill",
-        "delete_trans": "and all its associated transactions."
+  "bills": "Bills",
+  "new_bill": "New bill",
+  "create": "Create",
+  "no_bills": "No bills found",
+  "no_description": "No description...",
+
+  "type": {
+    "emitida": "Issued",
+    "recibida": "Received"
+  },
+
+  "fields": {
+    "date": "Date",
+    "iva": "% VAT",
+    "plazos": "Installments",
+    "plazo_singular": "Installment",
+    "plazos_plural": "Installments",
+    "client": "Client",
+    "base_imponible": "Tax base"
+  },
+
+  "payment": {
+    "card": "Credit card",
+    "cash": "Cash",
+    "transfer": "Bank transfer"
+  },
+
+  "status": {
+    "pending_plazos": "Pending installments to add",
+    "overpaid": "Paid amount exceeds the invoice total"
+  },
+
+  "confirm": {
+    "delete": "Are you sure you want to delete",
+    "delete_trans": "and all its related transactions?"
+  },
+
+  "error": {
+    "delete": "Error deleting the invoice"
   }
 }
