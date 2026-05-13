@@ -79,7 +79,7 @@ function Goals() {
                     </span>
                   </p>
                   <div>
-                    <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays <= 0 ? <div className='text-secondary dark:text-accent animate-pulse'> Finalizado</div> :  `${diffDays} ${t('days')}` }</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
+                    <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays <= 0 ? <span className='text-secondary dark:text-accent animate-pulse'> Finalizado</span> :  `${diffDays} ${t('days')}` }</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
                     <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
                       <div className="bg-secondary dark:bg-accent h-full" style={{ width: `${progress}%` }} /> 
                     </div>

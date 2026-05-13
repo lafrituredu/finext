@@ -6,9 +6,8 @@ import Chart from "react-apexcharts";
 function ReportPage({monthCounter,types,categories}:{monthCounter:number,types:string,categories:string}) {
     const { t } = useTranslation("overview");
     const { t: tUtils } = useTranslation("utils");
-    const {transactions} = useTransactions() as TransactionsContextType;
+    const { transactions } = useTransactions() as TransactionsContextType;
     let filtered:any[] = [];
-    let dataPerCategories:any[] = [];
 
 transactions.forEach( element => {
     let date:number = new Date(element.date).getMonth();
@@ -19,8 +18,6 @@ transactions.forEach( element => {
         let total:number = filtered[date]?.incomes == undefined ? Number(element.total_amount) : Number(filtered[date].incomes) + Number(element.total_amount);
         filtered[date] = {incomes: total, expenses: filtered[date]?.expenses}
         
-        // let ref = dataPerCategories[element.category.id];
-        // dataPerCategories[element.category.id] = {incomes: (ref.incomes ?? 0) + element.total_amount };
     }else{
         let total:number = filtered[date]?.expenses == undefined ? Number(element.total_amount) : Number(filtered[date].expenses) + Number(element.total_amount);
         filtered[date] = {incomes: filtered[date]?.incomes , expenses: total}
@@ -42,9 +39,22 @@ for (let i = 0; i <= (monthCounter-1); i++) {
     months.push(obj);
 }
 
-//console.log(months)
-console.log(dataPerCategories);
 
+let dataPerCategories = new Map<string,any>();
+transactions.forEach( t => {
+    let name = t.category?.name ?? "no category";
+    let obj = dataPerCategories.get(name) ?? {incomes: 0,expenses: 0} ;
+    if (t.type == 'income') {
+        obj.incomes = Number(obj.incomes)+Number(t.total_amount);
+        obj.expenses = obj.expenses;
+    }else{
+        obj.incomes = obj.incomes;
+        obj.expenses = Number(obj.expenses)+Number(t.total_amount);
+    }
+    dataPerCategories.set(name,obj);
+});
+
+console.log(dataPerCategories)
 const getDynamicSeries = () => {
     switch (types) {
         case 'both':
@@ -82,6 +92,38 @@ const config = {
     
     },
     series: getDynamicSeries(),
+};
+let seriesPieIncomes = Array.from(dataPerCategories.values()).map(el => el.incomes);
+let seriesPieOutcomes = Array.from(dataPerCategories.values()).map(el => el.expenses);
+
+const pieConfig = {
+  options: {
+    chart: { toolbar: { show: false } },
+
+    labels: Array.from(dataPerCategories.keys()),
+
+    // legend: {
+    //   position: "bottom"
+    // },
+
+    dataLabels: {
+      enabled: true
+    },
+
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 300
+          },
+          legend: {
+            position: "bottom"
+          }
+        }
+      }
+    ]
+  }
 };
   return (
     <div id='report-content' className='py-20 px-25 relative flex flex-col gap-10'>
@@ -135,6 +177,38 @@ const config = {
         <div className='absolute bottom-10'>
         <p>Este informe ha sido generado automáticamente por Finext.</p>
         <p>Los datos fiscales son estimaciones orientativas. Consulta con un asesor profesional.</p>
+        </div>
+
+        <div className='inter mb-5 flex flex-col gap-5'>
+            <p className='text-5xl mb-3'>Resumen general</p>
+
+            <ul>
+                {Array.from(dataPerCategories.entries()).map(([key, value]) => (
+                <li key={key}>
+                    <p className="text-2xl font-bold">{key}</p>
+                    <p>Ingresos: {value.incomes}€</p>
+                    <p>Gastos: {value.expenses}€</p>
+                </li>
+                ))}
+            </ul>
+        </div>
+
+        <div className='grid grid-cols-2'>
+            <Chart
+            options={pieConfig.options}
+            series={seriesPieIncomes}
+            type="pie"
+            width="100%"
+            height={350}
+            />
+
+            <Chart
+            options={pieConfig.options}
+            series={seriesPieOutcomes}
+            type="pie"
+            width="100%"
+            height={350}
+            />
         </div>
 
     </div>
