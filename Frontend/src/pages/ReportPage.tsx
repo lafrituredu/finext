@@ -8,6 +8,7 @@ function ReportPage({monthCounter,types,categories}:{monthCounter:number,types:s
     const { t: tUtils } = useTranslation("utils");
     const {transactions} = useTransactions() as TransactionsContextType;
     let filtered:any[] = [];
+    let dataPerCategories:any[] = [];
 
 transactions.forEach( element => {
     let date:number = new Date(element.date).getMonth();
@@ -17,12 +18,16 @@ transactions.forEach( element => {
     if (element.type == 'income') {
         let total:number = filtered[date]?.incomes == undefined ? Number(element.total_amount) : Number(filtered[date].incomes) + Number(element.total_amount);
         filtered[date] = {incomes: total, expenses: filtered[date]?.expenses}
+        
+        // let ref = dataPerCategories[element.category.id];
+        // dataPerCategories[element.category.id] = {incomes: (ref.incomes ?? 0) + element.total_amount };
     }else{
         let total:number = filtered[date]?.expenses == undefined ? Number(element.total_amount) : Number(filtered[date].expenses) + Number(element.total_amount);
         filtered[date] = {incomes: filtered[date]?.incomes , expenses: total}
     }
     
 })
+
 
 let months = [];
 for (let i = 0; i <= (monthCounter-1); i++) {
@@ -37,7 +42,9 @@ for (let i = 0; i <= (monthCounter-1); i++) {
     months.push(obj);
 }
 
-console.log(months)
+//console.log(months)
+console.log(dataPerCategories);
+
 const getDynamicSeries = () => {
     switch (types) {
         case 'both':
@@ -105,8 +112,8 @@ const config = {
                     </tr>
                 </thead>
                 <tbody>
-                    {months.map( month => 
-                        <tr className='text-3xl *:pt-2'>
+                    {months.map( (month,key) => 
+                        <tr key={key} className='text-3xl *:pt-2'>
                             <td>{month.name}</td>
                             <td>{month.incomes}€</td>
                             <td>{month.expense}€</td>
