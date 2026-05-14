@@ -86,14 +86,14 @@ const config = {
 
 function calculateIncomes(){
     return transactions
-        .filter(t => t.type === 'income' && new Date(t.date).getMonth()  == new Date().getMonth())
+        .filter(t => t.type === 'income' && new Date(t.date).getMonth()  == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 
 function calculateIncomesIva(){
     return transactions
-        .filter(t => t.type ==='income' && new Date(t.date).getMonth() == new Date().getMonth())
+        .filter(t => t.type ==='income' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
@@ -104,13 +104,13 @@ function calculateIncomesIva(){
 
 function calculateExpenses(){
     return transactions
-        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth())
+        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 function calculateExpensesIva(){
     return transactions
-        .filter(t => t.type ==='expense' && new Date(t.date).getMonth() == new Date().getMonth())
+        .filter(t => t.type ==='expense' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
@@ -120,13 +120,7 @@ function calculateExpensesIva(){
 }
 
 function calculateCashflow(){
-    const incomes = transactions
-        .filter(t => t.type === 'income' && new Date(t.date).getMonth() == new Date().getMonth())
-        .reduce((acc, t) => acc + Number(t.total_amount), 0)
-    const expenses = transactions
-        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth())
-        .reduce((acc, t) => acc + Number(t.total_amount), 0)
-    return (incomes - expenses).toFixed(2)
+    return (Number(calculateIncomes()) - Number(calculateExpenses())).toFixed(2)
 }
   return (
     <div className='min-h-full w-full p-10 inter'>

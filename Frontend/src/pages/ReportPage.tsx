@@ -55,7 +55,6 @@ transactions.forEach( t => {
     dataPerCategories.set(name,obj);
 });
 
-console.log(dataPerCategories)
 const getDynamicSeries = () => {
     switch (types) {
         case 'both':
