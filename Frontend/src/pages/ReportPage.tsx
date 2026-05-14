@@ -2,6 +2,7 @@ import React from 'react'
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
 import { useTranslation } from 'react-i18next';
 import Chart from "react-apexcharts";
+import type { ApexOptions } from 'apexcharts';
 
 function ReportPage({monthCounter,types,categories}:{monthCounter:number,types:string,categories:string}) {
     const { t } = useTranslation("overview");
@@ -77,24 +78,53 @@ const getDynamicSeries = () => {
             ]
     }
 }
-const config = {
-    options: {
-
+const config: { options: ApexOptions; series: any } = {
+  options: {
     chart: {
-        id: "basic-bar",
-        toolbar: { show: false },
-        zoom: { enabled: false }
+      id: "basic-bar",
+      type: "line",
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      fontFamily: "Inter, sans-serif"
     },
-    markers: { size: 5 },
+
+    stroke: {
+      curve: "smooth",
+      width: 3
+    },
+
+    markers: {
+      size: 4,
+      hover: {
+        size: 6
+      }
+    },
+
     xaxis: {
-        categories: months.map(m => m.name)
-    }
-    
+      categories: months.map(m => m.name)
     },
-    series: getDynamicSeries(),
+
+    tooltip: {
+      theme: "light"
+    }
+  },
+
+  series: getDynamicSeries()
 };
 let seriesPieIncomes = Array.from(dataPerCategories.values()).map(el => el.incomes);
 let seriesPieOutcomes = Array.from(dataPerCategories.values()).map(el => el.expenses);
+
+let total_incomes = transactions
+    .filter(t => t.type === 'income' && new Date(t.date).getMonth() < monthCounter && new Date(t.date).getFullYear() == new Date().getFullYear())
+    .reduce((acc, t) => acc + Number(t.total_amount), 0)
+    .toFixed(2)
+
+let total_expenses = transactions
+    .filter(t => t.type === 'expense' && new Date(t.date).getMonth() < monthCounter && new Date(t.date).getFullYear() == new Date().getFullYear())
+    .reduce((acc, t) => acc + Number(t.total_amount), 0)
+    .toFixed(2)
+
+let cashflow = Number(total_incomes) - Number(total_expenses);
 
 const pieConfig = {
   options: {
@@ -126,27 +156,26 @@ const pieConfig = {
   }
 };
   return (
-    <div id='report-content' className='py-20 px-25 relative flex flex-col gap-10'>
+    <div id='report-content' className='py-20 px-25 relative flex flex-col gap-10 inter *:inter'>
         <div>
             <p className='flex justify-between montserrat text-xl mb-2'> <span>FULLNAME</span> <span>{new Date().toLocaleString()}</span> </p>
-            <div className='w-full h-px bg-black inter mb-10' />
+            <div className='w-full h-px bg-black inter mb-' />
         </div>
 
-        <div className='inter mb-5 flex flex-col gap-5'>
-            <p className='text-5xl mb-3'>Resumen general</p>
+        <div className='inter mb-5 flex flex-col gap-2'>
+            <p className='text-3xl mb-3'>Resumen general</p>
             <ul>
-                <li className='text-3xl'>Total ingresos: 0000€</li>
-                <li className='text-3xl'>Total ingresos: 0000€</li>
-                <li className='text-3xl'>Total ingresos: 0000€</li>
-                <li className='text-3xl'>Total ingresos: 0000€</li>
+                <li className='text-2xl'>Total ingresos: {total_incomes}€</li>
+                <li className='text-2xl'>Total Gastos: {total_expenses}€</li>
+                <li className='text-2xl'>Flujo de caja: {cashflow}€</li>
             </ul>
         </div>
 
-        <div className='inter mb-5 flex flex-col gap-5'>
-            <p className='text-5xl mb-3'>Resumen mensual</p>
+        <div className='inter mb-5 flex flex-col gap-2'>
+            <p className='text-3xl mb-3'>Resumen mensual</p>
             <table>
                 <thead>
-                    <tr className='*:text-start *:text-3xl'>
+                    <tr className='*:text-start *:text-2xl'>
                         <th>Mes</th>
                         <th>Ingresos</th>
                         <th>Gastos</th>
@@ -155,7 +184,7 @@ const pieConfig = {
                 </thead>
                 <tbody>
                     {months.map( (month,key) => 
-                        <tr key={key} className='text-3xl *:pt-2'>
+                        <tr key={key} className='text-2xl *:pt-1'>
                             <td>{month.name}</td>
                             <td>{month.incomes}€</td>
                             <td>{month.expense}€</td>
@@ -166,7 +195,7 @@ const pieConfig = {
             </table>
         </div>
 
-        <p className='text-5xl mb-3'>Gráfica General</p>
+        <p className='text-3xl mb-3'>Gráfica General (ingresos y gastos) </p>
         <Chart
         options={config.options}
         series={config.series}
@@ -179,18 +208,29 @@ const pieConfig = {
         <p>Los datos fiscales son estimaciones orientativas. Consulta con un asesor profesional.</p>
         </div>
 
-        <div className='inter mb-5 flex flex-col gap-5'>
-            <p className='text-5xl mb-3'>Resumen general</p>
+        {categories == 'all' &&
+        <>
+        <div className='inter mb-5 flex flex-col gap-2'>
+            <p className='text-3xl mb-3'>Resumen por categorias</p>
 
-            <ul>
+        <table>
+            <thead>
+                <tr className='*:text-start text-2xl'>
+                    <th>Categoria</th>
+                    <th>Ingresos</th>
+                    <th>Gastos</th>
+                </tr>
+            </thead>
+            <tbody>
                 {Array.from(dataPerCategories.entries()).map(([key, value]) => (
-                <li key={key}>
-                    <p className="text-2xl font-bold">{key}</p>
-                    <p>Ingresos: {value.incomes}€</p>
-                    <p>Gastos: {value.expenses}€</p>
-                </li>
+                    <tr key={key} className='text-2xl *:pt-2'>
+                        <td>{key}</td>
+                        <td>{value.incomes}€</td>
+                        <td>{value.expenses}€</td>
+                    </tr>
                 ))}
-            </ul>
+            </tbody>
+        </table>
         </div>
 
         <div className='grid grid-cols-2'>
@@ -199,7 +239,7 @@ const pieConfig = {
             series={seriesPieIncomes}
             type="pie"
             width="100%"
-            height={350}
+            height={250}
             />
 
             <Chart
@@ -207,9 +247,10 @@ const pieConfig = {
             series={seriesPieOutcomes}
             type="pie"
             width="100%"
-            height={350}
+            height={250}
             />
         </div>
+        </>}
 
     </div>
   )

@@ -10,33 +10,51 @@ function Reports() {
   const [months,setMonths] = useState(12);
   const [types,setTypes] = useState('both');
   const [categoriesPDF,setCategoriesPDF] = useState('all');
+  const [generating, setGenerating] = useState(false);
+  
+const generatePDF = async () => {
+  const element = document.getElementById("report-content");
+  if (!element) return;
 
-  const generatePDF = async () =>  {
-    const element = document.getElementById("report-content");
+  const canvas = await html2canvas(element, {
+    scale: 2
+  });
 
-    if (!element) return;
+  const imgData = canvas.toDataURL("image/png");
 
-    const canvas = await html2canvas(element);
+  const pdf = new jsPDF("p", "mm", "a4");
 
-    const image = canvas.toDataURL("image/png");
+  const pageWidth = 210;
+  const pageHeight = 297;
 
-    const pdf = new jsPDF("p", "mm", "a4");
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    const width = 210;
+  let heightLeft = imgHeight;
+  let position = 0;
 
-    const height = (canvas.height * width) / canvas.width;
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
 
-    pdf.addImage(image, "PNG", 0, 0, width, height);
+  heightLeft -= pageHeight;
 
-    pdf.save("report.pdf");
+  while (heightLeft > 0) {
+    position -= pageHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
   }
 
-  return (
+  pdf.save("report.pdf");
+  setGenerating(false);
+};
+
+  return (<>
     <div className='min-h-full w-full p-10 inter'>
       <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
         <p className='mont_semibold text-4xl'>Reports</p>
         <button 
-        onClick={() => generatePDF()}
+        onClick={() => {setGenerating(true);generatePDF()} }
+        disabled={generating}
         className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
           <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
             Generate PDF
@@ -53,7 +71,7 @@ function Reports() {
         </div>
 
         <div className='p-5 border border-gray-300 rounded-2xl' >
-          <label htmlFor="">Months: </label>
+          <label >Months: </label>
           <select onChange={(e) => setMonths(Number(e.currentTarget.value))} defaultValue={12}>
             <option value="12">12 months</option>
             <option value="9">9 months</option>
@@ -61,18 +79,17 @@ function Reports() {
             <option value="3">3 months</option>
           </select>
 
-          <label htmlFor="">Incomes & outcomes</label>
+          <label >Incomes & outcomes</label>
           <select onChange={(e) => setTypes(e.currentTarget.value)} >
             <option value="both">Both</option>
             <option value="incomes">Incomes</option>
             <option value="outcomes">Outcomes</option>            
           </select>
           
-          <label htmlFor="">Categories</label>
+          <label >Categories</label>
           <select onChange={(e) => setCategoriesPDF(e.currentTarget.value)}>
             <option value="all">All</option>
             <option value="none">None</option>
-            {categories.map( el => <option key={el.id} value={el.name}>{el.name}</option>)}
           </select>
         </div>
 
@@ -82,6 +99,26 @@ function Reports() {
         </div>
       </div>
     </div>
+    {generating &&
+      <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/30 backdrop-blur-md">
+        
+        <div className="flex flex-col items-center gap-4 px-8 py-6 rounded-2xl bg-white/90 shadow-2xl border border-black/10">
+
+          <div className="w-10 h-10 border-4 border-gray-200 border-t-primary rounded-full animate-spin" />
+
+          <div className="text-center">
+            <p className="text-lg font-semibold text-gray-800">
+              Generando tu informe
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              Esto puede tardar unos segundos...
+            </p>
+          </div>
+
+        </div>
+      </div>
+    }
+    </>
   )
 }
 
