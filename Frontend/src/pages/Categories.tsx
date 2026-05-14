@@ -56,7 +56,7 @@ function Categories() {
             <div className='min-h-40 grid xl:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5 mb-10 justify-center items-center'>
 
               {categoriasPropias.map((category, key) =>
-                <div key={key} className='flex flex-col justify-around items-between min-h-40 max-h-40 rounded-2xl p-4 ring-1 dark:bg-dark-card ring-gray-200 dark:ring-gray-800 hover:scale-102 transition-transform ease-in-out'>
+                <div key={key} className='flex flex-col justify-around items-between min-h-40 max-h-40 rounded-2xl p-4 ring-1 dark:bg-dark-card ring-gray-200 dark:ring-[#1d2344] hover:scale-102 transition-transform ease-in-out'>
 
                   <div className='flex justify-between'>
                     <p>

@@ -64,6 +64,7 @@ function Navbar() {
             <NavLink to="/" className={linkClass}>{t("home")}</NavLink>
             <NavLink to="/about" className={linkClass}>{t("about_us")}</NavLink>
             <NavLink to="/contact" className={linkClass}>{t("contact_us")}</NavLink>
+            <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
         </div>
         <div className="md:hidden flex pb-5">
             <LanguageSelect/>

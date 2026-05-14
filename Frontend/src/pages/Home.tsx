@@ -151,9 +151,9 @@ function Home() {
           <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text">{t('built_for_you')}</h4>
           <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('built_to_simplify')}</p>
         </div>
-        <div className="flex flex-col text-black dark:text-dark-text mt-20 gap-10 sticky top-[200px]">
+        <div className="flex flex-col text-black dark:text-dark-text mt-20 gap-10 sticky top-[150px] sm:top-[200px]">
           {/*--- CARD 1 --- */}
-          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[200px]">
+          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[150px] sm:top-[200px]">
             <div className= "sm:col-span-2 col-span-3">
               <div className="flex flex-col">
                 <div className="flex sm:flex-row flex-col items-center">
@@ -164,11 +164,12 @@ function Home() {
               </div>
             </div>
             <div className="sm:flex hidden sm:col-span-1 justify-center items-center italic">
-              <img src="/test/test-img.png" alt="test" />
+              <img src="/img/Cardtop_imagev2.png" alt="test"  className="dark:hidden block"/>
+              <img src="/img/Dark_Cardtop_imagev2.png" alt="test" className="hidden dark:block" />
             </div>
           </div>
           {/*--- CARD 2 --- */}
-          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[220px]">
+          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[150px] sm:top-[200px]">
             <div className= "sm:col-span-2 col-span-3">
               <div className="flex flex-col">
                 <div className="flex sm:flex-row flex-col items-center">
@@ -178,10 +179,13 @@ function Home() {
                 <p className="inter sm:pt-10 pt-5 text-base/7 sm:text-lg">{t('intelligent_expense_text')}.</p>
               </div>
             </div>
-            <div className="sm:flex hidden sm:col-span-1 justify-center items-center italic"><img src="/test/test-img.png" alt="test" /></div>
+            <div className="sm:flex hidden sm:col-span-1 justify-center items-center italic">
+              <img src="/img/Cardmiddle_image.png" alt="test" className="block dark:hidden" />
+              <img src="/img/Dark_Cardmiddle_image.png" alt="test" className="hidden dark:block"/>
+              </div>
           </div>
           {/*--- CARD 3 --- */}
-          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[240px]">
+          <div className="grid grid-cols-3 max-w-[1280px] min-h-[500px] bg-background dark:bg-dark-card w-full sm:h-[500px] h-fit rounded-3xl shadow-md ring-2 ring-gray-200 dark:ring-[#050b1f] p-10 sticky top-[150px] sm:top-[200px]">
             <div className= "sm:col-span-2 col-span-3">
               <div className="flex flex-col">
                 <div className="flex sm:flex-row flex-col items-center">
@@ -191,7 +195,10 @@ function Home() {
                 <p className="inter sm:pt-10 pt-5 text-base/7 sm:text-lg">{t('smart_financial_text')}.</p>
               </div>
             </div>
-            <div className="sm:flex hidden sm:col-span-1 justify-center items-center italic"><img src="https://i.pinimg.com/736x/6a/b3/59/6ab3590b7ed9ff80625194c208b9ff29.jpg" alt="test" /></div>
+            <div className="sm:flex hidden sm:col-span-1 justify-center items-center italic">
+              <img src="/img/Cardbottom_image.png" alt="test" className="block dark:hidden" />
+              <img src="/img/Dark_Cardbottom_image.png" alt="test" className="hidden dark:block"/>
+              </div>
           </div>
         </div>
       </div>

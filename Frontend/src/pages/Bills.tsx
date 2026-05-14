@@ -147,7 +147,7 @@ function Bills() {
              {bills.map(bill => (
               <div key={bill.id}
                 className="flex flex-col bg-background dark:bg-dark-card rounded-2xl ring-1 
-                ring-gray-300 dark:ring-gray-800 p-5 gap-2 inter">
+                ring-gray-300 dark:ring-[#1d2344] p-5 gap-2 inter">
                   <div className='flex flex-row w-full justify-between items-center gap-2'>
                     <div className='flex gap-2 items-center'>
                       <ReceiptIcon className='text-gray-700 dark:text-dark-text'/>
@@ -204,8 +204,8 @@ function Bills() {
                     )}
                   </div>
                   
-                  <div className='flex flex-row bg-gray-100 dark:bg-dark-card w-full rounded-sm py-1 px-4 gap-2 ring-1 ring-gray-200 dark:ring-dark-text'>
-                    <InfoIcon className='text-gray-500 dark:text-dark-text w-5 h-5'/>
+                  <div className='flex flex-row items-center bg-gray-100 dark:bg-dark-card w-full rounded-sm py-1 px-2 gap-2 ring-1 ring-gray-200 dark:ring-gray-700'>
+                    <InfoIcon className='text-gray-500 dark:text-dark-text w-5 h-5 min-w-5 min-h-5'/>
                     {bill.description != null ? (
                     <span className='text-gray-500 dark:text-dark-text text-sm truncate'>{bill.description}</span>):(
                       <span className='text-gray-500 dark:text-dark-text text-sm truncate'>{t('no_description')}</span>)}
