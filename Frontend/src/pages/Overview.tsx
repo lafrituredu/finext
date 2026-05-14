@@ -20,14 +20,10 @@ const { t: tUtils } = useTranslation("utils");
 const [select,setSeleceted] = useState<any>('cashflow');
 const { transactions, setTransactions } = useTransactions() as TransactionsContextType;
 const { goals, setGoals } = useGoals() as GoalsContextType;
-// const [transactions, setTransactions] = useState<Transaction[]>(useTransactions())
-// const transactions:Transaction[] = useTransactions();
-// const [goals, setGoals] = useState<Goal[]>([])
 
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
-
 
 
 let filtered:any[] = [];
@@ -90,16 +86,20 @@ const config: {options: ApexOptions, series: any} = {
     ],
 };
 
+const isCurrent = (t: Transaction): boolean => {
+    return new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear();
+}
+
 function calculateIncomes(){
     return transactions
-        .filter(t => t.type === 'income' && new Date(t.date).getMonth()  == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
+        .filter(t => t.type === 'income' && isCurrent(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 
 function calculateIncomesIva(){
     return transactions
-        .filter(t => t.type ==='income' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
+        .filter(t => t.type ==='income' && isCurrent(t))
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
@@ -110,13 +110,13 @@ function calculateIncomesIva(){
 
 function calculateExpenses(){
     return transactions
-        .filter(t => t.type === 'expense' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
+        .filter(t => t.type === 'expense' && isCurrent(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
 function calculateExpensesIva(){
     return transactions
-        .filter(t => t.type ==='expense' && new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear())
+        .filter(t => t.type ==='expense' && isCurrent(t))
         .reduce((acc, t) => {
             const amount = Number(t.total_amount)
             const iva = Number(t.iva_percent)
