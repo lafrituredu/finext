@@ -11,7 +11,6 @@ function Reports() {
   const [types,setTypes] = useState('both');
   const [categoriesPDF,setCategoriesPDF] = useState('all');
   const [generating, setGenerating] = useState(false);
-  
 const generatePDF = async () => {
   const element = document.getElementById("report-content");
   if (!element) return;

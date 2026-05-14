@@ -237,7 +237,7 @@ const pieConfig = {
             options={pieConfig.options}
             series={seriesPieIncomes}
             type="pie"
-            width="100%"
+            width="100%" 
             height={250}
             />
 

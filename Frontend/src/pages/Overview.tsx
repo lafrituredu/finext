@@ -9,6 +9,8 @@ import { getTransactions, type Transaction } from '../api/TransactionService';
 import { getGoals, getRecomendation, type Goal } from '../api/GoalService';
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
 import { useGoals, type GoalsContextType } from '../contexts/GoalContext';
+import type { ApexOptions } from 'apexcharts';
+import { Link } from 'react-router-dom';
 
 
 function Overview() {
@@ -58,13 +60,17 @@ for (let i = 0; i <= 11; i++) {
     months.push(obj);
 }
 
-const config = {
+const config: {options: ApexOptions, series: any} = {
     options: {
 
     chart: {
         id: "basic-bar",
         toolbar: { show: false },
         zoom: { enabled: false }
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3
     },
     markers: { size: 5 },
     xaxis: {
@@ -203,36 +209,33 @@ function calculateCashflow(){
         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
             {/* FINANCIAL GOALS */}
             <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] flex flex-col gap-4'>
-                {goals?.map( (goal,key) => 
-                    {
-                    const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
-                    const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
-                    const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
-                    
-                    if (key >= 2) {
-                        return;
-                    }
+            {goals?.map( (goal,key) => 
+            { const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
+              const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
+              const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
+              if (key > 1) return;
+              return (
+                <div key={key} className='inter w-full mb-5 flex flex-col gap-3 dark:bg-dark-card'>
+                  <p className='font-semibold montserrat flex justify-between'>{goal.name}
+                  </p>
+                  <div>
+                    <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays <= 0 ? <span className='text-secondary dark:text-accent animate-pulse'> Finalizado</span> :  `${diffDays} ${t('days')}` }</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
+                    <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
+                      <div className="bg-secondary dark:bg-accent h-full" style={{ width: `${progress}%` }} /> 
+                    </div>
+                  </div>
 
-                    return (
-                    <div key={key} className='inter flex flex-col gap-2'>
-                        <p className='font-semibold montserrat flex justify-between'>{goal.name}
-                            <span className='flex gap-1 items-center'>
-                            </span>
-                        </p>
-                        <div>
-                            <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays} días</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
-                            <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
-                            <div className="bg-[#00540C] h-full" style={{ width: `${progress}%` }} /> 
-                            </div>
-                        </div>
+                  <div className={`${recomendation.bg} p-2`}>
+                    <p>{recomendation.message}</p>
+                  </div>
+                    {/* <p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p> */}
 
-                        <div className={`${recomendation.bg} p-2`}>
-                            <p>{recomendation.message}</p>
-                        </div>
-                    </div>)
-                    }
-                )}
-                { goals.length > 2 && <a className='text-primary underline hover:text-blue-500' href='/dashboard/goals'>Ver las demás metas</a>}
+                </div>
+              )
+            }
+          
+            )}
+                { goals.length > 2 && <Link className='text-primary underline hover:text-blue-500'  to='/dashboard/goals'>Ver las demás metas</Link>}
                 { goals.length == 0 && <p>No tienes metas abiertas aún</p>}
             </div>
 
@@ -282,7 +285,7 @@ function calculateCashflow(){
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg'>
                     <span className='text-[#7B7B7B] dark:text-dark-text'>{t('cash_flow')}</span>
-                    <span className='text-green-600'>{calculateCashflow()}€</span>
+                    <span className={`${ Number(calculateCashflow()) > 0 ? 'text-green-600' : 'text-red-600'}`}>{calculateCashflow()}€</span>
                 </p>
 
             </div>
