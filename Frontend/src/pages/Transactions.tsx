@@ -113,6 +113,10 @@ function Transactions() {
             {t('create')}
           </span>
         </button>
+        {/* <button onClick={()=> {setShowTransactionForm(true); setTransactionToEdit(null);}}
+          className='inter bg-primary w-50 h-10 rounded-full cursor-pointer hover:scale-104 transition-all ease-in-out duration-150'>
+          <span className='text-white'>{t('new_transaction')}</span>
+        </button> */}
       </div>
       {transactions.length !== 0 ? (
       <div className='md:py-10 pt-10 pb-5'>

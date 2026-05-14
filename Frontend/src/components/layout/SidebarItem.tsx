@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router';
 import ChevronIcon from '/src/assets/icons/Chevron-down.svg?react';
 type IconType = React.FC<React.SVGProps<SVGSVGElement>>
 
-function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = null}: {id:string,label:string,icon:IconType,to?:string,openId?:string,setOpenId?:any,children?:any}) {
+function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = null, onNavigate}: {id:string,label:string,icon:IconType,to?:string,openId?:string,setOpenId?:any,children?:any, onNavigate?: () => void}) {
   
     const content = (isActive = false) =>{
         return (<>
@@ -20,7 +20,7 @@ function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = nu
         
         <div className={`ms-5 dropdown transition-all duration-75 ease-in overflow-hidden ${openId == id ? "max-h-20" : "max-h-0"}`}>
             {children != null && children.map((child: any,key:any) => (
-                <SidebarItem key={key} id="" label={child.label} icon={child.icon} to={child.to}></SidebarItem>
+                <SidebarItem key={key} id="" label={child.label} icon={child.icon} to={child.to} onNavigate={onNavigate}></SidebarItem>
             ))}
         </div>
         </>)
@@ -29,7 +29,7 @@ function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = nu
     return (
     <>
     {to != "" ?
-        <NavLink to={to} end>
+        <NavLink to={to} end onClick={onNavigate}>
             {({ isActive }) => content(isActive)}
         </NavLink>
     :

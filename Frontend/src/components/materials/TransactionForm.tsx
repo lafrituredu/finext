@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
-import { getCategories, type Category } from '../../api/CategoryService'
 import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
 import React from "react";
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next";
+
+import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
 
 type TransactionFormValues = {
   id: number
@@ -24,9 +25,6 @@ type TransactionFormValues = {
 
 export function TransctionForm({ close, transactionEdit }: { close: any, transactionEdit?: Transaction }) {
   const [select, setSelected] = useState<any>(transactionEdit?.type || 'income');
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
@@ -39,6 +37,8 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
 
   const { t } = useTranslation("transactionsForm")
+  const { categories, loading } = useCategories()
+
   const {
     register,
     handleSubmit,
@@ -63,10 +63,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   }
 
   useEffect(() => {
-    getCategories()
-      .then(data => setCategories(data))
-      .catch(() => setError(t('errors.loadCategories')))
-      .finally(() => setLoading(false));
     setValue("type", select);
     if (transactionEdit) {
       setValue("id", transactionEdit.id)

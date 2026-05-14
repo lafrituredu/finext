@@ -21,9 +21,10 @@ import { getCurrentUser, logoutUser, type UserProfile } from '../../api/AuthServ
 
 interface DashboardSidebar {
   opened?: boolean;
+  onClose?: () => void;
 }
 
-function DashboardSidebar({opened = true}:DashboardSidebar) {
+function DashboardSidebar({opened = true, onClose}:DashboardSidebar) {
 const [openId, setOpenId] = useState();
 const [user, setUser] = useState<UserProfile | null>(null);
 const { t } = useTranslation("sidebar");
@@ -149,6 +150,7 @@ const menuItems = [{
                       children={el.children}
                       openId={openId}
                       setOpenId={setOpenId}
+                      onNavigate={onClose}
                   />))}
               </ul>
           </div>

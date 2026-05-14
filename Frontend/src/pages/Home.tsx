@@ -213,7 +213,7 @@ function Home() {
           <p className="inter text-lg max-w-140 text-center pt-5">{t('why_built_text')}</p>
         </div>
         <div className="flex flex-col justify-center items-center pt-12">
-          <img src="icons/finext.svg" alt="" className="w-18 h-18 m-2 hover:drop-shadow-[0_0_8px_rgba(70,110,255,0.7)] duration-500 ease-out transition-all"/>
+          <img src="/img/FiNext.png" alt="FiNext-Logo" className="w-18 h-18 m-2 hover:drop-shadow-[0_0_8px_rgba(70,110,255,0.7)] duration-500 ease-out transition-all"/>
           <p className="montserrat text-4xl text-center">{t('ready_try')}</p>
           <p className="inter text-lg max-w-140 text-center pt-5">{t('ready_try_text')}</p>
         </div>

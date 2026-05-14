@@ -15,7 +15,7 @@ function Dashboard() {
   return (
   <>
     <div className='h-screen w-full flex'>
-      <DashboardSidebar opened={opened}/>
+      <DashboardSidebar opened={opened} onClose={() => setTimeout(() => setOpened(false), 150)} />
       <div className='w-full h-full overflow-y-scroll'>
         <DashboardNavbar opened={opened} onToggle ={toggleMenu}/>
 

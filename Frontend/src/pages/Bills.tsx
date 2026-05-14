@@ -124,7 +124,6 @@ function Bills() {
             </span>
           </button>
         </div>
-
         {/* States */}
         {loading && (
           <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
@@ -214,8 +213,8 @@ function Bills() {
                   <hr className="border-t border-gray-300 my-4 dark:border-gray-700"></hr>
                   <div className='flex flex-row justify-between items-end'>
                     <div className='flex flex-col'>
-                      <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {Number(billWithIVA(bill.total_amount, bill.iva_percent))} €</span>
-                      <span className='text-primary font-medium text-3xl'>{bill.total_amount}€</span>
+                      <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {bill.type == 'recibida' && '-'}{Number(billWithIVA(bill.total_amount, bill.iva_percent))} €</span>
+                      <span className='text-primary font-medium text-3xl'>{bill.type == 'recibida' && '-'}{bill.total_amount}€</span>
                     </div>
                     <div className='flex flex-col items-end'>
                       <div className='ring-1 ring-gray-300 rounded-md px-2 w-fit'>

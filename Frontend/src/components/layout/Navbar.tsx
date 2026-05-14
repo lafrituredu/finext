@@ -36,8 +36,8 @@ function Navbar() {
             <HamburgerMenu opened={opened} onToggle={toggleMenu}/>
         </div>
         <div className="md:hidden flex">
-            <FiNextIcon className='w-12 h-12 shrink-0' />
-            {/* <img src="icons/finext.svg" alt="" className="w-12 h-12 min-w-10"/> */}
+            {/* <FiNextIcon className='w-12 h-12 shrink-0' /> */}
+            <img src="/img/FiNext.png" alt="FiNext-Logo" className="w-12 h-12 min-w-12"/>
         </div>
 
         {/* Right */}
