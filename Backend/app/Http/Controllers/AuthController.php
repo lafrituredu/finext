@@ -366,6 +366,28 @@ class AuthController extends Controller
         return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
     }
 
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user();
+        $avatar = $user->avatar;
+        $email = $user->email;
+
+        DB::transaction(function () use ($user, $email) {
+            $user->tokens()->delete();
+            DB::table('password_reset_tokens')->where('email', $email)->delete();
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+            $user->delete();
+        });
+
+        if ($avatar) {
+            Storage::disk('public')->delete($avatar);
+        }
+
+        return response()->json([
+            'message' => 'Cuenta eliminada correctamente'
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

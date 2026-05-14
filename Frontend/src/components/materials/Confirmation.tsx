@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 type IconType = React.FC<React.SVGProps<SVGSVGElement>>
 
 interface ConfirmationProps {
@@ -6,13 +6,19 @@ interface ConfirmationProps {
     children: React.ReactNode
     close: () => void
     onConfirm: () => void
+    confirmLabel?: string
+    cancelLabel?: string
+    confirmDisabled?: boolean
 }
-export function Confirmation({Icon, children, close, onConfirm}:ConfirmationProps) {
-
-  useEffect(()=>{
-  },[])
-
-  const [opened, setOpened] = useState(false)
+export function Confirmation({
+  Icon,
+  children,
+  close,
+  onConfirm,
+  confirmLabel = "Delete",
+  cancelLabel = "Abort",
+  confirmDisabled = false
+}:ConfirmationProps) {
 
   return (
     <>
@@ -21,10 +27,16 @@ export function Confirmation({Icon, children, close, onConfirm}:ConfirmationProp
                 {<Icon className="size-16 text-red-500 my-2"/>}
                 <p className="text-xl max-w-100 text-center">{children}</p>
                 <div className="flex flex-col justify-between pt-5 gap-4 w-full">
-                    <button className="bg-red-400 rounded-full py-2 w-full cursor-pointer select-none hover:scale-104 hover:bg-red-500 
-                    transition-all duration-100 ease-in-out" onClick={onConfirm}>Delete</button>
+                    <button
+                      className="bg-red-400 rounded-full py-2 w-full cursor-pointer select-none hover:scale-104 hover:bg-red-500 
+                    transition-all duration-100 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-red-400"
+                      onClick={onConfirm}
+                      disabled={confirmDisabled}
+                    >
+                      {confirmLabel}
+                    </button>
                     <button className="bg-background ring-1 ring-gray-300 dark:bg-dark-background dark:ring-dark-card rounded-full py-2 w-full cursor-pointer select-none 
-                    hover:scale-104 transition-all duration-100 ease-in-out" onClick={close}>Abort</button>
+                    hover:scale-104 transition-all duration-100 ease-in-out" onClick={close}>{cancelLabel}</button>
                 </div>
             </div>
 

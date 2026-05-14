@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Usuario autenticado
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [AuthController::class, 'updateProfile']);
+    Route::delete('/me', [AuthController::class, 'deleteAccount']);
     Route::post('/me/avatar', [AuthController::class, 'updateAvatar']);
     Route::delete('/me/avatar', [AuthController::class, 'deleteAvatar']);
     Route::post('/logout', [AuthController::class, 'logout']);

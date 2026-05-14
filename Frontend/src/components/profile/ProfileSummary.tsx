@@ -12,8 +12,10 @@ type ProfileSummaryProps = {
   user: UserProfile | null;
   roleLabel: (role: ProfileRole) => string;
   avatarSaving: boolean;
+  accountDeleting: boolean;
   onAvatarChange: (file: File) => void;
   onAvatarDelete: () => void;
+  onDeleteAccountClick: () => void;
 };
 
 function ProfileSummary({
@@ -21,8 +23,10 @@ function ProfileSummary({
   user,
   roleLabel,
   avatarSaving,
+  accountDeleting,
   onAvatarChange,
-  onAvatarDelete
+  onAvatarDelete,
+  onDeleteAccountClick
 }: ProfileSummaryProps) {
   const { t } = useTranslation("profile");
   const avatarUrl = user?.avatar_url || user?.avatar;
@@ -115,6 +119,24 @@ function ProfileSummary({
             {user?.email_verified_at ? t("verified") : t("pending")}
           </span>
         </div>
+      </div>
+
+      <div className="mt-7 pt-5 border-t border-[#0000001a] dark:border-[#1d2344]">
+        <p className="montserrat text-sm font-semibold text-[#7B7B7B] dark:text-dark-text">
+          {t("danger_zone")}
+        </p>
+        <p className="mt-2 text-xs text-[#7B7B7B] dark:text-dark-text">
+          {t("delete_account_hint")}
+        </p>
+        <button
+          type="button"
+          disabled={accountDeleting}
+          onClick={onDeleteAccountClick}
+          className="mt-3 inline-flex items-center justify-center gap-2 h-9 px-3 rounded-full border border-red-500/40 text-red-500 text-xs hover:bg-red-500/10 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <TrashIcon className="size-4" />
+          {accountDeleting ? t("deleting_account") : t("delete_account")}
+        </button>
       </div>
     </aside>
   );

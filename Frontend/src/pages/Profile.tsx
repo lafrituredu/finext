@@ -1,7 +1,9 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import {
+  deleteCurrentUserAccount,
   deleteCurrentUserAvatar,
   getCurrentUser,
   updateCurrentUser,
@@ -9,6 +11,7 @@ import {
   type UpdateUserProfilePayload,
   type UserProfile
 } from "../api/AuthServices";
+import Confirmation from "../components/materials/Confirmation";
 import ProfileForm from "../components/profile/ProfileForm";
 import ProfileSummary from "../components/profile/ProfileSummary";
 import {
@@ -16,6 +19,7 @@ import {
   profileFormToPayload,
   userToProfileForm
 } from "../utils/profileMappers";
+import TrashIcon from "/src/assets/icons/Trashcan.svg?react";
 
 export type ProfileRole = UpdateUserProfilePayload["rol"];
 
@@ -50,11 +54,14 @@ const notifyUserProfileUpdated = (user: UserProfile) => {
 
 function Profile() {
   const { t } = useTranslation("profile");
+  const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [form, setForm] = useState<ProfileFormData>(emptyProfileForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [avatarSaving, setAvatarSaving] = useState(false);
+  const [accountDeleting, setAccountDeleting] = useState(false);
+  const [showDeleteAccountConfirm, setShowDeleteAccountConfirm] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -138,6 +145,28 @@ function Profile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setAccountDeleting(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await deleteCurrentUserAccount();
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setShowDeleteAccountConfirm(false);
+      navigate("/login", {
+        replace: true,
+        state: { message: t("delete_account_success") }
+      });
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t("delete_account_error")));
+      setShowDeleteAccountConfirm(false);
+    } finally {
+      setAccountDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-full p-10 inter flex items-center justify-center">
@@ -147,37 +176,56 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-full w-full p-10 inter">
-      <div className="flex flex-col gap-2 mb-8">
-        <h2 className="mont_semibold text-4xl">{t("title")}</h2>
-        <p className="text-[#7B7B7B] dark:text-dark-text max-w-3xl">
-          {t("subtitle")}
-        </p>
-      </div>
+    <>
+      {showDeleteAccountConfirm && (
+        <Confirmation
+          Icon={TrashIcon}
+          close={() => setShowDeleteAccountConfirm(false)}
+          onConfirm={handleDeleteAccount}
+          confirmLabel={
+            accountDeleting ? t("deleting_account") : t("confirm_delete_account")
+          }
+          cancelLabel={t("cancel_delete_account")}
+          confirmDisabled={accountDeleting}
+        >
+          {t("delete_account_confirm")}
+        </Confirmation>
+      )}
 
-      <div className="grid xl:grid-cols-[360px_1fr] grid-cols-1 gap-6">
-        <ProfileSummary
-          form={form}
-          user={user}
-          roleLabel={roleLabel}
-          avatarSaving={avatarSaving}
-          onAvatarChange={handleAvatarChange}
-          onAvatarDelete={handleAvatarDelete}
-        />
-        <ProfileForm
-          form={form}
-          user={user}
-          saving={saving}
-          message={message}
-          error={error}
-          roleLabel={roleLabel}
-          onSubmit={handleSubmit}
-          onChange={handleChange}
-          onFieldChange={handleFieldChange}
-          onRoleChange={handleRoleChange}
-        />
+      <div className="min-h-full w-full p-10 inter">
+        <div className="flex flex-col gap-2 mb-8">
+          <h2 className="mont_semibold text-4xl">{t("title")}</h2>
+          <p className="text-[#7B7B7B] dark:text-dark-text max-w-3xl">
+            {t("subtitle")}
+          </p>
+        </div>
+
+        <div className="grid xl:grid-cols-[360px_1fr] grid-cols-1 gap-6">
+          <ProfileSummary
+            form={form}
+            user={user}
+            roleLabel={roleLabel}
+            avatarSaving={avatarSaving}
+            accountDeleting={accountDeleting}
+            onAvatarChange={handleAvatarChange}
+            onAvatarDelete={handleAvatarDelete}
+            onDeleteAccountClick={() => setShowDeleteAccountConfirm(true)}
+          />
+          <ProfileForm
+            form={form}
+            user={user}
+            saving={saving}
+            message={message}
+            error={error}
+            roleLabel={roleLabel}
+            onSubmit={handleSubmit}
+            onChange={handleChange}
+            onFieldChange={handleFieldChange}
+            onRoleChange={handleRoleChange}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

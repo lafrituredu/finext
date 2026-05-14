@@ -136,6 +136,11 @@ export const deleteCurrentUserAvatar = async (): Promise<UserProfile> => {
   return response.data;
 };
 
+export const deleteCurrentUserAccount = async (): Promise<AuthResponse> => {
+  const response = await api.delete<AuthResponse>('/me');
+  return response.data;
+};
+
 // LOGOUT
 export const logoutUser = async (): Promise<void> => {
   await api.post('/logout');
