@@ -112,7 +112,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Login correcto',
-            'user' => $user,
+            'user' => $this->withAvatarUrl($user),
             'token' => $token
         ]);
     }
