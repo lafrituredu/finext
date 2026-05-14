@@ -1,0 +1,63 @@
+{
+  "title": "Informes",
+  "filePrefix": "Reporte",
+  "subtitle": "Crea una foto financiera clara a partir de tu actividad reciente.",
+  "downloadPdf": "Generar PDF",
+  "generate": "Generar",
+  "helper": "Elige el periodo y las secciones que quieres incluir. La previsualización se actualiza antes de exportar el PDF.",
+  "period": "Periodo",
+  "months": "Últimos {{count}} meses",
+  "data": "Datos",
+  "categories": "Categorías",
+  "categoryBreakdown": "Desglose por categorías",
+  "preview": "Previsualización",
+  "previewHint": "El PDF usará este diseño de informe.",
+  "periodSummary": "Informe de {{count}} meses",
+  "generatingTitle": "Generando tu informe",
+  "generatingText": "Esto puede tardar unos segundos...",
+  "reportTitle": "Informe financiero",
+  "reportSubtitle": "Resumen de ingresos, gastos y flujo de caja",
+  "generatedAt": "Generado {{date}}",
+  "periodRange": "{{period}}",
+  "noCategory": "Sin categoría",
+  "emptyCategories": "No hay datos por categoría en este periodo.",
+  "footerLine1": "Este informe ha sido generado automáticamente por Finext.",
+  "footerLine2": "Los datos fiscales son estimaciones orientativas. Consulta con un asesor profesional.",
+  "types": {
+    "both": "Ambos",
+    "incomes": "Ingresos",
+    "outcomes": "Gastos"
+  },
+  "categoryOptions": {
+    "all": "Incluir",
+    "none": "No incluir"
+  },
+  "summary": {
+    "incomes": "Ingresos",
+    "outcomes": "Gastos",
+    "cashFlow": "Flujo de caja",
+    "incomesCaption": "Ingresos totales en el periodo seleccionado",
+    "outcomesCaption": "Gastos totales en el periodo seleccionado",
+    "cashFlowCaption": "Ingresos menos gastos"
+  },
+  "sections": {
+    "overall": "Resumen general",
+    "overallHint": "Últimos {{count}} meses",
+    "monthly": "Resumen mensual",
+    "chart": "Gráfica general",
+    "chartHint": "Movimiento mensual de los datos seleccionados",
+    "categories": "Resumen por categorías",
+    "categoriesHint": "Todas las categorías con actividad en el periodo seleccionado."
+  },
+  "table": {
+    "month": "Mes",
+    "incomes": "Ingresos",
+    "outcomes": "Gastos",
+    "cashFlow": "Flujo",
+    "category": "Categoría"
+  },
+  "charts": {
+    "incomeCategories": "Ingresos por categoría",
+    "outcomeCategories": "Gastos por categoría"
+  }
+}

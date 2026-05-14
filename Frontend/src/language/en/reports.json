@@ -1,0 +1,63 @@
+{
+  "title": "Reports",
+  "filePrefix": "Report",
+  "subtitle": "Create a clean financial snapshot from your recent activity.",
+  "downloadPdf": "Generate PDF",
+  "generate": "Generate",
+  "helper": "Choose the period and sections you want to include. The preview updates before exporting the PDF.",
+  "period": "Period",
+  "months": "Last {{count}} months",
+  "data": "Data",
+  "categories": "Categories",
+  "categoryBreakdown": "Category breakdown",
+  "preview": "Preview",
+  "previewHint": "The PDF will use this report layout.",
+  "periodSummary": "{{count}} month report",
+  "generatingTitle": "Generating your report",
+  "generatingText": "This can take a few seconds...",
+  "reportTitle": "Financial report",
+  "reportSubtitle": "Income, outcome and cash flow overview",
+  "generatedAt": "Generated {{date}}",
+  "periodRange": "{{period}}",
+  "noCategory": "No category",
+  "emptyCategories": "There is no category data for this period.",
+  "footerLine1": "This report was generated automatically by Finext.",
+  "footerLine2": "Tax data are guidance estimates. Please consult a professional advisor.",
+  "types": {
+    "both": "Both",
+    "incomes": "Incomes",
+    "outcomes": "Outcomes"
+  },
+  "categoryOptions": {
+    "all": "Include",
+    "none": "Do not include"
+  },
+  "summary": {
+    "incomes": "Incomes",
+    "outcomes": "Outcomes",
+    "cashFlow": "Cash flow",
+    "incomesCaption": "Total income in the selected period",
+    "outcomesCaption": "Total outcome in the selected period",
+    "cashFlowCaption": "Income minus outcome"
+  },
+  "sections": {
+    "overall": "General summary",
+    "overallHint": "Last {{count}} months",
+    "monthly": "Monthly summary",
+    "chart": "General chart",
+    "chartHint": "Monthly movement for the selected data",
+    "categories": "Category summary",
+    "categoriesHint": "All categories with activity in the selected period."
+  },
+  "table": {
+    "month": "Month",
+    "incomes": "Incomes",
+    "outcomes": "Outcomes",
+    "cashFlow": "Cash flow",
+    "category": "Category"
+  },
+  "charts": {
+    "incomeCategories": "Income by category",
+    "outcomeCategories": "Outcome by category"
+  }
+}

@@ -68,6 +68,9 @@ import categoriesEN from "./language/en/categories.json";
 import goalsES from "./language/es/goals.json";
 import goalsEN from "./language/en/goals.json";
 
+import reportsES from "./language/es/reports.json";
+import reportsEN from "./language/en/reports.json";
+
 export const resources = {
   es: {
     common: es,
@@ -92,7 +95,8 @@ export const resources = {
     recurrent: recurrentES,
     profile: profileES,
     categories: categoriesES,
-    goals: goalsES
+    goals: goalsES,
+    reports: reportsES
   },
   en: {
     common: en,
@@ -117,7 +121,8 @@ export const resources = {
     recurrent: recurrentEN,
     profile: profileEN,
     categories: categoriesEN,
-    goals: goalsEN
+    goals: goalsEN,
+    reports: reportsEN
   },
 } as const;
 
