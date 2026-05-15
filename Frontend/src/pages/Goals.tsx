@@ -71,7 +71,7 @@ function Goals() {
               const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
               const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
               return (
-                <div key={key} className='inter w-full border border-[#1d2344] rounded-2xl px-8 py-5 flex flex-col gap-4 dark:bg-dark-card'>
+                <div key={key} className='inter w-full border border-[#0000001a] rounded-2xl px-8 py-5 flex flex-col gap-4 dark:bg-dark-card'>
                   <p className='font-semibold montserrat flex justify-between'>{goal.name}
                     <span className='flex gap-1 items-center'>
                       <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text' onClick={() => {setShowGoalForm(true);setGoalEdit(goal)}} />
