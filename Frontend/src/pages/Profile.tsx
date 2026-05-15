@@ -1,6 +1,7 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 import {
   deleteCurrentUserAccount,
@@ -8,7 +9,6 @@ import {
   getCurrentUser,
   updateCurrentUser,
   uploadCurrentUserAvatar,
-  type UpdateUserProfilePayload,
   type UserProfile
 } from "../api/AuthServices";
 import Confirmation from "../components/materials/Confirmation";
@@ -21,7 +21,7 @@ import {
 } from "../utils/profileMappers";
 import TrashIcon from "/src/assets/icons/Trashcan.svg?react";
 
-export type ProfileRole = UpdateUserProfilePayload["rol"];
+export type ProfileRole = UserProfile["rol"];
 
 export type ProfileFormData = {
   username: string;
@@ -56,7 +56,6 @@ function Profile() {
   const { t } = useTranslation("profile");
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [form, setForm] = useState<ProfileFormData>(emptyProfileForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [avatarSaving, setAvatarSaving] = useState(false);
@@ -64,32 +63,36 @@ function Profile() {
   const [showDeleteAccountConfirm, setShowDeleteAccountConfirm] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit: handleProfileSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<ProfileFormData>({
+    defaultValues: emptyProfileForm,
+    mode: "onBlur"
+  });
+  const form = watch();
 
   useEffect(() => {
     getCurrentUser()
       .then((data) => {
         setUser(data);
-        setForm(userToProfileForm(data));
+        reset(userToProfileForm(data));
       })
       .catch(() => setError(t("load_error")))
       .finally(() => setLoading(false));
-  }, [t]);
+  }, [reset, t]);
 
   const roleLabel = (role: ProfileRole) => t(`role_${role}`);
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
-  };
-
   const handleFieldChange = (name: string, value: string) => {
-    setForm((current) => ({ ...current, [name]: value }));
-  };
-
-  const handleRoleChange = (role: ProfileRole) => {
-    setForm((current) => ({ ...current, rol: role }));
+    setValue(name as keyof ProfileFormData, value, {
+      shouldDirty: true,
+      shouldValidate: true
+    });
   };
 
   const handleAvatarChange = async (file: File) => {
@@ -126,15 +129,15 @@ function Profile() {
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (data: ProfileFormData) => {
     setSaving(true);
     setError("");
     setMessage("");
 
     try {
-      const updatedUser = await updateCurrentUser(profileFormToPayload(form));
+      const updatedUser = await updateCurrentUser(profileFormToPayload(data));
       setUser(updatedUser);
+      reset(userToProfileForm(updatedUser));
       notifyUserProfileUpdated(updatedUser);
       localStorage.setItem("user", updatedUser.username);
       setMessage(t("saved"));
@@ -218,10 +221,10 @@ function Profile() {
             message={message}
             error={error}
             roleLabel={roleLabel}
-            onSubmit={handleSubmit}
-            onChange={handleChange}
+            register={register}
+            errors={errors}
+            onSubmit={handleProfileSubmit(handleSubmit)}
             onFieldChange={handleFieldChange}
-            onRoleChange={handleRoleChange}
           />
         </div>
       </div>

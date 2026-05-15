@@ -36,8 +36,7 @@ export const profileFormToPayload = (
   const payload: UpdateUserProfilePayload = {
     username: form.username.trim(),
     full_name: form.full_name.trim(),
-    phone_number: form.phone_number.trim(),
-    rol: form.rol
+    phone_number: form.phone_number.trim()
   };
 
   if (form.rol === "autonomo") {

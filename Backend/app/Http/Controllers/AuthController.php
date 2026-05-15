@@ -297,19 +297,18 @@ class AuthController extends Controller
             ],
             'full_name' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:255',
-            'rol' => 'required|in:particular,gestor,autonomo',
             'dni' => [
-                'required_if:rol,autonomo',
+                Rule::requiredIf($user->rol === 'autonomo'),
                 'nullable',
                 'string',
                 'max:255',
                 Rule::unique('autonomos', 'dni')->ignore($user->id, 'user_id'),
             ],
             'birth_date' => 'nullable|date',
-            'modulo_iva' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+            'modulo_iva' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
             'civil_state' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
-            'company' => 'required_if:rol,autonomo|nullable|string|max:255',
-            'irpf' => 'required_if:rol,autonomo|nullable|numeric|min:0|max:100',
+            'company' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'string', 'max:255'],
+            'irpf' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
         ]);
 
         DB::transaction(function () use ($user, $data) {
@@ -317,21 +316,9 @@ class AuthController extends Controller
                 'username' => $data['username'],
                 'full_name' => $data['full_name'],
                 'phone_number' => $data['phone_number'] ?? null,
-                'rol' => $data['rol'],
             ]);
 
-            if ($data['rol'] === 'gestor') {
-                $user->autonomo()->delete();
-                Gestor::firstOrCreate(['user_id' => $user->id]);
-            }
-
-            if ($data['rol'] === 'particular') {
-                $user->autonomo()->delete();
-                $user->gestor()->delete();
-            }
-
-            if ($data['rol'] === 'autonomo') {
-                $user->gestor()->delete();
+            if ($user->rol === 'autonomo') {
                 Autonomo::updateOrCreate(
                     ['user_id' => $user->id],
                     [

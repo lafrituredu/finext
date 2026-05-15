@@ -1,17 +1,22 @@
-import type { ChangeEvent, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import type { UserProfile } from "../../api/AuthServices";
 import type { ProfileFormData, ProfileRole } from "../../pages/Profile";
 import DropdownSelect from "../materials/DropdownSelect";
 import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
+import {
+  hasNumbers,
+  isValidPhoneNumber,
+  isValidSpanishDniNie
+} from "../../utils/profileValidation";
 import GearIcon from "/src/assets/icons/Gear.svg?react";
-
-const roleOptions: ProfileRole[] = ["particular", "autonomo", "gestor"];
+import PadlockIcon from "/src/assets/icons/Padlock.svg?react";
 
 const inputClass =
   "w-full mt-2 px-4 py-3 rounded-xl border border-[#0000001a] dark:border-[#1d2344] bg-white dark:bg-[#070d22] text-black dark:text-dark-text focus:outline-none focus:ring-2 focus:ring-primary transition-all";
 const labelClass = "text-sm text-[#7B7B7B] dark:text-dark-text inter";
+const errorClass = "mt-1 text-xs text-red-500";
 
 type ProfileFormProps = {
   form: ProfileFormData;
@@ -20,10 +25,10 @@ type ProfileFormProps = {
   message: string;
   error: string;
   roleLabel: (role: ProfileRole) => string;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  register: UseFormRegister<ProfileFormData>;
+  errors: FieldErrors<ProfileFormData>;
+  onSubmit: () => void;
   onFieldChange: (name: string, value: string) => void;
-  onRoleChange: (role: ProfileRole) => void;
 };
 
 function ProfileForm({
@@ -33,12 +38,37 @@ function ProfileForm({
   message,
   error,
   roleLabel,
+  register,
+  errors,
   onSubmit,
-  onChange,
-  onFieldChange,
-  onRoleChange
+  onFieldChange
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
+  const isAutonomo = form.rol === "autonomo";
+  const fullNameField = register("full_name", {
+    required: "El nombre completo es obligatorio.",
+    minLength: {
+      value: 3,
+      message: "El nombre debe tener al menos 3 caracteres."
+    },
+    maxLength: {
+      value: 50,
+      message: "El nombre no puede superar 50 caracteres."
+    },
+    validate: (value) =>
+      !hasNumbers(value) || "El nombre no puede contener numeros."
+  });
+  const phoneField = register("phone_number", {
+    validate: (value) =>
+      !value ||
+      isValidPhoneNumber(value) ||
+      "El telefono debe contener solo numeros y tener entre 9 y 15 digitos."
+  });
+  const dniField = register("dni", {
+    required: "El DNI o NIE es obligatorio.",
+    validate: (value) =>
+      isValidSpanishDniNie(value) || "El DNI o NIE no tiene un formato valido."
+  });
 
   return (
     <form
@@ -76,65 +106,78 @@ function ProfileForm({
           {t("full_name")}
           <input
             className={inputClass}
-            name="full_name"
-            value={form.full_name}
-            onChange={onChange}
-            required
+            {...fullNameField}
+            onChange={(event) => {
+              event.target.value = event.target.value.replace(/\d/g, "");
+              fullNameField.onChange(event);
+            }}
           />
+          {errors.full_name && (
+            <p className={errorClass}>{errors.full_name.message}</p>
+          )}
         </label>
 
         <label className={labelClass}>
           {t("username")}
-          <input
-            className={inputClass}
-            name="username"
-            value={form.username}
-            disabled
-            required
-          />
+          <div className="relative">
+            <input
+              className={`${inputClass} pr-11 bg-[#ECEFF4] text-[#6B7280] border-[#D7DBE4] cursor-not-allowed select-none dark:bg-[#091126] dark:text-[#7F8AA9] dark:border-[#1d2344]`}
+              readOnly
+              aria-readonly="true"
+              tabIndex={-1}
+              {...register("username", {
+                required: "El usuario es obligatorio."
+              })}
+            />
+            <PadlockIcon className="absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-[#7B7B7B] dark:text-[#7F8AA9]" />
+          </div>
+          <p className="mt-1 text-xs text-[#7B7B7B] dark:text-dark-text">
+            {t("username_locked_hint")}
+          </p>
         </label>
 
         <label className={labelClass}>
           {t("email")}
-          <input
-            className={`${inputClass} opacity-70`}
-            value={user?.email ?? ""}
-            disabled
-          />
+          <div className="relative">
+            <input
+              className={`${inputClass} pr-11 bg-[#ECEFF4] text-[#6B7280] border-[#D7DBE4] cursor-not-allowed select-none dark:bg-[#091126] dark:text-[#7F8AA9] dark:border-[#1d2344]`}
+              value={user?.email ?? ""}
+              readOnly
+              aria-readonly="true"
+              tabIndex={-1}
+            />
+            <PadlockIcon className="absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-[#7B7B7B] dark:text-[#7F8AA9]" />
+          </div>
+          <p className="mt-1 text-xs text-[#7B7B7B] dark:text-dark-text">
+            {t("email_locked_hint")}
+          </p>
         </label>
 
         <label className={labelClass}>
           {t("phone")}
           <input
             className={inputClass}
-            name="phone_number"
-            value={form.phone_number}
-            onChange={onChange}
+            inputMode="numeric"
+            {...phoneField}
+            onChange={(event) => {
+              event.target.value = event.target.value.replace(/\D/g, "");
+              phoneField.onChange(event);
+            }}
           />
+          {errors.phone_number && (
+            <p className={errorClass}>{errors.phone_number.message}</p>
+          )}
         </label>
       </div>
 
       <div className="mt-7">
         <p className={labelClass}>{t("role")}</p>
-        <div className="mt-2 bg-[#EFEFEF] dark:bg-[#070d22] w-fit px-2 py-1 rounded-3xl flex flex-wrap items-center gap-2 border border-[#0000001a] dark:border-[#1d2344] montserrat">
-          {roleOptions.map((role) => (
-            <button
-              key={role}
-              type="button"
-              onClick={() => onRoleChange(role)}
-              className={`px-3 py-1 rounded-2xl transition-all cursor-pointer ${
-                form.rol === role
-                  ? "bg-white dark:bg-[#1a2957] text-black dark:text-dark-text"
-                  : "text-[#7B7B7B] dark:text-dark-text"
-              }`}
-            >
-              {roleLabel(role)}
-            </button>
-          ))}
-        </div>
+        <p className="mt-2 inline-flex rounded-full bg-[#84A2EB33] text-primary px-3 py-1 text-sm montserrat">
+          {roleLabel(form.rol)}
+        </p>
       </div>
 
-      {form.rol === "autonomo" && (
+      {isAutonomo && (
         <div className="mt-8 pt-7 border-t border-[#0000001a] dark:border-[#1d2344]">
           <p className="montserrat font-semibold">{t("tax_info")}</p>
           <p className="text-[#7B7B7B] dark:text-dark-text mb-5">
@@ -146,11 +189,15 @@ function ProfileForm({
               {t("dni")}
               <input
                 className={inputClass}
-                name="dni"
-                value={form.dni}
-                onChange={onChange}
-                required
+                {...dniField}
+                onChange={(event) => {
+                  event.target.value = event.target.value
+                    .toUpperCase()
+                    .replace(/\s/g, "");
+                  dniField.onChange(event);
+                }}
               />
+              {errors.dni && <p className={errorClass}>{errors.dni.message}</p>}
             </label>
 
             <label className={labelClass}>
@@ -158,10 +205,20 @@ function ProfileForm({
               <input
                 className={inputClass}
                 type="date"
-                name="birth_date"
-                value={form.birth_date}
-                onChange={onChange}
+                {...register("birth_date", {
+                  required: "La fecha de nacimiento es obligatoria.",
+                  validate: (value) => {
+                    if (!value) return "La fecha de nacimiento es obligatoria.";
+                    return (
+                      new Date(value) <= new Date() ||
+                      "La fecha de nacimiento no puede ser futura."
+                    );
+                  }
+                })}
               />
+              {errors.birth_date && (
+                <p className={errorClass}>{errors.birth_date.message}</p>
+              )}
             </label>
 
             <label className={labelClass}>
@@ -174,6 +231,15 @@ function ProfileForm({
                 onChange={onFieldChange}
                 buttonClassName={inputClass}
               />
+              <input
+                type="hidden"
+                {...register("modulo_iva", {
+                  required: "Selecciona un tipo de IVA."
+                })}
+              />
+              {errors.modulo_iva && (
+                <p className={errorClass}>{errors.modulo_iva.message}</p>
+              )}
             </label>
 
             <label className={labelClass}>
@@ -186,15 +252,22 @@ function ProfileForm({
                 onChange={onFieldChange}
                 buttonClassName={inputClass}
               />
+              <input
+                type="hidden"
+                {...register("irpf", {
+                  required: "Selecciona un tipo de IRPF."
+                })}
+              />
+              {errors.irpf && (
+                <p className={errorClass}>{errors.irpf.message}</p>
+              )}
             </label>
 
             <label className={labelClass}>
               {t("civil_state")}
               <select
                 className={inputClass}
-                name="civil_state"
-                value={form.civil_state}
-                onChange={onChange}
+                {...register("civil_state")}
               >
                 <option value="soltero">{t("civil_single")}</option>
                 <option value="casado">{t("civil_married")}</option>
@@ -209,11 +282,17 @@ function ProfileForm({
               {t("company")}
               <input
                 className={inputClass}
-                name="company"
-                value={form.company}
-                onChange={onChange}
-                required
+                {...register("company", {
+                  required: "La empresa es obligatoria.",
+                  minLength: {
+                    value: 2,
+                    message: "La empresa debe tener al menos 2 caracteres."
+                  }
+                })}
               />
+              {errors.company && (
+                <p className={errorClass}>{errors.company.message}</p>
+              )}
             </label>
           </div>
         </div>
