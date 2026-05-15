@@ -20,6 +20,7 @@ import BankIcon from '/src/assets/icons/Bank.svg?react'
 import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext'
 
 function Transactions() {
+  // const [transactions, setTransactions] = useState<Transaction[]>([])
   const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -31,12 +32,11 @@ function Transactions() {
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
   const [transactionToEdit, setTransactionToEdit] = useState<Transaction | null>(null)
-
-  const [selectedMonth, setSelectedMonth] = useState<string>('')
-  const [selectedYear, setSelectedYear] = useState<string>('')
-  const [sortOrder, setSortOrder] = useState<string>('asc')
-
   useEffect(() => {
+    // getTransactions()
+    //   .then(data => setTransactions(data))
+    //   .catch(() => setError('Error al cargar las transacciones'))
+    //   .finally(() => setLoading(false));
     refetchTransactions()
   }, [showTransactionForm])
 
@@ -58,26 +58,35 @@ function Transactions() {
 
   //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
   const filteredTransactions = transactions.filter(t => {
-    const date = dayjs(t.date)
-    if (selectedMonth && date.month() + 1 !== parseInt(selectedMonth)) return false
-    if (selectedYear && date.year() !== parseInt(selectedYear)) return false
-
     if (select === 'incomes') return t.type === 'income'
     if (select === 'expenses') return t.type === 'expense'
-
     return true //'total'
   })
 
-  const sortedTransactions = [...filteredTransactions].sort((a,b) => {
-    if(sortOrder === 'asc'){
-      return dayjs(a.date).valueOf() - dayjs(b.date).valueOf();
-    }else{
-      return dayjs(b.date).valueOf() - dayjs(a.date).valueOf();
-    }
-  })
+  const displayDataSquares = () => {
+    return (<>
+    </>);
+  }
 
-  const availableYears = [...new Set(transactions.map(t => dayjs(t.date).year()))].sort((a, b) => b - a)
+  const displayDataList = () => {
+    return (<>
+    </>);
+  }
+
+  {/* PARA MOSTRAR LISTA O SQUARESD   */}
+  {/* selectFilter == 'list'? displayDataList() : displayDataSquares() */}
   
+  {/* TOGGLE PARA SETEAR EL FILTRO */}
+  {/*
+  <div id='toggleFilter' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+    <div id='squares'  onClick={(e) => setSelectedFilter(e.currentTarget.id)} className={`${selectFilter == 'squares' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-full'} p-2 transition-all ease-in-out duration-200 cursor-pointer`}>
+      <Squares className='size-5' />
+    </div>
+    <div id='list' onClick={(e) => setSelectedFilter(e.currentTarget.id)} className={`${selectFilter == 'list' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-full'} p-2  transition-all ease-in-out duration-200 cursor-pointer`}>
+      <List className='size-6' />
+    </div>
+  </div>
+  */}
   return (
     <>
     <div className='flex justify-center items-center'>
@@ -110,52 +119,14 @@ function Transactions() {
         </button> */}
       </div>
       {transactions.length !== 0 ? (
-        <div>
-        <div className='flex justify-between items-center gap-2'>
-        <div className='flex flex-row items-center md:py-10 pt-10 pb-5 gap-6'>
-          <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
-                <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
-                <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
-                <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
-          </div>
-          {/* Filtro por mes y año */}
-          <div className='flex items-center gap-2'>
-            <select
-              value={selectedMonth}
-              onChange={e => setSelectedMonth(e.target.value)}
-              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
-              <option value=''>All months</option>
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {dayjs().month(i).format('MMMM')}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedYear}
-              onChange={e => setSelectedYear(e.target.value)}
-              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
-              <option value=''>All years</option>
-              {availableYears.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
+      <div className='md:py-10 pt-10 pb-5'>
+        <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat select-none'>
+              <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
+              <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
+              <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
         </div>
-          <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
-            border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
-            transition-all duration-200 inter text-sm font-medium select-none">
-            <span>
-              {sortOrder === 'asc' ? 'Oldest first' : 'Newest first'}
-            </span>
-            <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
-              ↓
-            </span>
-          </button>
-        </div>
-      <p className='inter capitalize text-gray-400'>{select} transactions → <span className='font-bold'>{filteredTransactions.length}</span></p></div>):(<></>)}
+        <p className='inter capitalize text-gray-400'>{select} transactions → <span className='font-bold'>{filteredTransactions.length}</span></p>
+      </div>):(<></>)}
       {/* TRANSACTIONS CARDS */}
       {loading ? (
         //LOADING
@@ -172,7 +143,7 @@ function Transactions() {
       (
 
       <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
-        {sortedTransactions.map(trans => (
+        {filteredTransactions.map(trans => (
           <div key={trans.id} className= {`flex flex-col ${trans.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#1d2344]
             hover:scale-102 transition-transform ease-in-out w-full h-full`}>
             <div className='flex flex-row justify-between items-center w-full pb-6'>

@@ -155,8 +155,8 @@ function Bills() {
                     </div>
                     <div className='flex flex-row gap-4 items-center'>
                       {bill.type == 'emitida' ? 
-                      (<div className='bg-green-300 rounded-full px-3 text-sm text-green-800'>{t('type.emitida')}</div>):
-                      (<div className='bg-red-300 rounded-full px-3 text-sm text-red-800'>{t('type.recibida')}</div>)}
+                      (<div className='bg-green-200 rounded-full px-3 py-1 text-sm text-green-700'>{t('type.emitida')}</div>):
+                      (<div className='bg-red-200 rounded-full px-3 py-1 text-sm text-red-700'>{t('type.recibida')}</div>)}
                       <div className='flex flex-row items-center gap-2'>
                       <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
                         onClick={() => { setBillToEdit(bill); setShowBillForm(true) }} />

@@ -108,7 +108,7 @@ const menuItems = [{
           icon: UsersIcon,
           children: [
           { label: 'Edit', to: '/dashboard/profile' },
-          { label: 'Invite Manager', to: '/dashboard/invite' }
+          // { label: 'Invite Manager', to: '/dashboard/invite' }
           ]
         }
     ]
@@ -134,8 +134,7 @@ const menuItems = [{
               <img
                 src={avatarUrl}
                 alt=""
-                className="w-24 h-24 m-4 rounded-full object-cover ring-1 ring-gray-400 dark:ring-[#1d2344]"
-              />
+                className="w-24 h-24 m-2 rounded-full object-cover ring-1 ring-gray-400 dark:ring-[#1d2344] shadow-md"/>
             ) : (
               <FinextIcon className='w-16 h-16 m-4' />
             )}

@@ -46,8 +46,7 @@ function DropdownSelect({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className={`${buttonClassName} pr-10 text-left flex items-center justify-between gap-2`}
-      >
+        className={`${buttonClassName} pr-10 text-left flex items-center justify-between gap-2`}>
         <span className="truncate">{selectedLabel}</span>
       </button>
 
@@ -58,8 +57,7 @@ function DropdownSelect({
           }`}
           fill="none"
           stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+          viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
