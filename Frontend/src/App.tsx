@@ -21,6 +21,7 @@ import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import Profile from "./pages/Profile.tsx";
 import Bills from "./pages/Bills.tsx";
+import Taxes from "./pages/Taxes.tsx";
 
 const SESSION_LAST_ACTIVITY_KEY = "session-last-activity";
 const INACTIVITY_LIMIT_MS = 2 * 60 * 60 * 1000;
@@ -118,6 +119,7 @@ function App() {
           <Route path="recurrent" element={<Recurrent />} />
           <Route path="reports" element={<Reports />} />
           <Route path="goals" element={<Goals />} />
+          <Route path="taxes" element={<Taxes />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

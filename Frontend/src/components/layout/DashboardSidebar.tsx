@@ -92,6 +92,12 @@ const menuItems = [{
     icon: File,
     to: '/dashboard/reports'
   },
+  {
+    id: 'taxes',
+    label: t('taxes'),
+    icon: File,
+    to: '/dashboard/taxes'
+  },
   ]},
   {
     name: t('utils'),
