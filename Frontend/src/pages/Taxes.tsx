@@ -87,6 +87,21 @@ function Taxes() {
                     </div>
                     <p className='text-[#040919b3] dark:text-dark-text'>x</p>
                 </div>
+
+                <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
+                    <div className='flex items-center justify-between'>
+                        <span className='flex items-center montserrat'>
+                            <span className='bg-[#84A2EB66] p-1 rounded-full me-2'>x</span> asd
+                        </span>
+                        sds
+                    </div>
+                    <div>
+                        <p className='text-4xl text-red-600'>{expenses}€</p>
+                        <p className='text-xl text-red-500'>B.I. {expenses-inputVat}€</p>
+                        <p className='text-xl text-red-500'>IVA Repercutido {inputVat}€</p>
+                    </div>
+                    <p className='text-[#040919b3] dark:text-dark-text'>x</p>
+                </div>
             </div>
 
             <select name="" id="" onChange={(e) =>  handleChange(e)}>
