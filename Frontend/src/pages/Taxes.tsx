@@ -32,7 +32,7 @@ function Taxes() {
         bills.forEach((bill) => {
             const date = new Date(bill.date);
 
-            if (date.getMonth() < min || date.getMonth() > max) return;
+            if (date.getMonth() < min || date.getMonth() >= max) return;
             if (date.getFullYear() !== new Date().getFullYear()) return;
 
             const total = Number(bill.total_amount);
