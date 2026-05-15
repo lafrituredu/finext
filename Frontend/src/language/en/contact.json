@@ -17,6 +17,7 @@
   "message_placeholder": "Write your message here...",
   "send_button": "Send message",
   "sending": "Sending...",
+  "send_error": "We could not send your message. Please try again in a few minutes.",
   "contact_info_title": "Contact information",
   "email_general": "finext@finext.com",
   "email_support": "finextcontact@finext.com",

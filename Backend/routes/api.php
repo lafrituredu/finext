@@ -8,6 +8,7 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\RecurrentTransactionController;
+use App\Http\Controllers\ContactController;
 
 // AUTH
 Route::post('/register', [AuthController::class, 'register']);
@@ -18,6 +19,7 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/check-email', [AuthController::class, 'checkEmail']);
 Route::get('/check-username', [AuthController::class, 'checkUsername']);
+Route::post('/contact', [ContactController::class, 'send']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

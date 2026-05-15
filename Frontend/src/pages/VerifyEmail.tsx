@@ -11,7 +11,7 @@ import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 const EMAIL_VERIFICATION_STORAGE_KEY = "email-verification-event";
 
 const VerifyEmail: React.FC = () => {
-  const { t } = useTranslation("verifyEmail");
+  const { t, i18n } = useTranslation("verifyEmail");
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -159,7 +159,8 @@ const VerifyEmail: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await resendVerificationEmail(email);
+      const locale = i18n.language.startsWith("es") ? "es" : "en";
+      const response = await resendVerificationEmail(email, locale);
       setMessage(response.message);
     } catch (err: any) {
       setError(getFriendlyApiError(err, t("resend_error")));

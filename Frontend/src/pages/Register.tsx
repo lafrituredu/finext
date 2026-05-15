@@ -23,7 +23,7 @@ import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 type FormDataType = RegisterFormData;
 
 const Register: React.FC = () => {
-  const { t } = useTranslation("register");
+  const { t, i18n } = useTranslation("register");
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
@@ -222,7 +222,8 @@ const Register: React.FC = () => {
 
     try {
       const dataToSend = buildRegisterPayload(formData);
-      const data = await registerUser(dataToSend);
+      const locale = i18n.language.startsWith("es") ? "es" : "en";
+      const data = await registerUser({ ...dataToSend, locale });
 
       if (data.token && data.user?.username) {
         localStorage.setItem("token", data.token);

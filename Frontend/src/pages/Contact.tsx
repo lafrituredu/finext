@@ -2,9 +2,11 @@ import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import api from '../api/axiosInstance';
+import { getFriendlyApiError } from '../utils/getFriendlyApiError';
 
 function Contact() {
-  const { t } = useTranslation("contact");
+  const { t, i18n } = useTranslation("contact");
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,16 +14,29 @@ function Contact() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulación de envío
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitMessage('');
+    setSubmitError('');
+
+    try {
+      const locale = i18n.language.startsWith('es') ? 'es' : 'en';
+      const response = await api.post<{ message: string }>('/contact', {
+        ...formData,
+        locale,
+      });
+
       setFormData({ name: '', email: '', subject: '', message: '' });
-      alert('Mensaje enviado correctamente');
-    }, 1500);
+      setSubmitMessage(response.data.message);
+    } catch (error) {
+      setSubmitError(getFriendlyApiError(error, t('send_error')));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -135,6 +150,16 @@ function Contact() {
               >
                 {isSubmitting ? t('sending') : t('send_button')}
               </button>
+              {submitMessage && (
+                <p className="inter text-sm text-green-600 dark:text-green-400">
+                  {submitMessage}
+                </p>
+              )}
+              {submitError && (
+                <p className="inter text-sm text-red-600 dark:text-red-400">
+                  {submitError}
+                </p>
+              )}
             </form>
           </div>
 

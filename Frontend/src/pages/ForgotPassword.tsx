@@ -9,7 +9,7 @@ import Language from "../components/buttons/Lang";
 import { getFriendlyApiError } from "../utils/getFriendlyApiError";
 
 const ForgotPassword: React.FC = () => {
-  const { t } = useTranslation("forgotPassword");
+  const { t, i18n } = useTranslation("forgotPassword");
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -42,7 +42,8 @@ const ForgotPassword: React.FC = () => {
     setMessage("");
 
     try {
-      const response = await sendPasswordResetEmail(email.trim());
+      const locale = i18n.language.startsWith("es") ? "es" : "en";
+      const response = await sendPasswordResetEmail(email.trim(), locale);
       setMessage(response.message);
     } catch (err: any) {
       setError(getFriendlyApiError(err, t("send_error")));

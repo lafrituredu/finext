@@ -73,22 +73,25 @@ export const registerUser = async (data: {
   estado_civil?: string
   empresa?: string
   irpf?: string
+  locale?: 'en' | 'es'
 }): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/register', data)
   return response.data
 }
 
-export const resendVerificationEmail = async (email: string): Promise<AuthResponse> => {
+export const resendVerificationEmail = async (email: string, locale?: 'en' | 'es'): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/email/verification-notification', {
     email,
+    locale,
   })
 
   return response.data
 }
 
-export const sendPasswordResetEmail = async (email: string): Promise<AuthResponse> => {
+export const sendPasswordResetEmail = async (email: string, locale?: 'en' | 'es'): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/forgot-password', {
     email,
+    locale,
   })
 
   return response.data

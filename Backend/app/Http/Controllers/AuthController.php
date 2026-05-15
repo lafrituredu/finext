@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -37,7 +38,10 @@ class AuthController extends Controller
             'estado_civil' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
             'empresa' => 'required_if:rol,autonomo|nullable|string|max:255',
             'irpf' => 'nullable|numeric|min:0|max:100',
+            'locale' => 'nullable|in:en,es',
         ]);
+
+        $locale = $this->mailLocale($request->input('locale'));
 
         $user = DB::transaction(function () use ($request) {
             $user = User::create([
@@ -72,8 +76,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        app()->terminating(function () use ($user) {
-            $user->sendEmailVerificationNotification();
+        app()->terminating(function () use ($user, $locale) {
+            $this->sendVerificationEmail($user, $locale);
         });
 
         return response()->json([
@@ -144,8 +148,10 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
+            'locale' => 'nullable|in:en,es',
         ]);
 
+        $locale = $this->mailLocale($request->input('locale'));
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -161,8 +167,8 @@ class AuthController extends Controller
             ]);
         }
 
-        app()->terminating(function () use ($user) {
-            $user->sendEmailVerificationNotification();
+        app()->terminating(function () use ($user, $locale) {
+            $this->sendVerificationEmail($user, $locale);
         });
 
         return response()->json([
@@ -174,23 +180,30 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
+            'locale' => 'nullable|in:en,es',
         ]);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $locale = $this->mailLocale($request->input('locale'));
+        $user = User::where('email', $request->email)->first();
 
-        if ($status !== Password::RESET_LINK_SENT) {
+        if (!$user) {
             return response()->json([
-                'message' => 'No hemos podido enviar el correo de recuperación a esa dirección.',
+                'message' => 'No hemos podido enviar el correo de recuperacion a esa direccion.',
             ], 422);
         }
 
+        $token = Password::broker()->createToken($user);
+
+        if (!$this->sendPasswordResetEmail($user, $token, $locale)) {
+            return response()->json([
+                'message' => 'No hemos podido enviar el correo de recuperacion a esa direccion.',
+            ], 500);
+        }
+
         return response()->json([
-            'message' => 'Te hemos enviado un correo para restablecer tu contraseña.',
+            'message' => 'Te hemos enviado un correo para restablecer tu contrasena.',
         ]);
     }
-
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -405,5 +418,90 @@ class AuthController extends Controller
         );
 
         return $user;
+    }
+
+    private function sendVerificationEmail(User $user, string $locale): bool
+    {
+        return $this->sendMailtrapTemplate(
+            $user->email,
+            $user->full_name,
+            config("services.mailtrap.templates.email_verification.$locale"),
+            [
+                'name' => $user->full_name,
+                'verification_url' => $this->verificationUrl($user),
+            ]
+        );
+    }
+
+    private function sendPasswordResetEmail(User $user, string $token, string $locale): bool
+    {
+        return $this->sendMailtrapTemplate(
+            $user->email,
+            $user->full_name,
+            config("services.mailtrap.templates.password_reset.$locale"),
+            [
+                'name' => $user->full_name,
+                'reset_url' => $this->passwordResetUrl($user, $token),
+                'expiration_minutes' => (string) config('auth.passwords.users.expire', 60),
+            ]
+        );
+    }
+
+    private function sendMailtrapTemplate(string $email, string $name, ?string $templateUuid, array $variables): bool
+    {
+        $token = config('services.mailtrap.api_token');
+        $endpoint = config('services.mailtrap.api_endpoint');
+
+        if (!$token || !$endpoint || !$templateUuid) {
+            report(new \RuntimeException('Mailtrap template configuration is incomplete.'));
+            return false;
+        }
+
+        $response = Http::withHeaders([
+            'Api-Token' => $token,
+        ])->post($endpoint, [
+            'from' => [
+                'email' => config('services.mailtrap.from_email'),
+                'name' => config('services.mailtrap.from_name'),
+            ],
+            'to' => [
+                ['email' => $email, 'name' => $name],
+            ],
+            'template_uuid' => $templateUuid,
+            'template_variables' => $variables,
+        ]);
+
+        if ($response->failed()) {
+            report(new \RuntimeException('Mailtrap template email failed: ' . $response->body()));
+            return false;
+        }
+
+        return true;
+    }
+
+    private function verificationUrl(User $user): string
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            [
+                'id' => $user->getKey(),
+                'hash' => sha1($user->getEmailForVerification()),
+            ]
+        );
+    }
+
+    private function passwordResetUrl(User $user, string $token): string
+    {
+        $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
+
+        return $frontendUrl
+            . '/reset-password?token=' . urlencode($token)
+            . '&email=' . urlencode($user->getEmailForPasswordReset());
+    }
+
+    private function mailLocale(?string $locale): string
+    {
+        return $locale === 'es' ? 'es' : 'en';
     }
 }
