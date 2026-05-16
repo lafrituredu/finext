@@ -1,8 +1,25 @@
 {
+"title": {
+    "transactions": "Transactions",
+    "edit": "Edit Transaction"
+  },
+  "type": {
+    "total" : "Total",
+    "incomes": "Incomes",
+    "expenses": "Expenses"
+  },
+  "order":{
+    "new": "Newest first",
+    "old": "Oldest first"
+},
+    "confirmation": "Are you sure you want to delete",
     "transactions": "Transactions",
     "new_transaction":"New Transaction",
     "create":"Create",
     "no_transactions":"There are no transactions",
     "income": "Income",
-    "expense": "Expense"
+    "expense": "Expense",
+    "months" : "All months",
+    "years" : "All years",
+    "IVA": "VAT"
 }

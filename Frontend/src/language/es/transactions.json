@@ -1,8 +1,25 @@
 {
+"title": {
+    "transactions": "Transactions",
+    "edit": "Edit Transaction"
+},
+"type": {
+    "total" : "Todas",
+    "incomes": "Ingresos",
+    "expenses": "Gastos"
+},
+"order":{
+    "new": "Nuevas primero",
+    "old": "Antiguas primero"
+},
+    "confirmation": "Estas seguro de que quieres eliminar",
     "transactions": "Transacciones",
     "new_transaction":"Nueva Transaccion",
     "create":"Crear",
     "no_transactions":"No hay transacciones",
     "income": "Ingreso",
-    "expense": "Gasto"
+    "expense": "Gasto",
+    "months" : "Todos los meses",
+    "years" : "Todos los años",
+    "IVA": "IVA"
 }

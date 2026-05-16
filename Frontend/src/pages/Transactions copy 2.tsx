@@ -1,0 +1,235 @@
+import React, { useEffect, useState } from 'react'
+import TransactionForm from "../components/materials/TransactionForm"
+import { useTranslation } from 'react-i18next'
+//dayjs -> Libreria de js utilizada para hacer format de dates
+import dayjs from 'dayjs'
+
+import Trending_up from '/src/assets/icons/Trending-up.svg?react'
+import Trending_down from '/src/assets/icons/Trending-down.svg?react'
+import ArrowsLeftRight from '/src/assets/icons/ArrowsLeftRight.svg?react'
+import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
+import TagIcon from '/src/assets/icons/Tag.svg?react'
+import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
+import Notifications from '../components/materials/Notifications'
+import Confirmation from '../components/materials/Confirmation'
+import { getCategories, type Category } from '../api/CategoryService'
+import PencilIcon from '/src/assets/icons/Pencil.svg?react'
+import CardIcon from '/src/assets/icons/Credit-card.svg?react'
+import CoinIcon from '/src/assets/icons/Coin.svg?react'
+import BankIcon from '/src/assets/icons/Bank.svg?react'
+import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext'
+
+function Transactions() {
+  const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const { t } = useTranslation("transactions")
+  const [select,setSelected] = useState<any>('total')
+  const [selectFilter,setSelectedFilter] = useState('squares')
+  const [showTransactionForm, setShowTransactionForm] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
+  const [transactionToEdit, setTransactionToEdit] = useState<Transaction | null>(null)
+
+  const [selectedMonth, setSelectedMonth] = useState<string>('')
+  const [selectedYear, setSelectedYear] = useState<string>('')
+  const [sortOrder, setSortOrder] = useState<string>('asc')
+
+  useEffect(() => {
+    refetchTransactions()
+  }, [showTransactionForm])
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteTransaction(id)
+      setTransactions(prev => prev.filter(t => t.id !== id))
+    } catch (error: any) {
+      setError('Error al eliminar la transaccion')
+    }
+  }
+
+  function transactionWithIVA(amount:number, iva:any){
+    if (amount < 0) throw new Error("Amount must be positive value");
+    let i = amount * (iva / 100);
+    const total = amount - i
+    return total
+  }
+
+  //Filtrar transacciones para recoger "income" o "expense", o en caso de no ser ninguna de las 2 recoger todas.
+  const filteredTransactions = transactions.filter(t => {
+    const date = dayjs(t.date)
+    if (selectedMonth && date.month() + 1 !== parseInt(selectedMonth)) return false
+    if (selectedYear && date.year() !== parseInt(selectedYear)) return false
+
+    if (select === 'incomes') return t.type === 'income'
+    if (select === 'expenses') return t.type === 'expense'
+
+    return true //'total'
+  })
+
+  const sortedTransactions = [...filteredTransactions].sort((a,b) => {
+    if(sortOrder === 'asc'){
+      return dayjs(a.date).valueOf() - dayjs(b.date).valueOf();
+    }else{
+      return dayjs(b.date).valueOf() - dayjs(a.date).valueOf();
+    }
+  })
+
+  const availableYears = [...new Set(transactions.map(t => dayjs(t.date).year()))].sort((a, b) => b - a)
+  
+  return (
+    <>
+    <div className='flex justify-center items-center'>
+      {/* <Notifications type="alert">Transaction successfully deleted!</Notifications> */}
+    </div>
+    {transactionToDelete !== null && (
+      <Confirmation
+        Icon={TrashcanIcon}
+        close={() => setTransactionToDelete(null)}
+        onConfirm={() => {handleDelete(transactionToDelete.id!); setTransactionToDelete(null)}}>
+        Estas seguro de que quieres eliminar <span className='font-bold'>{transactionToDelete.name}</span>?
+      </Confirmation>)}
+    {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)} transactionEdit={transactionToEdit!}/>}
+    <div className='p-10'>
+      <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
+        <h2 className='mont_semibold text-4xl'>{t('transactions')}</h2>
+        <button 
+        onClick={() => {setShowTransactionForm(true);setTransactionToEdit(null);}}
+        className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
+          <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
+            {t('new_transaction')}
+          </span>
+          <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+            {t('create')}
+          </span>
+        </button>
+        {/* <button onClick={()=> {setShowTransactionForm(true); setTransactionToEdit(null);}}
+          className='inter bg-primary w-50 h-10 rounded-full cursor-pointer hover:scale-104 transition-all ease-in-out duration-150'>
+          <span className='text-white'>{t('new_transaction')}</span>
+        </button> */}
+      </div>
+      {transactions.length !== 0 ? (
+        <div>
+        <div className='flex justify-between items-center gap-2'>
+        <div className='flex flex-row items-center md:py-10 pt-10 pb-5 gap-6'>
+          <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
+                <div id='total' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'total' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Total</div>
+                <div id='incomes' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'incomes' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>Incomes</div>
+                <div id='expenses' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'expenses' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Expenses</div>
+          </div>
+          {/* Filtro por mes y año */}
+          <div className='flex items-center gap-2'>
+            <select
+              value={selectedMonth}
+              onChange={e => setSelectedMonth(e.target.value)}
+              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+              <option value=''>All months</option>
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {dayjs().month(i).format('MMMM')}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedYear}
+              onChange={e => setSelectedYear(e.target.value)}
+              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+              <option value=''>All years</option>
+              {availableYears.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+          <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
+            border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
+            transition-all duration-200 inter text-sm font-medium select-none">
+            <span>
+              {sortOrder === 'asc' ? 'Oldest first' : 'Newest first'}
+            </span>
+            <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
+              ↓
+            </span>
+          </button>
+        </div>
+      <p className='inter capitalize text-gray-400'>{select} transactions → <span className='font-bold'>{filteredTransactions.length}</span></p></div>):(<></>)}
+      {/* TRANSACTIONS CARDS */}
+      {loading ? (
+        //LOADING
+        <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
+          <svg xmlns="http://www.w3.org/2000/svg" height="64px" viewBox="0 -960 960 960" width="64px" fill="#999999" className='animate-spin'><path d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z"/></svg>
+        </div>) : 
+      error ? (<p>{error}</p>) : 
+      transactions.length === 0 ? (
+      <div className='flex flex-col justify-center items-center inter pt-40'>
+        <ArrowsLeftRight className='w-24 h-24'/>
+        <p className='text-xl'>{t('no_transactions')}</p>
+      </div>
+      ) : 
+      (
+
+      <div className='grid sm:grid-cols-2 grid-cols-1 gap-5 text-text dark:text-dark-text'>
+        {sortedTransactions.map(trans => (
+          <div key={trans.id} className= {`flex flex-col ${trans.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#1d2344]
+            hover:scale-102 transition-transform ease-in-out w-full h-full`}>
+            <div className='flex flex-row justify-between items-center w-full pb-6'>
+              <div className='flex flex-row items-center truncate gap-2'>
+              <div>
+                {trans.payment_method == "card" && (<CardIcon className='text-text dark:text-dark-text'/>)}
+                {trans.payment_method == "cash" && (<CoinIcon className='text-text dark:text-dark-text'/>)}
+                {trans.payment_method =="transfer" && (<BankIcon className='text-text dark:text-dark-text'/>)}
+              </div>
+              <p className='mont_semibold text-xl truncate mr-2'>{trans.name}</p>
+              </div>
+              <div className='flex flex-row gap-2 items-center'>
+                <div className={trans.type == 'income' ?
+                  'inter bg-green-200 ring-1 ring-green-500 rounded-full text-green-600 text-xs px-2' : 
+                  'inter bg-red-200 ring-1 ring-red-500 rounded-full text-red-600 text-xs px-2'}>
+                  <p className='flex justify-center items-center capitalize'>
+                    {trans.type == 'income'?<Trending_up className='lg:mr-2 text-green-600 w-5'/>:
+                    <Trending_down className='lg:mr-2 text-red-600 w-5'/>}<span className='lg:flex hidden'>{trans.type == 'income' ? t('income') : t('expense')}</span>
+                  </p>
+                </div>
+                {trans.bill_id == null && (
+                <div className='flex flex-row justify-center items-center gap-2'>
+                  <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
+                  onClick={() => {setTransactionToEdit(trans);setShowTransactionForm(true)}}/>
+                  <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
+                  onClick={()=>setTransactionToDelete(trans)}/>
+                </div>
+                )}
+              </div>
+              
+            </div>
+            <div className={trans.type == 'income'?'text-green-400':'text-red-400'}>
+              <p className='inter text-4xl'>{trans.type != 'income' && <span>-</span>}{trans.total_amount}€</p>
+                <div className='flex flex-row gap-2'>
+                  {trans.iva_percent > 0 &&
+                  <p className={trans.type == 'income'?'text-green-400':'text-red-400'}>{transactionWithIVA(trans.total_amount, trans.iva_percent).toFixed(2)}€</p>
+                  }
+                  <span className='text-gray-400'>IVA {Math.round(trans.iva_percent)}%</span>
+                </div>
+            </div>
+            <div className='flex flex-row justify-between items-center w-full pt-1'>
+              <p className='inter text-gray-400 text-lg '>{dayjs(trans.date).format('DD-MM-YYYY')}</p>
+              {trans.category !== null && (
+              <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center`}
+              style={{ backgroundColor: trans.category.color.concat(`30`), color: `${trans.category?.color}`}}>
+                <TagIcon className='w-4 mr-1 h-4'/><p>{trans.category.name}</p>
+              </div>)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      )}
+
+    </div>
+    </>
+  )
+}
+
+export default Transactions
