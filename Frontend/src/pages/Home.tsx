@@ -14,6 +14,7 @@ import Goals from '/src/assets/icons/Goals.svg?react'
 import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
 import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 import PDFIcon from '/src/assets/icons/PDF-Icon.svg?react'
+import ArrowDownDotsIcon from '/src/assets/icons/ArrowDownDots.svg?react'
 
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
@@ -26,7 +27,7 @@ function Home() {
     <>
       <Navbar/>
       {/* --- COINTAINER HERO --- */}
-      <div className="bg-[url(/home/homebg.png)] w-full bg-no-repeat bg-cover xl:bg-[position:center_-120px] bg-[position:center]">
+      <div className="bg-[url(/home/homebg.png)] w-full bg-no-repeat bg-cover xl:bg-[position:center_-80px] bg-[position:center]">
         <div className="flex flex-row xl:justify-center justify-start items-around mx-5 xxl:mx-[120px] pt-50 gap-56">
           {/*Hero Left*/}
           <div className="flex flex-col justify-center text-dark-text gap-3">
@@ -51,11 +52,23 @@ function Home() {
             <FiNextIcon className="min-w-100"/>
           </div>
         </div>
+        <div className="h-64"></div>
+      </div>
+      <div className="hidden sm:flex flex-row justify-center items-center w-full gap-4 px-10">
+        <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
+        <ArrowDownDotsIcon className="shrink-0 animate-pulse text-gray-500 text-gray-700" />
+        <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
+      </div>
+      {/* --- COINTAINER 1 (Everything in one place) --- */}
+      <div className="flex flex-col justify-center items-center sm:mx-5 sm:py-20 py-15">
+        <div>
+          <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
+          <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
+        </div>
         {/*--- CARDS HERO ---*/}
         <div className="flex justify-center mx-4 pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
-          
-          <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
             <div className="p-5 inter">
               <p className="text-2xl bold_montserrat">Manage multiple accounts as <span className="font-bold">Manager</span></p>
@@ -73,7 +86,7 @@ function Home() {
             </div>
           </div>
           {/*--- Card Middle ---*/}
-          <div id="card2" className="flex flex-col bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div id="card2" className="flex flex-col bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative overflow-clip">
             <div className="p-5 inter">
               <p className="text-2xl bold_montserrat">Manage your finances with a <span className="font-bold">Personal account</span></p>
@@ -102,11 +115,9 @@ function Home() {
                     <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
               </div>
             </div>
-
-
           </div>
           {/*--- Card Right ---*/}
-          <div  id="card3" className="lg:flex hidden bg-background dark:bg-dark-card w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div  id="card3" className="lg:flex hidden bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative">
             <div className="p-5 inter">
               <p className="text-2xl bold_montserrat">Generate custom PDF as <span className="font-bold">Freelancer</span></p>
@@ -122,25 +133,11 @@ function Home() {
               </div>
           </div>
         </div>
-      </div>
-      {/* Dots */}
-      <div className="flex flex-row justify-center items-center pt-5 gap-2 lg:hidden">
-        <div className="bg-gray-700 rounded-full w-2 h-2"></div>
-        <div className="bg-gray-700 rounded-full w-2 h-2"></div>
-        <div className="bg-gray-700 rounded-full w-2 h-2"></div>
-      </div>
-      {/* --- COINTAINER 1 (Everything in one place) --- */}
-      <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
-        <div>
-          <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
-          <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
-        </div>
-        <div className="flex flex-row items-center justify-center pt-24 gap-3 w-full">
-          <div className="lg:flex hidden bg-[#6483d2] w-80 h-100 rounded-3xl -translate-x-40 hover:-translate-x-52 duration-400 transition-all"></div>
-          {/*Fix absolute card*/}
-          <div className="bg-primary ring-5 ring-background dark:ring-dark-background lg:absolute w-100 h-120 rounded-3xl z-1"></div>
-          {/*-------------------------*/}
-          <div className="lg:flex relative hidden bg-[#6483d2] w-80 h-100 rounded-3xl translate-x-40 hover:translate-x-52 duration-400 transition-all "></div>
+        {/* Dots */}
+        <div className="flex flex-row justify-center items-center pt-5 gap-2 lg:hidden">
+          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
+          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
+          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
         </div>
       </div>
       {/* --- COINTAINER 2 (SPONSORS) --- */}

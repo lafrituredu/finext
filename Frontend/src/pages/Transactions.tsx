@@ -109,9 +109,8 @@ function Transactions() {
     )}
     {/* Edit Form */}
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)} transactionEdit={transactionToEdit!}/>}
-    
 
-    <div className='p-10'>
+    <div className='p-6'>
       <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
         {/* Title */}
         <h2 className='mont_semibold text-4xl'>{t('transactions')}</h2>
@@ -134,58 +133,61 @@ function Transactions() {
       {/* Body */}
       {transactions.length !== 0 ? (
       <div>
-        <div className='flex justify-between items-center gap-2'>
-        <div className='flex flex-row items-center md:py-10 pt-10 pb-5 gap-6'>
-          <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
-            {FILTERS.map(({ id, label }) => (
-              <div
-                key={id}
-                onClick={() => setActiveFilter(id)}
-                className={`${activeFilter === id ? 'bg-[#FFF] dark:bg-[#1a2957] rounded-2xl' : ''} 
-                px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>
-                {label}
-              </div>
-            ))}
-          </div>
-          
-          {/* Filtro por mes y año */}
-          <div className='flex items-center gap-2'>
-            <select
-              value={selectedMonth}
-              onChange={e => setSelectedMonth(e.target.value)}
-              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
-              <option value=''>{t('months')}</option> {/* All months */}
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {dayjs().month(i).format('MMMM')}
-                </option>
+        <div className='flex justify-between items-start md:items-center gap-2 flex-col md:flex-row'>
+          <div className='flex sm:flex-row flex-col items-center md:py-10 pt-10 pb-5 gap-6'>
+            <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
+              {FILTERS.map(({ id, label }) => (
+                <div
+                  key={id}
+                  onClick={() => setActiveFilter(id)}
+                  className={`${activeFilter === id ? 'bg-[#FFF] dark:bg-[#1a2957] rounded-2xl' : ''} 
+                  px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>
+                  {label}
+                </div>
               ))}
-            </select>
+            </div>
+            
+            {/* Filtro por mes y año */}
+            <div className='flex items-center gap-2'>
+              <select
+                value={selectedMonth}
+                onChange={e => setSelectedMonth(e.target.value)}
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+                <option value=''>{t('months')}</option> {/* All months */}
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {dayjs().month(i).format('MMMM')}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              value={selectedYear}
-              onChange={e => setSelectedYear(e.target.value)}
-              className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
-              <option value=''>{t('years')}</option> {/* All years */}
-              {availableYears.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+              <select
+                value={selectedYear}
+                onChange={e => setSelectedYear(e.target.value)}
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+                <option value=''>{t('years')}</option> {/* All years */}
+                {availableYears.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className='pb-6 md:pb-0'>
+            <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
+              border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
+              transition-all duration-200 inter text-sm font-medium select-none">
+              <span>
+                {sortOrder === 'asc' ? t('order.old') : t('order.new')}
+              </span>
+              <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
+                ↓
+              </span>
+            </button>
           </div>
         </div>
-          <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
-            border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
-            transition-all duration-200 inter text-sm font-medium select-none">
-            <span>
-              {sortOrder === 'asc' ? t('order.old') : t('order.new')}
-            </span>
-            <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
-              ↓
-            </span>
-          </button>
-      </div>
-      <p className='inter capitalize text-gray-400 pb-2'>{activeFilterLabel} {t('transactions')} → <span className='font-bold'>{sortedTransactions.length}</span></p></div>):(<></>)}
+        <p className='inter capitalize text-gray-400 pb-2'>{activeFilterLabel} {t('transactions')} → <span className='font-bold'>{sortedTransactions.length}</span></p>
+      </div>):(<></>)}
       {loading ? (
         <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
           <CycleIcon className='animate-spin h-16 w-16 text-gray-400'/>
