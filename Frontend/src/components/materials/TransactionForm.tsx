@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+//Library
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form"
+
+//TransactionForm
+import { useCategories} from '../../contexts/CategoryContext'
+import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
+
+//Icons
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
-import { createTransaction, updateTransaction, type Transaction } from "../../api/TransactionService"
-import React from "react";
-import { useForm } from "react-hook-form"
-import { useTranslation } from "react-i18next";
 
-import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
-
+//Types
 type TransactionFormValues = {
   id: number
   name: string
@@ -23,68 +27,74 @@ type TransactionFormValues = {
   category_id?: number
 };
 
-export function TransctionForm({ close, transactionEdit }: { close: any, transactionEdit?: Transaction }) {
-  const [select, setSelected] = useState<any>(transactionEdit?.type || 'income');
+type TransactionType = 'income' | 'expense'
+
+interface TransactionFormProps {
+  close: () => void
+  transactionEdit?: Transaction
+}
+
+const TRANSACTION_TYPES: { id: TransactionType; labelKey: string; Icon: React.FC<any>; activeColor: string }[] = [
+  { id: 'income', labelKey: 'type.income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
+  { id: 'expense', labelKey: 'type.expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+]
+
+//Styles
+const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
+  bg-gray-50 dark:bg-[#0f1b35] text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500
+  px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+  transition-all duration-150`;
+
+const labelCls = `block text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1`;
+
+export function TransactionForm({ close, transactionEdit }: TransactionFormProps) {
+  //Variables-------------------------
+  const { t } = useTranslation("transactionsForm")
+
+  //TransactionForm
+  const { categories, loading } = useCategories()
+  
+  const [transactionType, setTransactionType] = useState<TransactionType>(transactionEdit?.type || 'income');
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const [transactionName, setTransactionName] = useState<string>(transactionEdit?.name || '')
-  const [transactionImport, setTransactionImport] = useState<number | string>(transactionEdit?.total_amount || '')
-  const [transactionDate, setTransactionDate] = useState<string>(transactionEdit?.date || '')
-  const [transactioniva, setTransactionIva] = useState<number | string>(transactionEdit?.iva_percent || 21.00)
-  const [transactionDescription, setTransactionDescription] = useState<string>(transactionEdit?.description || '')
-  const [transactionClient, setTransactionClient] = useState<string>(transactionEdit?.client || '')
-  const [transactionPaymentMethod, setTransactionPaymentMethod] = useState<string>(transactionEdit?.payment_method || '')
-  const [category, setCategory] = useState<number | string>(transactionEdit?.category_id ?? '')
+  //React form hook
+  const {register, handleSubmit, setValue, formState: { errors }} = useForm<TransactionFormValues>({
+    defaultValues: {
+      name: transactionEdit?.name || '',
+      total_amount: transactionEdit?.total_amount,
+      date: transactionEdit?.date || '',
+      iva_percent: transactionEdit?.iva_percent ?? 0,
+      description: transactionEdit?.description || '',
+      client: transactionEdit?.client || '',
+      payment_method: transactionEdit?.payment_method || 'card',
+      category_id: transactionEdit?.category_id ?? undefined,
+      type: transactionEdit?.type || 'income',
+      id: transactionEdit?.id
+    }
+  })
 
-  const { t } = useTranslation("transactionsForm")
-  const { categories, loading } = useCategories()
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors }
-  } = useForm<TransactionFormValues>()
-
+  //Submit form
   const onSubmit = async (data: TransactionFormValues) => {
-    if (isSubmitting) return
+    if (isSubmitting) return //Return so it doesn't send duplicates
     setIsSubmitting(true)
     try {
       const { id, ...dataWithoutId } = data
+      //Update or create Transaction
       if (transactionEdit != null) {
         await updateTransaction(dataWithoutId, id)
       } else {
         await createTransaction(dataWithoutId)
       }
-      close()
+      close() //Close TransactionForm
     } catch (error) {
       setIsSubmitting(false)
     }
   }
 
-  useEffect(() => {
-    setValue("type", select);
-    if (transactionEdit) {
-      setValue("id", transactionEdit.id)
-      setValue("category_id", transactionEdit.category_id ?? undefined)
-    }
-  }, [select, setValue, transactionEdit])
-
-  const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
-    bg-gray-50 dark:bg-[#0f1b35]
-    text-gray-800 dark:text-gray-100
-    placeholder:text-gray-400 dark:placeholder:text-gray-500
-    px-4 py-2.5 text-sm font-medium
-    focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
-    transition-all duration-150`;
-
-  const labelCls = `block text-xs font-semibold uppercase tracking-wide
-    text-gray-500 dark:text-gray-400 mb-1`;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Transaction ID */}
       <input type="hidden" {...register("id")} />
-
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
         <div
           className="
@@ -110,29 +120,22 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              </svg> {/* X svg */}
             </button>
           </div>
 
           {/* Income / Expense */}
           <div className="flex justify-center">
-            <div className="
-              flex items-center gap-1.5 p-1.5
-              bg-gray-100 dark:bg-[#0F1732]
-              rounded-2xl border border-gray-200 dark:border-gray-700
-              montserrat">
-              {[
-                { id: 'income', labelKey: 'type.income', Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'expense', labelKey: 'type.expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
-              ].map(({ id, labelKey, Icon, activeColor }) => (
+            <div className="flex items-center gap-1.5 p-1.5 bg-gray-100 dark:bg-[#0F1732]
+              rounded-2xl border border-gray-200 dark:border-gray-700 montserrat">
+                {TRANSACTION_TYPES.map(({ id, labelKey, Icon, activeColor }) => (
                 <button
                   key={id}
                   type="button"
-                  onClick={() => setSelected(id)}
-                  className={`
-                    flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold
+                  onClick={() => { setTransactionType(id); setValue("type", id) }}
+                  className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold
                     transition-all duration-200 ease-in-out cursor-pointer
-                    ${select === id
+                    ${transactionType === id
                       ? `bg-white dark:bg-[#1a2957] shadow-sm ${activeColor}`
                       : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}>
                   <Icon className="w-4 h-4" />
@@ -158,8 +161,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               })}
               type="text"
               placeholder={t('placeholders.name')}
-              value={transactionName}
-              onChange={(e) => setTransactionName(e.target.value)}
               className={inputCls}/>
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
@@ -183,8 +184,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
                 },
               })}
                 placeholder={t('placeholders.amount')}
-                value={transactionImport}
-                onChange={(e) => setTransactionImport(parseFloat(e.target.value))}
                 className={inputCls}/>
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
@@ -193,8 +192,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               <input
                 type="date"
                 {...register("date", { required: t('errors.dateRequired') })}
-                value={transactionDate}
-                onChange={(e) => setTransactionDate(e.target.value)}
                 className={inputCls}/>
               {errors.date && <p className="mt-1 text-xs text-red-400">{errors.date.message}</p>}
             </div>
@@ -206,10 +203,8 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               <label className={labelCls}>{t('fields.iva')}</label>
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
-                value={transactioniva}
-                onChange={(e) => setTransactionIva(e.currentTarget.value)}
                 className={inputCls}>
-                <option value="0">{t('iva.none')}</option>
+                <option value="0.00">{t('iva.none')}</option>
                 <option value="4.00">{t('iva.superreduced')}</option>
                 <option value="10.00">{t('iva.reduced')}</option>
                 <option value="21.00">{t('iva.general')}</option>
@@ -220,8 +215,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               {!loading ? (
                 <select
                   {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
                   className={inputCls}
                 >
                   <option value="">{t('placeholders.noCategory')}</option>
@@ -253,8 +246,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               })}
               type="text"
               placeholder={t('placeholders.description')}
-              value={transactionDescription}
-              onChange={(e) => setTransactionDescription(e.target.value)}
               className={inputCls}/>
               {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
@@ -276,8 +267,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               })}
                 type="text"
                 placeholder={t('placeholders.client')}
-                value={transactionClient}
-                onChange={(e) => setTransactionClient(e.target.value)}
                 className={inputCls}/>
                 {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
             </div>
@@ -285,8 +274,6 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               <label className={labelCls}>{t('fields.paymentMethod')}</label>
               <select
                 {...register("payment_method")}
-                value={transactionPaymentMethod}
-                onChange={(e) => setTransactionPaymentMethod(e.currentTarget.value)}
                 className={inputCls}>
                 <option value="card">{t('payment.card')}</option>
                 <option value="cash">{t('payment.cash')}</option>
@@ -301,25 +288,17 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
               type="submit"
               disabled={isSubmitting}
               className="
-                flex-1 bg-primary text-white font-semibold
-                py-2.5 px-6 rounded-xl shadow-md
-                hover:brightness-110 active:scale-[0.98]
-                transition-all duration-150 ease-in-out
-                cursor-pointer">
+                flex-1 bg-primary text-white font-semibold py-2.5 px-6 rounded-xl shadow-md
+                hover:brightness-110 active:scale-[0.98] transition-all duration-150 ease-in-out cursor-pointer">
               {transactionEdit == null ? t('buttons.create') : t('buttons.update')}
             </button>
             <button
               type="button"
               onClick={close}
-              className="
-                flex-1 sm:flex-none sm:w-36
-                bg-background dark:bg-dark-background
-                ring-1 ring-gray-200 dark:ring-gray-700
-                text-gray-600 dark:text-gray-300 font-semibold
-                py-2.5 px-6 rounded-xl
-                hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
-                transition-all duration-150 ease-in-out
-                cursor-pointer">
+              className="flex-1 sm:flex-none sm:w-36 bg-background dark:bg-dark-background
+                ring-1 ring-gray-200 dark:ring-gray-700 text-gray-600 dark:text-gray-300 font-semibold
+                py-2.5 px-6 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
+                transition-all duration-150 ease-in-out cursor-pointer">
               {t('buttons.cancel')}
             </button>
           </div>
@@ -330,4 +309,4 @@ export function TransctionForm({ close, transactionEdit }: { close: any, transac
   );
 }
 
-export default TransctionForm;
+export default TransactionForm;
