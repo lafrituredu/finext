@@ -135,7 +135,7 @@ function Transactions() {
       <div>
         <div className='flex justify-between items-start md:items-center gap-2 flex-col md:flex-row'>
           <div className='flex sm:flex-row flex-col items-center md:py-10 pt-10 pb-5 gap-6'>
-            <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
+            <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit sm:px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
               {FILTERS.map(({ id, label }) => (
                 <div
                   key={id}
@@ -152,7 +152,7 @@ function Transactions() {
               <select
                 value={selectedMonth}
                 onChange={e => setSelectedMonth(e.target.value)}
-                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a] cursor-pointer'>
                 <option value=''>{t('months')}</option> {/* All months */}
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -164,7 +164,7 @@ function Transactions() {
               <select
                 value={selectedYear}
                 onChange={e => setSelectedYear(e.target.value)}
-                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a]'>
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a] cursor-pointer'>
                 <option value=''>{t('years')}</option> {/* All years */}
                 {availableYears.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -176,7 +176,7 @@ function Transactions() {
             <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
               border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
-              transition-all duration-200 inter text-sm font-medium select-none">
+              transition-all duration-200 inter text-sm font-medium select-none cursor-pointer">
               <span>
                 {sortOrder === 'asc' ? t('order.old') : t('order.new')}
               </span>

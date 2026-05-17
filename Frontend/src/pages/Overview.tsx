@@ -56,13 +56,16 @@ for (let i = 0; i <= 11; i++) {
     months.push(obj);
 }
 
+const [isDark, setIsDark] = useState(document.documentElement.classList.contains("dark"));
+
 const config: {options: ApexOptions, series: any} = {
     options: {
 
     chart: {
         id: "basic-bar",
         toolbar: { show: false },
-        zoom: { enabled: false }
+        zoom: { enabled: false },
+        foreColor: isDark ? "#E5E7EB" : "#424242",
     },
     stroke: {
       curve: "smooth",
@@ -150,6 +153,19 @@ function calculateCashflow(){
 function calculateYearCashflow(){
     return (Number(calculateYearIncomes()) - Number(calculateYearExpenses())).toFixed(2)
 }
+
+useEffect(() => {
+    const observer = new MutationObserver(() => {
+        setIsDark(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+}, []);
 
   return (
     <div className='min-h-full w-full p-10 inter'>
