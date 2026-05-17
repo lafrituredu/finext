@@ -94,7 +94,6 @@ function Transactions() {
       }
     })
   },[transactions, activeFilter, selectedMonth, selectedYear, sortOrder])
-  
   //---------------------------------------------------------------------------------------
   return (
     <>
@@ -111,7 +110,7 @@ function Transactions() {
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)} transactionEdit={transactionToEdit!}/>}
 
     <div className='p-6 sm:p-10'>
-      <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
+      <div className='flex sm:flex-row flex-col justify-between items-center gap-4'>
         {/* Title */}
         <h2 className='mont_semibold text-4xl'>{t('transactions')}</h2>
         {/* Create button */}
@@ -130,6 +129,7 @@ function Transactions() {
           <span className='text-white'>{t('new_transaction')}</span>
         </button> */}
       </div>
+      <hr className="-mx-6 sm:-mx-10 mt-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
       {/* Body */}
       {transactions.length !== 0 ? (
       <div>

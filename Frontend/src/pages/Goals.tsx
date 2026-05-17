@@ -51,7 +51,7 @@ function Goals() {
   return (
     <>
         <div className='p-6 sm:p-10'>
-         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
+         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6'>
             <p className='mont_semibold text-4xl'>{t('title')}</p>
             <button 
             onClick={(e) => setShowGoalForm(true)}
@@ -64,7 +64,7 @@ function Goals() {
               </span>
             </button>
           </div>
-
+          <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
           <div className='w-full grid md:grid-cols-2 grid-cols-1 gap-15'>
             {goals?.map( (goal,key) => 
             { const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));

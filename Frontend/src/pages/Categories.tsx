@@ -190,7 +190,7 @@ function Categories() {
             </span>
           </button>
         </div>
-
+        <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
         {loading ? (
           <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
             <Loading className='fixed flex items-center justify-center w-full size-15 animate-spin text-[#999]' />

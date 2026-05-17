@@ -111,7 +111,7 @@ function Bills() {
       {/* -------------------------------------------------- */}
       <div className='p-6 sm:p-10 inter'>
         {/* Header */}
-        <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4 mb-8'>
+        <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
           <h2 className='mont_semibold text-4xl'>{t('bills')}</h2>
           <button
             onClick={() => { setShowBillForm(true); setBillToEdit(null) }}
@@ -124,6 +124,7 @@ function Bills() {
             </span>
           </button>
         </div>
+        <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
         {/* States */}
         {loading && (
           <div className='flex flex-col justify-center items-center w-full h-[50vh]'>

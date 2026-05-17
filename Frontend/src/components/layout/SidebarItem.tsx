@@ -8,8 +8,8 @@ function SidebarItem({id,label,icon: Icon,openId,setOpenId,to = "",children = nu
     const content = (isActive = false) =>{
         return (<>
         <div id={id} onClick={(e) => { openId != e.currentTarget.id ? setOpenId(e.currentTarget.id) : setOpenId("") } }
-            className={`rounded-3xl flex items-center hover:bg-[#0000000a] transition ease-in 
-            px-5 py-2 justify-between hover:cursor-pointer ${ isActive || openId == id ? 'bg-[#0000000a]' : ''} `}>
+            className={`rounded-3xl flex items-center hover:bg-[#0000000a] dark:hover:dark:bg-[#ffffff12] transition ease-in 
+            px-5 py-2 justify-between hover:cursor-pointer ${ isActive || openId == id ? 'bg-[#0000000a] dark:bg-[#ffffff12]' : ''} `}>
             <p className="flex gap-2 items-center">
                 {Icon && <Icon className="size-5" />}
                 {label}
