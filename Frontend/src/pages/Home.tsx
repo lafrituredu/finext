@@ -56,17 +56,17 @@ function Home() {
       </div>
       <div className="hidden sm:flex flex-row justify-center items-center w-full gap-4 px-10">
         <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
-        <ArrowDownDotsIcon className="shrink-0 animate-pulse text-gray-500 text-gray-700" />
+        <a href="#everything_one_place"><ArrowDownDotsIcon className="shrink-0 animate-pulse text-gray-500 text-gray-700" /></a>
         <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
       </div>
       {/* --- COINTAINER 1 (Everything in one place) --- */}
-      <div className="flex flex-col justify-center items-center sm:mx-5 sm:py-20 py-15">
+      <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
         <div>
-          <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
+          <h4 id="everything_one_place" className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
           <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
         </div>
         {/*--- CARDS HERO ---*/}
-        <div className="flex justify-center mx-4 pt-25 xl:gap-20 gap-5">
+        <div className="flex justify-center pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
           <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
@@ -92,8 +92,8 @@ function Home() {
               <p className="text-2xl bold_montserrat">Manage your finances with a <span className="font-bold">Personal account</span></p>
             </div>
 
-            <div className="-bottom-2 left-4 absolute w-fit h-fit flex hover:-translate-x-100 transition-all ease-in-out duration-1000 gap-5">
-              <div className='w-100  border  rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+            <div className="-bottom-2 left-10 absolute w-fit h-fit flex hover:-translate-x-106 transition-all ease-in-out duration-1000 gap-5">
+              <div className='w-100 border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
                   <div className='flex items-center justify-between'>
                       <span className='flex items-center montserrat'>
                           <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('incomes')}
@@ -104,7 +104,7 @@ function Home() {
                     <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
               </div>
 
-              <div className='w-100 border transition-all ease-out duration-300 rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col gap-3'>
+              <div className='w-100 border transition-all ease-out duration-300 rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
                   <div className='flex items-center justify-between'>
                       <span className='flex items-center montserrat'>
                           <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('outcomes')}
@@ -126,7 +126,7 @@ function Home() {
                 <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-primary rounded-full cursor-pointer shadow-md hover:scale-110 transition
                 after:content-[''] after:absolute after:rounded-full after:w-3 after:h-3 after:bg-red-500 after:top-0 after:right-0 after:animate-ping
                 before:content-[''] before:absolute before:rounded-full before:w-3 before:h-3 before:bg-red-500 before:top-0 before:right-0"><PDFIcon className="size-5 text-dark-text" /> </button>
-                <div className={`border border-gray-700 h-30  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-5'} transition duration-300 ease-out`}>
+                <div className={`border border-[#0000001a] dark:border-[#1d2344] h-36  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-4'} transition duration-300 ease-out dark:bg-dark-background`}>
                   <p className="bold_montserrat font-bold">Taxes | auto-generated</p>
                   <p className="montserrat">Taxes of { new Date().toLocaleDateString() }</p>
                 </div>

@@ -109,7 +109,7 @@ function Bills() {
         {t("confirm.delete")} <span className='font-semibold'>{billToDelete.name}</span> {t("confirm.delete_trans")}
       </Confirmation>)}
       {/* -------------------------------------------------- */}
-      <div className='p-10 inter'>
+      <div className='p-6 sm:p-10 inter'>
         {/* Header */}
         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4 mb-8'>
           <h2 className='mont_semibold text-4xl'>{t('bills')}</h2>

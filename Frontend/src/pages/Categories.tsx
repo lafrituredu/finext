@@ -176,7 +176,7 @@ function Categories() {
     }
 
     return (
-      <div className='p-10'>
+      <div className='p-6 sm:p-10'>
 
         <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
           <p className='mont_semibold text-4xl'>{t("title")}</p>

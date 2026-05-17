@@ -4,7 +4,7 @@ function Footer() {
     const { t } = useTranslation("footer");
   return (
     <>
-        <div className="bg-[#374161] w-full h-fit pb-10">
+        <div className="bg-[#374161] w-full h-fit pb-4">
             <div className="bg-white dark:bg-dark-background w-full h-10 sm:h-20 xl:h-30 rounded-b-full"></div>
             <div className="flex justify-center items-center">
               <div className="inter grid md:grid-cols-3 grid-cols-2 text-white gap-12 py-[10%] md:py-[5%] mx-12">

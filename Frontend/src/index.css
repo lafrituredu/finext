@@ -84,3 +84,11 @@ input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
   border-radius: 9999px;
 }
+
+html{
+  scroll-behavior: smooth;
+}
+
+#everything_one_place {
+  scroll-margin-top: 100px;
+}

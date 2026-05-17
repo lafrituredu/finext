@@ -110,7 +110,7 @@ function Transactions() {
     {/* Edit Form */}
     {showTransactionForm && <TransactionForm close={() => setShowTransactionForm(false)} transactionEdit={transactionToEdit!}/>}
 
-    <div className='p-6'>
+    <div className='p-6 sm:p-10'>
       <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-4'>
         {/* Title */}
         <h2 className='mont_semibold text-4xl'>{t('transactions')}</h2>

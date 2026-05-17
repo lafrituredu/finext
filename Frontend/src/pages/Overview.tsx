@@ -24,7 +24,7 @@ const { goals, setGoals } = useGoals() as GoalsContextType;
 const [loading, setLoading] = useState(true)
 const [error, setError] = useState<string | null>(null)
 const today = new Date();
-
+const currentYear = new Date().getFullYear();
 
 let filtered:any[] = [];
 
@@ -89,10 +89,20 @@ const config: {options: ApexOptions, series: any} = {
 const isCurrent = (t: Transaction): boolean => {
     return new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear();
 }
+const isCurrentYear = (t: Transaction): boolean => {
+    return new Date(t.date).getFullYear() == new Date().getFullYear();
+}
 
 function calculateIncomes(){
     return transactions
         .filter(t => t.type === 'income' && isCurrent(t))
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+        .toFixed(2)
+}
+
+function calculateYearIncomes(){
+    return transactions
+        .filter(t => t.type === 'income' && isCurrentYear(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
@@ -114,6 +124,14 @@ function calculateExpenses(){
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
         .toFixed(2)
 }
+
+function calculateYearExpenses(){
+    return transactions
+        .filter(t => t.type === 'expense' && isCurrentYear(t))
+        .reduce((acc, t) => acc + Number(t.total_amount), 0)
+        .toFixed(2)
+}
+
 function calculateExpensesIva(){
     return transactions
         .filter(t => t.type ==='expense' && isCurrent(t))
@@ -128,6 +146,11 @@ function calculateExpensesIva(){
 function calculateCashflow(){
     return (Number(calculateIncomes()) - Number(calculateExpenses())).toFixed(2)
 }
+
+function calculateYearCashflow(){
+    return (Number(calculateYearIncomes()) - Number(calculateYearExpenses())).toFixed(2)
+}
+
   return (
     <div className='min-h-full w-full p-10 inter'>
         {/* VISTA GENERAL */}
@@ -266,18 +289,18 @@ function calculateCashflow(){
 
             {/* SUMMARY */}
             <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-dark-text'>
-                <p className='flex items-center montserrat font-semibold gap-2 mb-3'><File className='size-6' /> {t('summary')}</p>
+                <p className='flex items-center montserrat font-semibold gap-2 mb-3'><File className='size-6' /> {t('summary')} {currentYear}</p>
                 
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg mb-2'>
                     <span className='text-[#7B7B7B] dark:text-dark-text'>{t('total_incomes')}</span>
-                    <span className='text-green-600'>{calculateIncomes()}€</span>
+                    <span className='text-green-600'>{calculateYearIncomes()}€</span>
                 </p>
 
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg mb-2'>
                     <span className='text-[#7B7B7B] dark:text-dark-text'>{t('total_outcomes')}</span>
-                    <span className='text-red-600'>{calculateExpenses()}€</span>
+                    <span className='text-red-600'>{calculateYearExpenses()}€</span>
                 </p>
 
                 <div className='w-full h-px mb-2 bg-[#0000001a] dark:bg-dark-text'></div>
@@ -285,7 +308,7 @@ function calculateCashflow(){
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg'>
                     <span className='text-[#7B7B7B] dark:text-dark-text'>{t('cash_flow')}</span>
-                    <span className={`${ Number(calculateCashflow()) > 0 ? 'text-green-600' : 'text-red-600'}`}>{calculateCashflow()}€</span>
+                    <span className={`${ Number(calculateYearCashflow()) > 0 ? 'text-green-600' : 'text-red-600'}`}>{calculateYearCashflow()}€</span>
                 </p>
 
             </div>
