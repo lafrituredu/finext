@@ -10,14 +10,16 @@ function Taxes() {
     const [collectedVat, setCollectedVat] = useState(0);
     const [inputVat, setInputVat] = useState(0);
     const [irpf, setIrpf] = useState<any>();
-    
-    function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        setQuarter(Number(e.currentTarget.value))
-        setIncomes(0);
-        setCollectedVat(0);
-        setExpenses(0);
-        setInputVat(0);
-    }
+    const [reserva,setReserva] = useState();
+    const today = new Date();
+    const todayMonth = today.getMonth();
+    // function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    //     setQuarter(Number(e.currentTarget.value))
+    //     setIncomes(0);
+    //     setCollectedVat(0);
+    //     setExpenses(0);
+    //     setInputVat(0);
+    // }
 
     function getCuota(cuota:number = 300){
         let months = 0;
@@ -100,7 +102,6 @@ function Taxes() {
                         <p className='text-xl text-green-500'>B.I. {incomes-collectedVat}€</p>
                         <p className='text-xl text-green-500'>IVA Repercutido {collectedVat}€</p>
                     </div>
-                    <p className='text-[#040919b3] dark:text-dark-text'>x</p>
                 </div>
 
                 <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
@@ -115,7 +116,7 @@ function Taxes() {
                         <p className='text-xl text-red-500'>B.I. {expenses-inputVat}€</p>
                         <p className='text-xl text-red-500'>IVA Soportado {inputVat}€</p>
                     </div>
-                    <p className='text-[#040919b3] dark:text-dark-text'>x</p>
+                
                 </div>
                 <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
                     <div className='flex items-center justify-between'>
@@ -125,26 +126,34 @@ function Taxes() {
                         sds
                     </div>
                     <div>
-                        <p className='text-4xl text-orange-5v00'>{Math.abs(inputVat-collectedVat)}€</p>
+                        <p className='text-4xl text-orange-5v00'>{collectedVat-inputVat < 0 ? 0 : collectedVat-inputVat}€</p>
                     </div>
                     <p className='text-[#040919b3] dark:text-dark-text'>Repercutido - Soportado</p>
                 </div>
                 <div>
-                    <p>IVA a pagar: {Math.abs(inputVat-collectedVat)}€</p>
+                    <p>IVA a pagar: {collectedVat-inputVat}€</p>
                     <p>IRPF: {(Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))}€</p>
                     <p>Cuota de autonomos: {getCuota()}€</p>
-                    <p>Reserva recomendada: {Math.abs(inputVat-collectedVat) + ((Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))) + getCuota()}€ </p>
+                    <p>Reserva recomendada: {Math.abs(collectedVat-inputVat) + ((Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))) + getCuota()}€ </p>
                 </div>
 
             </div>
 
-            <select name="" id="" onChange={(e) =>  handleChange(e)}>
+            <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-full px-2 py-1 rounded-3xl flex justify-between items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+                <div id='1' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 1 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>T1 {todayMonth < 3 && 'Actual'}</div>
+                <div id='2' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 2 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T2 {todayMonth >= 3 && todayMonth < 6 && 'Actual'}</div>
+                <div id='3' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 3 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T3 {todayMonth >= 6 && todayMonth < 9 && 'Actual'}</div>
+                <div id='4' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 4 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T4 {todayMonth >= 9 && 'Actual'}</div>
+                <div id='0' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 0 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Anual</div>
+            </div>
+
+            {/* <select name="" id="" onChange={(e) =>  handleChange(e)}>
                 <option value="1">T1</option>
                 <option value="2">T2</option>
                 <option value="3">T3</option>
                 <option value="4">T4</option>
                 <option value="0">Anual</option>
-            </select>
+            </select> */}
         </div>
     </>
   )
