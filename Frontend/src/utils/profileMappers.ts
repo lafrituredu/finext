@@ -4,6 +4,15 @@ import type {
 } from "../api/AuthServices";
 import type { ProfileFormData } from "../pages/Profile";
 
+const normalizeTaxValue = (value: string | number | null | undefined) => {
+  if (value === null || value === undefined || value === "") {
+    return "";
+  }
+
+  const numericValue = Number(value);
+  return Number.isNaN(numericValue) ? "" : String(numericValue);
+};
+
 export const emptyProfileForm: ProfileFormData = {
   username: "",
   full_name: "",
@@ -24,10 +33,10 @@ export const userToProfileForm = (user: UserProfile): ProfileFormData => ({
   rol: user.rol ?? "particular",
   dni: user.autonomo?.dni ?? "",
   birth_date: user.autonomo?.birth_date ?? "",
-  modulo_iva: String(user.autonomo?.modulo_iva ?? ""),
+  modulo_iva: normalizeTaxValue(user.autonomo?.modulo_iva),
   civil_state: user.autonomo?.civil_state ?? "soltero",
   company: user.autonomo?.company ?? "",
-  irpf: String(user.autonomo?.irpf ?? "")
+  irpf: normalizeTaxValue(user.autonomo?.irpf)
 });
 
 export const profileFormToPayload = (
@@ -40,7 +49,9 @@ export const profileFormToPayload = (
   };
 
   if (form.rol === "autonomo") {
-    payload.dni = form.dni.trim();
+    if (form.dni.trim()) {
+      payload.dni = form.dni.trim();
+    }
     payload.birth_date = form.birth_date;
     payload.modulo_iva = form.modulo_iva;
     payload.civil_state = form.civil_state;

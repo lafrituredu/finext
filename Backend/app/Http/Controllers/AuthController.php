@@ -21,6 +21,8 @@ class AuthController extends Controller
     // REGISTER
     public function register(Request $request)
     {
+        $this->normalizeIdentityDocumentInput($request, 'dni');
+
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
             'full_name' => 'required|string|max:255',
@@ -32,7 +34,13 @@ class AuthController extends Controller
                 'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
             ],
             'rol' => 'required|in:particular,gestor,autonomo',
-            'dni' => 'required_if:rol,autonomo|nullable|string|max:255|unique:autonomos,dni',
+            'dni' => [
+                'required_if:rol,autonomo',
+                'nullable',
+                'string',
+                'max:255',
+                $this->validUniqueSpanishDniNieRule(),
+            ],
             'birthdate' => 'required_if:rol,autonomo|nullable|date',
             'modulo_iva' => 'nullable|numeric|min:0|max:100',
             'estado_civil' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
@@ -62,7 +70,7 @@ class AuthController extends Controller
             if ($request->rol === 'autonomo') {
                 Autonomo::create([
                     'user_id' => $user->id,
-                    'dni' => $request->dni,
+                    'dni' => $this->hashIdentityDocument($request->dni),
                     'birth_date' => $request->birthdate,
                     'modulo_iva' => $request->modulo_iva,
                     'civil_state' => $request->estado_civil,
@@ -287,6 +295,8 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         $user = $request->user();
+        $this->normalizeIdentityDocumentInput($request, 'dni');
+        $user->loadMissing('autonomo');
 
         $data = $request->validate([
             'username' => [
@@ -298,11 +308,11 @@ class AuthController extends Controller
             'full_name' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:255',
             'dni' => [
-                Rule::requiredIf($user->rol === 'autonomo'),
+                Rule::requiredIf($user->rol === 'autonomo' && !$user->autonomo?->dni),
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('autonomos', 'dni')->ignore($user->id, 'user_id'),
+                $this->validUniqueSpanishDniNieRule($user->id),
             ],
             'birth_date' => 'nullable|date',
             'modulo_iva' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
@@ -322,7 +332,9 @@ class AuthController extends Controller
                 Autonomo::updateOrCreate(
                     ['user_id' => $user->id],
                     [
-                        'dni' => $data['dni'],
+                        'dni' => isset($data['dni']) && $data['dni'] !== ''
+                            ? $this->hashIdentityDocument($data['dni'])
+                            : $user->autonomo?->dni,
                         'birth_date' => $data['birth_date'] ?? null,
                         'modulo_iva' => $data['modulo_iva'] ?? null,
                         'civil_state' => $data['civil_state'] ?? null,
@@ -404,7 +416,125 @@ class AuthController extends Controller
             $user->avatar ? Storage::disk('public')->url($user->avatar) : null
         );
 
+        if ($user->relationLoaded('autonomo') && $user->autonomo) {
+            $user->autonomo->setAttribute('dni_set', !empty($user->autonomo->dni));
+            $user->autonomo->setAttribute('dni', null);
+        }
+
         return $user;
+    }
+
+    private function normalizeIdentityDocumentInput(Request $request, string $field): void
+    {
+        if (!$request->has($field) || !is_string($request->input($field))) {
+            return;
+        }
+
+        $request->merge([
+            $field => $this->normalizeIdentityDocument($request->input($field)),
+        ]);
+    }
+
+    private function normalizeIdentityDocument(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return strtoupper((string) preg_replace('/\s+/', '', trim($value)));
+    }
+
+    private function validUniqueSpanishDniNieRule(?int $ignoreUserId = null): \Closure
+    {
+        return function ($attribute, $value, $fail) use ($ignoreUserId): void {
+            if ($value === null || $value === '') {
+                return;
+            }
+
+            if (!$this->isValidSpanishDniNie((string) $value)) {
+                $fail('El DNI o NIE no tiene un formato valido.');
+                return;
+            }
+
+            $query = Autonomo::where('dni', $this->hashIdentityDocument((string) $value));
+
+            if ($ignoreUserId !== null) {
+                $query->where('user_id', '!=', $ignoreUserId);
+            }
+
+            if ($query->exists()) {
+                $fail('El DNI o NIE ya esta registrado.');
+            }
+        };
+    }
+
+    private function hashIdentityDocument(string $value): string
+    {
+        return hash_hmac(
+            'sha256',
+            $this->normalizeIdentityDocument($value) ?? '',
+            (string) config('app.key')
+        );
+    }
+
+    private function isValidSpanishDniNie(string $value): bool
+    {
+        $normalizedValue = $this->normalizeIdentityDocument($value) ?? '';
+
+        if ($this->hasSuspiciousIdentityNumber($normalizedValue)) {
+            return false;
+        }
+
+        if (preg_match('/^(\d{8})([A-Z])$/', $normalizedValue, $matches)) {
+            return $this->expectedIdentityLetter($matches[1]) === $matches[2];
+        }
+
+        if (preg_match('/^([XYZ])(\d{7})([A-Z])$/', $normalizedValue, $matches)) {
+            $prefixMap = [
+                'X' => '0',
+                'Y' => '1',
+                'Z' => '2',
+            ];
+
+            return $this->expectedIdentityLetter($prefixMap[$matches[1]] . $matches[2]) === $matches[3];
+        }
+
+        return false;
+    }
+
+    private function expectedIdentityLetter(string $numbers): string
+    {
+        $letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+
+        return $letters[((int) $numbers) % 23];
+    }
+
+    private function hasSuspiciousIdentityNumber(string $normalizedValue): bool
+    {
+        $blockedIdentityDocuments = [
+            '00000000T',
+            '00000001R',
+            '11111111H',
+            '12345678Z',
+            '87654321X',
+            'X0000000T',
+            'Y0000000Z',
+            'Z0000000M',
+        ];
+
+        if (in_array($normalizedValue, $blockedIdentityDocuments, true)) {
+            return true;
+        }
+
+        if (!preg_match('/^[XYZ]?(\d+)[A-Z]$/', $normalizedValue, $matches)) {
+            return false;
+        }
+
+        $numbers = $matches[1];
+
+        return preg_match('/^(\d)\1+$/', $numbers) === 1
+            || str_contains('0123456789', $numbers)
+            || str_contains('9876543210', $numbers);
     }
 
     private function sendVerificationEmail(User $user, string $locale): bool

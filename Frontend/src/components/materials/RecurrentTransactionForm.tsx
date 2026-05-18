@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react";
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react";
 import RecurrentIcon from "/src/assets/icons/Recurrent.svg?react";
-import { getCategories, type Category } from "../../api/CategoryService";
+import { useCategories } from "../../contexts/CategoryContext";
 import {
   createRecurrentTransaction,
   updateRecurrentTransaction,
@@ -42,9 +42,7 @@ export function RecurrentTransactionForm({
   const { t } = useTranslation("recurrent");
   const dateInputValue = (value?: string | null) => value ? value.slice(0, 10) : '';
   const [select, setSelected] = useState(recurrentEdit?.type || 'expense');
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { categories, loading } = useCategories();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [name, setName] = useState(recurrentEdit?.name || '');
@@ -69,13 +67,6 @@ export function RecurrentTransactionForm({
   } = useForm<RecurrentFormValues>();
 
   useEffect(() => {
-    getCategories()
-      .then(data => setCategories(data))
-      .catch(() => setError(t('errors.loadCategories')))
-      .finally(() => setLoading(false));
-  }, [t]);
-
-  useEffect(() => {
     setValue("type", select);
     setValue("frequency", frequency);
     setValue("active", active);
@@ -85,13 +76,6 @@ export function RecurrentTransactionForm({
       setValue("category_id", recurrentEdit.category_id ?? null);
     }
   }, [active, createsBill, frequency, recurrentEdit, select, setValue]);
-
-  useEffect(() => {
-    if (!nextRunDate && startDate) {
-      setNextRunDate(startDate);
-      setValue("next_run_date", startDate);
-    }
-  }, [nextRunDate, setValue, startDate]);
 
   const onSubmit = async () => {
     if (isSubmitting) return;
@@ -124,9 +108,10 @@ export function RecurrentTransactionForm({
       }
       onSaved?.(savedRecurrent);
       close();
-    } catch (error: any) {
-      console.error('Status:', error.response?.status);
-      console.error('Errors:', error.response?.data);
+    } catch (error) {
+      const apiError = error as { response?: { status?: unknown; data?: unknown } };
+      console.error('Status:', apiError.response?.status);
+      console.error('Errors:', apiError.response?.data);
       setIsSubmitting(false);
     }
   };
@@ -256,7 +241,7 @@ export function RecurrentTransactionForm({
                 value={frequency}
                 placeholder={t('placeholders.frequency')}
                 options={frequencyOptions}
-                onChange={(_, value) => setFrequency(value as any)}
+                onChange={(_, value) => setFrequency(value)}
                 buttonClassName={dropdownButtonCls}
               />
             </div>
@@ -266,7 +251,13 @@ export function RecurrentTransactionForm({
             <div>
               <label className={labelCls}>{t('form.start')} *</label>
               <input type="date" {...register("start_date", { required: t('errors.startRequired') })}
-                value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                value={startDate} onChange={(e) => {
+                  setStartDate(e.target.value);
+                  if (!nextRunDate) {
+                    setNextRunDate(e.target.value);
+                    setValue("next_run_date", e.target.value);
+                  }
+                }}
                 className={inputCls} />
               {errors.start_date && <p className="mt-1 text-xs text-red-400">{errors.start_date.message}</p>}
             </div>
@@ -316,7 +307,6 @@ export function RecurrentTransactionForm({
                   {t('placeholders.loadingCategories')}
                 </div>
               )}
-              {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
             </div>
             <div>
               <label className={labelCls}>{t('form.paymentMethod')}</label>

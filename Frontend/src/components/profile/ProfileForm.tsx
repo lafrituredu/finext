@@ -45,6 +45,7 @@ function ProfileForm({
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
   const isAutonomo = form.rol === "autonomo";
+  const hasStoredDni = Boolean(user?.autonomo?.dni_set);
   const fullNameField = register("full_name", {
     required: "El nombre completo es obligatorio.",
     minLength: {
@@ -65,9 +66,11 @@ function ProfileForm({
       "El telefono debe contener solo numeros y tener entre 9 y 15 digitos."
   });
   const dniField = register("dni", {
-    required: "El DNI o NIE es obligatorio.",
+    required: hasStoredDni ? false : "El DNI o NIE es obligatorio.",
     validate: (value) =>
-      isValidSpanishDniNie(value) || "El DNI o NIE no tiene un formato valido."
+      (hasStoredDni && !value) ||
+      isValidSpanishDniNie(value) ||
+      "El DNI o NIE no tiene un formato valido."
   });
 
   return (
@@ -189,6 +192,7 @@ function ProfileForm({
               {t("dni")}
               <input
                 className={inputClass}
+                placeholder={hasStoredDni ? "DNI/NIE guardado. Escribe uno nuevo para cambiarlo." : undefined}
                 {...dniField}
                 onChange={(event) => {
                   event.target.value = event.target.value

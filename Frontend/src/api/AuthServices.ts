@@ -15,6 +15,7 @@ export interface AuthResponse {
 
 export interface AutonomoProfile {
   dni?: string | null
+  dni_set?: boolean
   birth_date?: string | null
   modulo_iva?: string | number | null
   civil_state?: string | null
