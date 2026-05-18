@@ -20,7 +20,7 @@ export interface AutonomoProfile {
   modulo_iva?: string | number | null
   civil_state?: string | null
   company?: string | null
-  irpf?: string | number | null
+  irpf: string | number | null
 }
 
 export interface UserProfile {
@@ -33,7 +33,7 @@ export interface UserProfile {
   email_verified_at?: string | null
   avatar?: string | null
   avatar_url?: string | null
-  autonomo?: AutonomoProfile | null
+  autonomo: AutonomoProfile | null
   gestor?: Record<string, unknown> | null
 }
 

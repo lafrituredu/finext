@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useBills, type BillsContextType } from '../contexts/BillContext';
+import { getCurrentUser, type UserProfile } from '../api/AuthServices'
 
 function Taxes() {
     const { bills, setBills, refetchBills } = useBills() as BillsContextType;
@@ -8,6 +9,7 @@ function Taxes() {
     const [expenses, setExpenses] = useState(0);
     const [collectedVat, setCollectedVat] = useState(0);
     const [inputVat, setInputVat] = useState(0);
+    const [irpf, setIrpf] = useState<any>();
     
     function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         setQuarter(Number(e.currentTarget.value))
@@ -15,6 +17,15 @@ function Taxes() {
         setCollectedVat(0);
         setExpenses(0);
         setInputVat(0);
+    }
+
+    function getCuota(cuota:number = 300){
+        let months = 0;
+        months = 3;
+        if (quarter === 0) {
+            months = 12;
+        }
+        return months*cuota
     }
     
     useEffect(() => {
@@ -53,6 +64,10 @@ function Taxes() {
         setInputVat(inputVatTotal);
     },[bills,quarter])
 
+    useEffect(() =>{
+        getCurrentUser().then(value => setIrpf(value?.autonomo?.irpf)).catch(err => console.log(err))
+        
+    },[])
 
 
   return (
@@ -98,10 +113,29 @@ function Taxes() {
                     <div>
                         <p className='text-4xl text-red-600'>{expenses}€</p>
                         <p className='text-xl text-red-500'>B.I. {expenses-inputVat}€</p>
-                        <p className='text-xl text-red-500'>IVA Repercutido {inputVat}€</p>
+                        <p className='text-xl text-red-500'>IVA Soportado {inputVat}€</p>
                     </div>
                     <p className='text-[#040919b3] dark:text-dark-text'>x</p>
                 </div>
+                <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
+                    <div className='flex items-center justify-between'>
+                        <span className='flex items-center montserrat'>
+                            <span className='bg-[#84A2EB66] p-1 rounded-full me-2'>x</span> IVA a pagar
+                        </span>
+                        sds
+                    </div>
+                    <div>
+                        <p className='text-4xl text-orange-5v00'>{Math.abs(inputVat-collectedVat)}€</p>
+                    </div>
+                    <p className='text-[#040919b3] dark:text-dark-text'>Repercutido - Soportado</p>
+                </div>
+                <div>
+                    <p>IVA a pagar: {Math.abs(inputVat-collectedVat)}€</p>
+                    <p>IRPF: {(Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))}€</p>
+                    <p>Cuota de autonomos: {getCuota()}€</p>
+                    <p>Reserva recomendada: {Math.abs(inputVat-collectedVat) + ((Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))) + getCuota()}€ </p>
+                </div>
+
             </div>
 
             <select name="" id="" onChange={(e) =>  handleChange(e)}>
