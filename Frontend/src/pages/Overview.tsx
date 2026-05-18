@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Goals from '/src/assets/icons/Goals.svg?react'
 import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
 import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
+import TrendUpIcon from '/src/assets/icons/Trending-up.svg?react'
+import TrendDownIcon from '/src/assets/icons/Trending-down.svg?react'
 import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
@@ -80,7 +82,7 @@ const config: {options: ApexOptions, series: any} = {
     series: [
     {
         name: t('incomes'),
-        data: months.map(m => m.incomes)
+        data: months.map(m => m.incomes)    
     },
     {
         name: t('outcomes'),
@@ -205,7 +207,12 @@ useEffect(() => {
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('cash_flow')}
                     </span>
-                    <KpiStatsUp className='text-[#84A2EB] right-0'/></p>
+                    {Number(calculateCashflow()) > 0 ? (
+                        <KpiStatsUp className='text-[#84A2EB] right-0'/>
+                    ) : (
+                        <KpiStatsDown className='text-[#84A2EB] right-0'/>
+                    )}
+                </p>
                 <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>

@@ -53,6 +53,15 @@
       "color": "Color",
       "name": "Name"
     }
+  },
+  "categoryNames": {
+    "Alimentacion": "Food",
+    "Transporte": "Transportation",
+    "Vivienda": "Housing",
+    "Salud": "Health",
+    "Ocio": "Leisure",
+    "Nomina": "Salary",
+    "Otros": "Other"
   }
   
 }

@@ -30,7 +30,7 @@ function Categories() {
 
     useEffect(() => {
       refetchCategories()
-    },[showCategoryForm])
+    },[categories])
 
     const categoriasPropias = categories.filter(c => c.user_id != null);
     const categoriasDefault = categories.filter(c => c.user_id == null);
@@ -112,7 +112,7 @@ function Categories() {
 
                     <div className='flex flex-row items-center justify-center gap-2'>
                       <div className='capitalize flex justify-center lg:text-3xl text-2xl truncate'>
-                        {category.name}
+                        {t(`categoryNames.${category.name}`)}
                       </div>
                     </div>
 
@@ -145,9 +145,11 @@ function Categories() {
           <tbody>
             {categories.map((category, key) =>
               <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
-
-                <td className='capitalize'>{category.name}</td>
-
+                <td className='capitalize'>
+                  {category.user_id == null
+                    ? t(`categoryNames.${category.name}`, category.name)
+                    : category.name}
+                </td>
                 <td>
                   <div className='size-5 rounded-full' style={{ backgroundColor: category.color ?? '#f3f4f5' }} />
                 </td>
