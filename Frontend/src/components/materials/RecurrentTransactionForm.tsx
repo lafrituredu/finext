@@ -47,7 +47,7 @@ export function RecurrentTransactionForm({
 
   const [name, setName] = useState(recurrentEdit?.name || '');
   const [amount, setAmount] = useState<number | string>(recurrentEdit?.total_amount || '');
-  const [iva, setIva] = useState<number | string>(recurrentEdit?.iva_percent ?? 21.00);
+  const [iva, setIva] = useState<string>(String(recurrentEdit?.iva_percent ?? 21));
   const [client, setClient] = useState(recurrentEdit?.client || '');
   const [description, setDescription] = useState(recurrentEdit?.description || '');
   const [paymentMethod, setPaymentMethod] = useState(recurrentEdit?.payment_method || 'card');
@@ -142,9 +142,9 @@ export function RecurrentTransactionForm({
 
   const ivaOptions = [
     { label: t("iva.none"), value: "0" },
-    { label: t("iva.superreduced"), value: "4.00" },
-    { label: t("iva.reduced"), value: "10.00" },
-    { label: t("iva.general"), value: "21.00" },
+    { label: t("iva.superreduced"), value: "4" },
+    { label: t("iva.reduced"), value: "10" },
+    { label: t("iva.general"), value: "21" },
   ];
 
   const paymentOptions = [
@@ -281,7 +281,7 @@ export function RecurrentTransactionForm({
               <label className={labelCls}>{t('form.iva')}</label>
               <DropdownSelect
                 name="iva_percent"
-                value={String(iva)}
+                value={iva}
                 placeholder={t('placeholders.iva')}
                 options={ivaOptions}
                 onChange={(_, value) => setIva(value)}

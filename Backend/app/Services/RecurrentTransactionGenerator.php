@@ -10,6 +10,40 @@ use Illuminate\Support\Facades\DB;
 
 class RecurrentTransactionGenerator
 {
+    public function generateDue(?int $userId = null, ?Carbon $dueThrough = null): int
+    {
+        $generated = 0;
+        $dueThrough ??= Carbon::today();
+
+        $recurrentTransactions = RecurrentTransaction::where('active', true)
+            ->when($userId !== null, fn ($query) => $query->where('user_id', $userId))
+            ->whereDate('next_run_date', '<=', $dueThrough->toDateString())
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                    ->orWhereColumn('next_run_date', '<=', 'end_date');
+            })
+            ->orderBy('next_run_date')
+            ->get();
+
+        foreach ($recurrentTransactions as $recurrentTransaction) {
+            while (
+                $recurrentTransaction->active
+                && $recurrentTransaction->next_run_date->lte($dueThrough)
+                && (!$recurrentTransaction->end_date || $recurrentTransaction->next_run_date->lte($recurrentTransaction->end_date))
+            ) {
+                $transaction = $this->generateNext($recurrentTransaction, $dueThrough);
+                if (!$transaction) {
+                    break;
+                }
+
+                $recurrentTransaction->refresh();
+                $generated++;
+            }
+        }
+
+        return $generated;
+    }
+
     public function generateNext(RecurrentTransaction $recurrentTransaction, ?Carbon $dueThrough = null): ?Transaction
     {
         return DB::transaction(function () use ($recurrentTransaction, $dueThrough) {

@@ -15,6 +15,7 @@ class RecurrentTransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $this->generator->generateDue($user->rol == 'gestor' ? null : $user->id);
 
         if ($user->rol != 'gestor') {
             $recurrentTransactions = RecurrentTransaction::where('user_id', $user->id)
