@@ -25,6 +25,7 @@ export interface Transaction {
         id: number
         color: string
         name: string
+        user_id : number | null
     }
     bill:{
         id: number,

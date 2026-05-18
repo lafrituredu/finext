@@ -27,7 +27,7 @@ function Categories() {
     const [categoryToEdit,setCategoryToEdit] = useState<Category | null>(null)
 
     const { t } = useTranslation("categories");
-
+    const { t:ct } = useTranslation("catTrans")
     useEffect(() => {
       refetchCategories()
     },[categories])
@@ -112,7 +112,7 @@ function Categories() {
 
                     <div className='flex flex-row items-center justify-center gap-2'>
                       <div className='capitalize flex justify-center lg:text-3xl text-2xl truncate'>
-                        {t(`categoryNames.${category.name}`)}
+                        {ct(`categoryNames.${category.name}`)}
                       </div>
                     </div>
 
@@ -147,7 +147,7 @@ function Categories() {
               <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
                 <td className='capitalize'>
                   {category.user_id == null
-                    ? t(`categoryNames.${category.name}`, category.name)
+                    ? ct(`categoryNames.${category.name}`, category.name)
                     : category.name}
                 </td>
                 <td>

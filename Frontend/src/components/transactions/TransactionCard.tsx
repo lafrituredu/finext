@@ -22,6 +22,7 @@ function calculateAmountWithoutIVA(amount: number, ivaPercent: number) {
 
 export default function TransactionCard({ transaction, onEdit, onDelete }: TransactionCardProps) {
 const { t } = useTranslation("transactions")
+const { t:ct } = useTranslation("catTrans")
 return (
     <div key={transaction.id} className= {`flex flex-col ${transaction.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#1d2344]
     hover:scale-102 transition-transform ease-in-out w-full h-full`}>
@@ -68,7 +69,12 @@ return (
     {transaction.category !== null && (
     <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center`}
     style={{ backgroundColor: transaction.category.color.concat(`30`), color: `${transaction.category?.color}`}}>
-        <TagIcon className='w-4 mr-1 h-4'/><p>{transaction.category.name}</p>
+        <TagIcon className='w-4 mr-1 h-4'/><p>
+        {transaction.category.user_id == null
+            ? ct(`categoryNames.${transaction.category.name}`, transaction.category.name)
+            : transaction.category.name
+        }
+        </p>
     </div>)}
     </div>
 </div>

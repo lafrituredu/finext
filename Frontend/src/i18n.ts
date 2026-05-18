@@ -71,6 +71,9 @@ import goalsEN from "./language/en/goals.json";
 import reportsES from "./language/es/reports.json";
 import reportsEN from "./language/en/reports.json";
 
+import catTransES from "./language/es/catTrans.json";
+import catTransEN from "./language/en/catTrans.json";
+
 export const resources = {
   es: {
     common: es,
@@ -96,7 +99,8 @@ export const resources = {
     profile: profileES,
     categories: categoriesES,
     goals: goalsES,
-    reports: reportsES
+    reports: reportsES,
+    catTrans: catTransES
   },
   en: {
     common: en,
@@ -122,7 +126,8 @@ export const resources = {
     profile: profileEN,
     categories: categoriesEN,
     goals: goalsEN,
-    reports: reportsEN
+    reports: reportsEN,
+    catTrans: catTransEN
   },
 } as const;
 

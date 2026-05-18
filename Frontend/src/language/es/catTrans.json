@@ -1,0 +1,11 @@
+{
+"categoryNames": {
+    "Alimentacion": "Alimentación",
+    "Transporte": "Transporte",
+    "Vivienda": "Vivienda",
+    "Salud": "Salud",
+    "Ocio": "Ocio",
+    "Nomina": "Nómina",
+    "Otros": "Otros"
+    }
+}

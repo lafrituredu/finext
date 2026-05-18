@@ -50,7 +50,7 @@ const labelCls = `block text-xs font-semibold uppercase tracking-wide text-gray-
 export function TransactionForm({ close, transactionEdit }: TransactionFormProps) {
   //Variables-------------------------
   const { t } = useTranslation("transactionsForm")
-
+  const { t:ct } = useTranslation("catTrans")
   //TransactionForm
   const { categories, loading } = useCategories()
   
@@ -219,7 +219,12 @@ export function TransactionForm({ close, transactionEdit }: TransactionFormProps
                 >
                   <option value="">{t('placeholders.noCategory')}</option>
                   {categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id}>
+                    {c.user_id == null
+                        ? ct(`categoryNames.${c.name}`, c.name)
+                        : c.name
+                    }
+                    </option>
                   ))}
                 </select>
               ) : (
