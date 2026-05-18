@@ -124,28 +124,331 @@ function Reports() {
     }
   }
 
-  const addRows = (
-    pdf: jsPDF,
-    rows: string[][],
-    startY: number,
-    columnX: number[],
-    rowHeight = 8
-  ) => {
-    let y = startY
+  const setFill = (pdf: jsPDF, color: [number, number, number]) => {
+    pdf.setFillColor(color[0], color[1], color[2])
+  }
 
-    rows.forEach((row) => {
-      if (y > 280) {
-        pdf.addPage()
-        y = 20
+  const setDraw = (pdf: jsPDF, color: [number, number, number]) => {
+    pdf.setDrawColor(color[0], color[1], color[2])
+  }
+
+  const setText = (pdf: jsPDF, color: [number, number, number]) => {
+    pdf.setTextColor(color[0], color[1], color[2])
+  }
+
+  const reportColors = {
+    text: [4, 9, 25] as [number, number, number],
+    muted: [100, 116, 139] as [number, number, number],
+    border: [226, 232, 240] as [number, number, number],
+    soft: [248, 250, 252] as [number, number, number],
+    primary: [132, 162, 235] as [number, number, number],
+    income: [22, 163, 74] as [number, number, number],
+    incomeSoft: [240, 253, 244] as [number, number, number],
+    expense: [220, 38, 38] as [number, number, number],
+    expenseSoft: [254, 242, 242] as [number, number, number],
+    primarySoft: [238, 243, 253] as [number, number, number],
+    white: [255, 255, 255] as [number, number, number]
+  }
+
+  const drawFooter = (pdf: jsPDF, page: number, total: number) => {
+    setDraw(pdf, reportColors.border)
+    pdf.line(14, 282, 196, 282)
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(7)
+    setText(pdf, reportColors.muted)
+    pdf.text(t('footerLine1'), 14, 288)
+    pdf.text(t('footerLine2'), 14, 292)
+    pdf.text(`${page} / ${total}`, 196, 290, { align: 'right' })
+  }
+
+  const drawHeader = (pdf: jsPDF, title: string, subtitle: string, userName: string, periodLabel: string) => {
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(7)
+    setText(pdf, reportColors.muted)
+    pdf.text('FINEXT', 14, 16)
+
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(20)
+    setText(pdf, reportColors.text)
+    pdf.text(title, 14, 27)
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(9)
+    setText(pdf, reportColors.muted)
+    pdf.text(subtitle, 14, 34)
+
+    pdf.setFontSize(8)
+    pdf.text(userName, 196, 20, { align: 'right' })
+    pdf.text(t('generatedAt', { date: new Intl.DateTimeFormat(getLocale(), { dateStyle: 'medium' }).format(new Date()) }), 196, 26, { align: 'right' })
+    pdf.text(periodLabel, 196, 32, { align: 'right' })
+
+    setDraw(pdf, reportColors.border)
+    pdf.line(14, 42, 196, 42)
+  }
+
+  const drawCard = (
+    pdf: jsPDF,
+    x: number,
+    y: number,
+    width: number,
+    label: string,
+    value: string,
+    caption: string,
+    accent: [number, number, number],
+    background: [number, number, number]
+  ) => {
+    setFill(pdf, background)
+    setDraw(pdf, reportColors.border)
+    pdf.roundedRect(x, y, width, 25, 2.5, 2.5, 'FD')
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(7)
+    setText(pdf, reportColors.muted)
+    pdf.text(label, x + 4, y + 6)
+
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(14)
+    setText(pdf, accent)
+    pdf.text(value, x + 4, y + 15)
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(6.5)
+    setText(pdf, reportColors.muted)
+    pdf.text(caption, x + 4, y + 21, { maxWidth: width - 8 })
+  }
+
+  const drawSectionTitle = (pdf: jsPDF, title: string, subtitle: string, y: number) => {
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(11)
+    setText(pdf, reportColors.text)
+    pdf.text(title, 14, y)
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(8)
+    setText(pdf, reportColors.muted)
+    pdf.text(subtitle, 14, y + 5)
+  }
+
+  const drawMonthlyTable = (
+    pdf: jsPDF,
+    monthsData: ReturnType<typeof getPeriodData>['months'],
+    currency: Intl.NumberFormat,
+    showIncomes: boolean,
+    showExpenses: boolean,
+    includeCashFlow: boolean,
+    y: number
+  ) => {
+    const rowHeight = monthsData.length >= 12 ? 7.4 : 8.5
+    const tableHeight = 10 + monthsData.length * rowHeight
+    const columns = includeCashFlow
+      ? [
+          { label: t('table.month'), x: 18, align: 'left' as const },
+          ...(showIncomes ? [{ label: t('table.incomes'), x: 92, align: 'right' as const }] : []),
+          ...(showExpenses ? [{ label: t('table.outcomes'), x: 139, align: 'right' as const }] : []),
+          { label: t('table.cashFlow'), x: 188, align: 'right' as const }
+        ]
+      : [
+          { label: t('table.month'), x: 18, align: 'left' as const },
+          ...(showIncomes ? [{ label: t('table.incomes'), x: 188, align: 'right' as const }] : []),
+          ...(showExpenses ? [{ label: t('table.outcomes'), x: 188, align: 'right' as const }] : [])
+        ]
+
+    setFill(pdf, reportColors.white)
+    setDraw(pdf, reportColors.border)
+    pdf.roundedRect(14, y, 182, tableHeight, 2.5, 2.5, 'S')
+    setFill(pdf, reportColors.soft)
+    pdf.roundedRect(14, y, 182, 10, 2.5, 2.5, 'F')
+    setDraw(pdf, reportColors.border)
+    pdf.line(14, y + 10, 196, y + 10)
+
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(7.5)
+    setText(pdf, reportColors.muted)
+    columns.forEach((column) => pdf.text(column.label, column.x, y + 6.5, { align: column.align }))
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(7.2)
+    monthsData.forEach((month, index) => {
+      const rowY = y + 10 + index * rowHeight
+      if (index > 0) {
+        setDraw(pdf, [241, 245, 249])
+        pdf.line(14, rowY, 196, rowY)
       }
 
-      row.forEach((cell, index) => {
-        pdf.text(cell, columnX[index], y)
-      })
-      y += rowHeight
+      setText(pdf, reportColors.text)
+      pdf.text(month.name, 18, rowY + 5)
+
+      if (showIncomes) {
+        setText(pdf, reportColors.income)
+        pdf.text(currency.format(month.incomes), includeCashFlow ? 92 : 188, rowY + 5, { align: 'right' })
+      }
+
+      if (showExpenses) {
+        setText(pdf, reportColors.expense)
+        pdf.text(currency.format(month.expenses), includeCashFlow ? 139 : 188, rowY + 5, { align: 'right' })
+      }
+
+      if (includeCashFlow) {
+        const cashFlow = month.incomes - month.expenses
+        setText(pdf, cashFlow >= 0 ? reportColors.primary : reportColors.expense)
+        pdf.text(currency.format(cashFlow), 188, rowY + 5, { align: 'right' })
+      }
     })
 
-    return y
+    return y + tableHeight
+  }
+
+  const drawLineChart = (
+    pdf: jsPDF,
+    monthsData: ReturnType<typeof getPeriodData>['months'],
+    currency: Intl.NumberFormat,
+    showIncomes: boolean,
+    showExpenses: boolean,
+    y: number
+  ) => {
+    const chartX = 14
+    const chartY = y
+    const chartWidth = 182
+    const chartHeight = 52
+    const plotX = chartX + 25
+    const plotY = chartY + 13
+    const plotWidth = chartWidth - 33
+    const plotHeight = chartHeight - 27
+    const values = monthsData.flatMap((month) => [
+      showIncomes ? month.incomes : 0,
+      showExpenses ? month.expenses : 0
+    ])
+    const maxValue = Math.max(1, ...values)
+
+    setDraw(pdf, reportColors.border)
+    setFill(pdf, reportColors.white)
+    pdf.roundedRect(chartX, chartY, chartWidth, chartHeight, 2.5, 2.5, 'S')
+
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(9)
+    setText(pdf, reportColors.text)
+    pdf.text(t('sections.chart'), chartX + 5, chartY + 7)
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(6)
+    setText(pdf, reportColors.muted)
+
+    for (let i = 0; i <= 4; i += 1) {
+      const tickValue = maxValue - (maxValue / 4) * i
+      const gridY = plotY + (plotHeight / 4) * i
+      setDraw(pdf, [226, 232, 240])
+      pdf.line(plotX, gridY, plotX + plotWidth, gridY)
+      setText(pdf, reportColors.muted)
+      pdf.text(currency.format(tickValue), plotX - 3, gridY + 1.5, { align: 'right' })
+    }
+
+    setDraw(pdf, reportColors.border)
+    pdf.line(plotX, plotY, plotX, plotY + plotHeight)
+    pdf.line(plotX, plotY + plotHeight, plotX + plotWidth, plotY + plotHeight)
+
+    const drawSerie = (field: 'incomes' | 'expenses', color: [number, number, number]) => {
+      const points = monthsData.map((month, index) => {
+        const x = plotX + (monthsData.length == 1 ? plotWidth / 2 : (plotWidth / (monthsData.length - 1)) * index)
+        const yPoint = plotY + plotHeight - (month[field] / maxValue) * plotHeight
+        return { x, y: yPoint }
+      })
+
+      setDraw(pdf, color)
+      pdf.setLineWidth(0.7)
+      points.forEach((point, index) => {
+        if (index > 0) {
+          pdf.line(points[index - 1].x, points[index - 1].y, point.x, point.y)
+        }
+        setFill(pdf, color)
+        pdf.circle(point.x, point.y, 0.8, 'F')
+      })
+      pdf.setLineWidth(0.2)
+    }
+
+    if (showIncomes) drawSerie('incomes', reportColors.income)
+    if (showExpenses) drawSerie('expenses', reportColors.expense)
+
+    pdf.setFontSize(5.8)
+    setText(pdf, reportColors.muted)
+    monthsData.forEach((month, index) => {
+      if (monthsData.length > 9 && index % 2 != 0) return
+      const x = plotX + (monthsData.length == 1 ? plotWidth / 2 : (plotWidth / (monthsData.length - 1)) * index)
+      pdf.text(month.name.split(' ')[0].slice(0, 3), x, chartY + chartHeight - 5, { align: 'center' })
+    })
+
+    return chartY + chartHeight
+  }
+
+  const drawCategoriesPage = (
+    pdf: jsPDF,
+    rows: ReturnType<typeof getPeriodData>['categories'],
+    currency: Intl.NumberFormat,
+    showIncomes: boolean,
+    showExpenses: boolean,
+    userName: string,
+    periodLabel: string,
+    page: number,
+    totalPages: number
+  ) => {
+    drawHeader(pdf, t('sections.categories'), t('sections.categoriesHint'), userName, periodLabel)
+
+    const rowHeight = 8.2
+    const tableY = 56
+    const tableHeight = 10 + rows.length * rowHeight
+    setDraw(pdf, reportColors.border)
+    pdf.roundedRect(14, tableY, 182, Math.max(26, tableHeight), 2.5, 2.5, 'S')
+    setFill(pdf, reportColors.soft)
+    pdf.roundedRect(14, tableY, 182, 10, 2.5, 2.5, 'F')
+    setDraw(pdf, reportColors.border)
+    pdf.line(14, tableY + 10, 196, tableY + 10)
+
+    pdf.setFont('helvetica', 'bold')
+    pdf.setFontSize(7.5)
+    setText(pdf, reportColors.muted)
+    pdf.text(t('table.category'), 18, tableY + 6.5)
+    if (showIncomes) pdf.text(t('table.incomes'), showExpenses ? 126 : 188, tableY + 6.5, { align: 'right' })
+    if (showExpenses) pdf.text(t('table.outcomes'), 188, tableY + 6.5, { align: 'right' })
+
+    if (rows.length == 0) {
+      pdf.setFont('helvetica', 'normal')
+      pdf.setFontSize(8)
+      setText(pdf, reportColors.muted)
+      pdf.text(t('emptyCategories'), 18, tableY + 21)
+      drawFooter(pdf, page, totalPages)
+      return
+    }
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(7.2)
+    rows.forEach((category, index) => {
+      const rowY = tableY + 10 + index * rowHeight
+      if (index > 0) {
+        setDraw(pdf, [241, 245, 249])
+        pdf.line(14, rowY, 196, rowY)
+      }
+
+      const color = category.color || fallbackColors[index % fallbackColors.length]
+      const dot = /^#[0-9A-F]{6}$/i.test(color)
+        ? [
+            parseInt(color.slice(1, 3), 16),
+            parseInt(color.slice(3, 5), 16),
+            parseInt(color.slice(5, 7), 16)
+          ] as [number, number, number]
+        : reportColors.primary
+
+      setFill(pdf, dot)
+      pdf.circle(18, rowY + 5, 1.2, 'F')
+      setText(pdf, reportColors.text)
+      pdf.text(category.name, 22, rowY + 5)
+      if (showIncomes) {
+        setText(pdf, reportColors.income)
+        pdf.text(currency.format(category.incomes), showExpenses ? 126 : 188, rowY + 5, { align: 'right' })
+      }
+      if (showExpenses) {
+        setText(pdf, reportColors.expense)
+        pdf.text(currency.format(category.expenses), 188, rowY + 5, { align: 'right' })
+      }
+    })
+
+    drawFooter(pdf, page, totalPages)
   }
 
   const generateNativePDF = () => {
@@ -153,97 +456,71 @@ function Reports() {
     const currency = getCurrency()
     const reportData = getPeriodData()
     const fullName = currentUser?.full_name || localStorage.getItem('user') || 'Finext'
+    const periodLabel = `${reportData.months[0]?.name ?? ''} - ${reportData.months[reportData.months.length - 1]?.name ?? ''}`
+    const showIncomes = types == 'both' || types == 'incomes'
+    const showExpenses = types == 'both' || types == 'outcomes'
+    const includeCashFlow = types == 'both'
     const totalIncomes = reportData.months.reduce((acc, month) => acc + month.incomes, 0)
     const totalExpenses = reportData.months.reduce((acc, month) => acc + month.expenses, 0)
     const cashFlow = totalIncomes - totalExpenses
+    const visibleCategories = reportData.categories.filter((category) => {
+      const hasIncome = showIncomes && category.incomes > 0
+      const hasExpense = showExpenses && category.expenses > 0
+      return hasIncome || hasExpense
+    })
+    const categoriesPerPage = 24
+    const categoryPages = categoryBreakdown == 'none'
+      ? []
+      : visibleCategories.length > 0
+        ? Array.from({ length: Math.ceil(visibleCategories.length / categoriesPerPage) }, (_, index) =>
+            visibleCategories.slice(index * categoriesPerPage, (index + 1) * categoriesPerPage)
+          )
+        : [[] as typeof visibleCategories]
+    const totalPages = 1 + categoryPages.length
 
-    pdf.setFont('helvetica', 'bold')
-    pdf.setFontSize(20)
-    pdf.text(t('reportTitle'), 16, 20)
+    setFill(pdf, reportColors.white)
+    pdf.rect(0, 0, 210, 297, 'F')
+    drawHeader(pdf, t('reportTitle'), t('reportSubtitle'), fullName, periodLabel)
 
-    pdf.setFont('helvetica', 'normal')
-    pdf.setFontSize(10)
-    pdf.text(fullName, 16, 29)
-    pdf.text(t('generatedAt', { date: new Intl.DateTimeFormat(getLocale(), { dateStyle: 'medium' }).format(new Date()) }), 16, 35)
+    drawSectionTitle(pdf, t('sections.overall'), t('sections.overallHint', { count: months }), 55)
+    const cardCount = [showIncomes, showExpenses, includeCashFlow].filter(Boolean).length
+    const cardWidth = cardCount == 1 ? 182 : cardCount == 2 ? 88 : 58
+    const cardGap = cardCount == 3 ? 4 : 6
+    let cardX = 14
 
-    pdf.setDrawColor(226, 232, 240)
-    pdf.line(16, 42, 194, 42)
-
-    pdf.setFont('helvetica', 'bold')
-    pdf.setFontSize(13)
-    pdf.text(t('sections.overall'), 16, 55)
-
-    pdf.setFont('helvetica', 'normal')
-    pdf.setFontSize(11)
-    let y = addRows(
-      pdf,
-      [
-        [t('summary.incomes'), currency.format(totalIncomes)],
-        [t('summary.outcomes'), currency.format(totalExpenses)],
-        [t('summary.cashFlow'), currency.format(cashFlow)]
-      ],
-      65,
-      [16, 70]
-    )
-
-    y += 8
-    pdf.setFont('helvetica', 'bold')
-    pdf.setFontSize(13)
-    pdf.text(t('sections.monthly'), 16, y)
-    y += 10
-
-    pdf.setFontSize(10)
-    pdf.text(t('table.month'), 16, y)
-    pdf.text(t('table.incomes'), 82, y)
-    pdf.text(t('table.outcomes'), 122, y)
-    pdf.text(t('table.cashFlow'), 162, y)
-    y += 7
-
-    pdf.setFont('helvetica', 'normal')
-    y = addRows(
-      pdf,
-      reportData.months.map((month) => [
-        month.name,
-        currency.format(month.incomes),
-        currency.format(month.expenses),
-        currency.format(month.incomes - month.expenses)
-      ]),
-      y,
-      [16, 82, 122, 162],
-      7
-    )
-
-    if (categoryBreakdown != 'none') {
-      y += 8
-      if (y > 260) {
-        pdf.addPage()
-        y = 20
-      }
-
-      pdf.setFont('helvetica', 'bold')
-      pdf.setFontSize(13)
-      pdf.text(t('sections.categories'), 16, y)
-      y += 10
-
-      pdf.setFontSize(10)
-      pdf.text(t('table.category'), 16, y)
-      pdf.text(t('table.incomes'), 82, y)
-      pdf.text(t('table.outcomes'), 122, y)
-      y += 7
-
-      pdf.setFont('helvetica', 'normal')
-      addRows(
-        pdf,
-        reportData.categories.map((category) => [
-          category.name,
-          currency.format(category.incomes),
-          currency.format(category.expenses)
-        ]),
-        y,
-        [16, 82, 122],
-        7
-      )
+    if (showIncomes) {
+      drawCard(pdf, cardX, 63, cardWidth, t('summary.incomes'), currency.format(totalIncomes), t('summary.incomesCaption'), reportColors.income, reportColors.incomeSoft)
+      cardX += cardWidth + cardGap
     }
+    if (showExpenses) {
+      drawCard(pdf, cardX, 63, cardWidth, t('summary.outcomes'), currency.format(totalExpenses), t('summary.outcomesCaption'), reportColors.expense, reportColors.expenseSoft)
+      cardX += cardWidth + cardGap
+    }
+    if (includeCashFlow) {
+      drawCard(pdf, cardX, 63, cardWidth, t('summary.cashFlow'), currency.format(cashFlow), t('summary.cashFlowCaption'), cashFlow >= 0 ? reportColors.primary : reportColors.expense, reportColors.primarySoft)
+    }
+
+    drawSectionTitle(pdf, t('sections.monthly'), t('periodSummary', { count: months }), 103)
+    const tableBottom = drawMonthlyTable(pdf, reportData.months, currency, showIncomes, showExpenses, includeCashFlow, 113)
+    drawLineChart(pdf, reportData.months, currency, showIncomes, showExpenses, tableBottom + 10)
+    drawFooter(pdf, 1, totalPages)
+
+    categoryPages.forEach((categoryPage, index) => {
+      pdf.addPage()
+      setFill(pdf, reportColors.white)
+      pdf.rect(0, 0, 210, 297, 'F')
+      drawCategoriesPage(
+        pdf,
+        categoryPage,
+        currency,
+        showIncomes,
+        showExpenses,
+        fullName,
+        periodLabel,
+        index + 2,
+        totalPages
+      )
+    })
 
     downloadPDF(pdf)
   }
