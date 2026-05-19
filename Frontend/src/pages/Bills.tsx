@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react'
+//Library
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
+
+//Bills
 import BillForm from "../components/materials/BillForm"
+import { useBills, type BillsContextType } from '../contexts/BillContext'
 import { deleteBill, type Bill } from '../api/BillService'
+//Bills-Transactions
+import { getTransactionsByBill } from '../api/TransactionService'
+
+//Icons
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 import FileIcon from '/src/assets/icons/File.svg?react'
@@ -15,22 +24,24 @@ import CalendarIcon from '/src/assets/icons/Calendar.svg?react'
 import MoveUpIcon from '/src/assets/icons/Move-up.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 
-import { getTransactionsByBill } from '../api/TransactionService'
-import { useBills, type BillsContextType } from '../contexts/BillContext'
-import dayjs from 'dayjs'
+//Material
 import Confirmation from '../components/materials/Confirmation'
 
 function Bills() {
+  //Variables-------------------
+  const { t } = useTranslation("bills")
+  const { t:ct } = useTranslation("catTrans")
+
+  //Bills
   const { bills, setBills, refetchBills } = useBills() as BillsContextType
   const [billsPaid, setBillsPaid] = useState<Record<number, number | null>>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showBillForm, setShowBillForm] = useState(false)
   const [billToEdit, setBillToEdit] = useState<Bill | null>(null)
-  const [showConfirmation, setShowConfirmation] = useState(false)
   const [billToDelete, setBillToDelete] = useState<Bill | null>(null)
 
-  const { t } = useTranslation("bills")
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fetchBillTransactions = async (bills: Bill[]) => {
@@ -73,11 +84,8 @@ function Bills() {
     return paid > Number(bill.total_amount)
   }
 
-  function billWithIVA(amount: number, iva: any) {
-    if (amount < 0) throw new Error("Amount must be positive value");
-    let i = amount * (iva / 100);
-    const total = amount - i
-    return total
+  function calculateBaseAmount(amount: number, ivaPercent: number): number {
+    return amount * (1 - ivaPercent / 100)
   }
 
   const handleDelete = async (id: number) => {
@@ -87,7 +95,6 @@ function Bills() {
     try {
       await deleteBill(id)
       setBills(prev => prev.filter(b => b.id !== id))
-      setShowConfirmation(false)
       setBillToDelete(null)
       setIsSubmitting(false)
     } catch (error: any) {
@@ -100,10 +107,10 @@ function Bills() {
     <>
       {showBillForm && (<BillForm close={() => setShowBillForm(false)} billEdit={billToEdit ?? undefined} />)}
       {/* --- Confirmacion eliminar --- */}
-      {showConfirmation && billToDelete && (
+      {billToDelete && (
       <Confirmation
         Icon={TrashcanIcon}
-        close={() => { setShowConfirmation(false); setBillToDelete(null) }}
+        close={() => { setBillToDelete(null) }}
         onConfirm={() => { handleDelete(billToDelete.id)}}
       >
         {t("confirm.delete")} <span className='font-semibold'>{billToDelete.name}</span> {t("confirm.delete_trans")}
@@ -162,14 +169,18 @@ function Bills() {
                       <PencilIcon className='cursor-pointer text-gray-800 hover:scale-110 transition-all ease-in-out dark:text-dark-text'
                         onClick={() => { setBillToEdit(bill); setShowBillForm(true) }} />
                       <TrashcanIcon className='cursor-pointer text-red-600 hover:scale-104 transition-all ease-in-out hover:bg-red-200 hover:rotate-15 rounded-full'
-                        onClick={() => { setBillToDelete(bill); setShowConfirmation(true) }} />
+                        onClick={() => { setBillToDelete(bill)}} />
                       </div>
                     </div>
                   </div>
                   {bill.category !== null && (
                   <div className={`inter capitalize rounded-full text-blue-400 text-sm py-[2px] px-3 flex flex-row items-center w-fit`}
                   style={{ backgroundColor: bill.category.color.concat(`30`), color: `${bill.category?.color}`}}>
-                    <TagIcon className='w-4 mr-1 h-4'/><p>{bill.category.name}</p>
+                    <TagIcon className='w-4 mr-1 h-4'/><p>        
+                      {bill.category.user_id == null
+                          ? ct(`categoryNames.${bill.category.name}`, bill.category.name)
+                          : bill.category.name
+                      }</p>
                   </div>)}
                   <div className='grid grid-cols-2 gap-2 py-8'>
                     <div className='flex flex-col'>
@@ -214,7 +225,7 @@ function Bills() {
                   <hr className="border-t border-gray-300 my-4 dark:border-gray-700"></hr>
                   <div className='flex flex-row justify-between items-end'>
                     <div className='flex flex-col'>
-                      <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {bill.type == 'recibida' && '-'}{Number(billWithIVA(bill.total_amount, bill.iva_percent))} €</span>
+                      <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {bill.type == 'recibida' && '-'}{Number(calculateBaseAmount(bill.total_amount, bill.iva_percent))} €</span>
                       <span className='text-primary font-medium text-3xl'>{bill.type == 'recibida' && '-'}{bill.total_amount}€</span>
                     </div>
                     <div className='flex flex-col items-end'>
