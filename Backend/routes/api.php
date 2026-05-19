@@ -22,7 +22,7 @@ Route::get('/check-username', [AuthController::class, 'checkUsername']);
 Route::post('/contact', [ContactController::class, 'send']);
 
 
-Route::middleware(['auth:sanctum', 'generate.recurrents'])->group(function () {
+Route::middleware(['auth:sanctum','generate.recurrents'])->group(function () {
 
     // Usuario autenticado
     Route::get('/me', [AuthController::class, 'me']);
