@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useBills, type BillsContextType } from '../contexts/BillContext';
 import { getCurrentUser, type UserProfile } from '../api/AuthServices'
+import { useTranslation } from 'react-i18next';
 
 function Taxes() {
     const { bills, setBills, refetchBills } = useBills() as BillsContextType;
@@ -11,8 +12,10 @@ function Taxes() {
     const [inputVat, setInputVat] = useState(0);
     const [irpf, setIrpf] = useState<any>();
     const [reserva,setReserva] = useState();
+    const [cuota,setCuota] = useState<number>(900);
     const today = new Date();
     const todayMonth = today.getMonth();
+    const { t: tUtils } = useTranslation("utils");
     // function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     //     setQuarter(Number(e.currentTarget.value))
     //     setIncomes(0);
@@ -20,15 +23,6 @@ function Taxes() {
     //     setExpenses(0);
     //     setInputVat(0);
     // }
-
-    function getCuota(cuota:number = 300){
-        let months = 0;
-        months = 3;
-        if (quarter === 0) {
-            months = 12;
-        }
-        return months*cuota
-    }
     
     useEffect(() => {
         let min = (quarter-1)*3;
@@ -36,6 +30,9 @@ function Taxes() {
         if (quarter === 0) {
             min = 0;
             max = 12;
+            setCuota(3600)
+        }else{
+            setCuota(900)
         }
         let incomesTotal = 0;
         let expensesTotal = 0;
@@ -68,16 +65,16 @@ function Taxes() {
 
     useEffect(() =>{
         getCurrentUser().then(value => setIrpf(value?.autonomo?.irpf)).catch(err => console.log(err))
-        
     },[])
 
+const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 
   return (
     <>
         <div className='p-10'>
             <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-20'>
                 <p className='mont_semibold text-4xl'>Taxes</p>
-                <button 
+                {/* <button 
                 onClick={(e) => alert()}
                 className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
                 <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
@@ -86,70 +83,58 @@ function Taxes() {
                 <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
                     Create
                 </span>
-                </button>
+                </button> */}
             </div>
 
-            <div className='w-full grid xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 grid-cols-1 content-between justify-between xl:gap-10 gap-5 mb-10'>
-                <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
-                    <div className='flex items-center justify-between'>
-                        <span className='flex items-center montserrat'>
-                            <span className='bg-[#84A2EB66] p-1 rounded-full me-2'>x</span> asd
-                        </span>
-                        sds
-                    </div>
-                    <div>
-                        <p className='text-4xl text-green-600'>{incomes}€</p>
-                        <p className='text-xl text-green-500'>B.I. {incomes-collectedVat}€</p>
-                        <p className='text-xl text-green-500'>IVA Repercutido {collectedVat}€</p>
-                    </div>
-                </div>
 
-                <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
-                    <div className='flex items-center justify-between'>
-                        <span className='flex items-center montserrat'>
-                            <span className='bg-[#84A2EB66] p-1 rounded-full me-2'>x</span> asd
-                        </span>
-                        sds
-                    </div>
-                    <div>
-                        <p className='text-4xl text-red-600'>{expenses}€</p>
-                        <p className='text-xl text-red-500'>B.I. {expenses-inputVat}€</p>
-                        <p className='text-xl text-red-500'>IVA Soportado {inputVat}€</p>
-                    </div>
-                
-                </div>
-                <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
-                    <div className='flex items-center justify-between'>
-                        <span className='flex items-center montserrat'>
-                            <span className='bg-[#84A2EB66] p-1 rounded-full me-2'>x</span> IVA a pagar
-                        </span>
-                        sds
-                    </div>
-                    <div>
-                        <p className='text-4xl text-orange-5v00'>{collectedVat-inputVat < 0 ? 0 : collectedVat-inputVat}€</p>
-                    </div>
-                    <p className='text-[#040919b3] dark:text-dark-text'>Repercutido - Soportado</p>
-                </div>
+            <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-full px-2 py-1 rounded-3xl flex justify-between items-center gap-5 border border-[#0000001a] mb-4 montserrat'>
+                <div id='1' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 1 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>T1 {todayMonth < 3 && 'Actual'}</div>
+                <div id='2' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 2 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T2 {todayMonth >= 3 && todayMonth < 6 && <span className='px-2 py-1 rounded-2xl h-fit bg-blue-200 w-fit text-sm'>Actual</span>}</div>
+                <div id='3' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 3 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T3 {todayMonth >= 6 && todayMonth < 9 && 'Actual'}</div>
+                <div id='4' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 4 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T4 {todayMonth >= 9 && 'Actual'}</div>
+                <div id='0' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 0 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Anual</div>
+            </div>
+
+            <div className='inter w-full h-full border border-[#0000001a] rounded-2xl py-5 px-8 flex flex-col gap-5'>
+                {quarter != 0 ? <p>Trimestre {quarter} -  {tUtils(`months.${months[(quarter-1)*3]}`).slice(0,3)}-{tUtils(`months.${months[quarter*3-1]}`).slice(0,3)} {today.getFullYear()}</p> : <p>Anual</p>}
                 <div>
-                    <p>IVA a pagar: {collectedVat-inputVat}€</p>
-                    <p>IRPF: {(Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))}€</p>
-                    <p>Cuota de autonomos: {getCuota()}€</p>
-                    <p>Reserva recomendada: {Math.abs(collectedVat-inputVat) + ((Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))) + getCuota()}€ </p>
+                    <p className='text-xl mb-2'>Base de cálculo</p>
+                    <div className='flex flex-row gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
+                        <div className='bg-green-100'><span>Ingresos totales</span> <span>{incomes}</span></div>
+                        <div className='bg-red-100'><span>Ingresos totales</span> <span>{expenses}</span></div>
+                        <div className='bg-blue-100'><span>Base imponible</span> <span>{incomes-expenses}</span></div>
+                    </div>
+                    
                 </div>
 
-            </div>
+                <div>
+                    <p className='text-xl mb-2'>IVA - Modelo 303</p>
+                    <div className='flex flex-row gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
+                        <div className='bg-green-100'><span>IVA repercutido</span> <span>{collectedVat}</span></div>
+                        <div className='bg-red-100'><span>IVA soportado</span> <span>{inputVat}</span></div>
+                        <div className='bg-blue-100'><span>IVA a pagar</span> <span>{collectedVat-inputVat}</span></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <p className='text-xl mb-2'>IRPF + Cuota autonomos</p>
+                    <div className='flex flex-row gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
+                        <div className='bg-green-100'><span>IRPF</span> <span>{((Number(irpf)/100)*((incomes-expenses)))}</span></div>
+                        <div className='bg-red-100'><span>Cuota autonomos</span> <span>{cuota}</span></div>
+                        <div className='bg-blue-100'><span>IRPF + Cuota </span> <span>{(Number(irpf)/100)*( (incomes-collectedVat) - (expenses-inputVat))+300*3}</span></div>
+                    </div>
+                </div>
 
-            <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-full px-2 py-1 rounded-3xl flex justify-between items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
-                <div id='1' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 1 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>T1 {todayMonth < 3 && 'Actual'}</div>
-                <div id='2' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 2 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T2 {todayMonth >= 3 && todayMonth < 6 && 'Actual'}</div>
-                <div id='3' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 3 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T3 {todayMonth >= 6 && todayMonth < 9 && 'Actual'}</div>
-                <div id='4' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 4 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T4 {todayMonth >= 9 && 'Actual'}</div>
-                <div id='0' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 0 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Anual</div>
+                <div>
+                    <p className='text-xl mb-2'>Reserva recomendada</p>
+                    <div className='flex flex-row gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
+                        <div className='bg-orange-100 border border-orange-300'><span>Total a pagar (IRPF {Number(irpf)}% + Cuota + IVA):</span> <span>{Math.abs(collectedVat-inputVat) + ((Number(irpf)/100)*((incomes-expenses))) + cuota}€</span></div>
+                    </div>
+                </div>
             </div>
-
             {/* <select name="" id="" onChange={(e) =>  handleChange(e)}>
                 <option value="1">T1</option>
-                <option value="2">T2</option>
+                <option value="2">T2</option> 
                 <option value="3">T3</option>
                 <option value="4">T4</option>
                 <option value="0">Anual</option>
