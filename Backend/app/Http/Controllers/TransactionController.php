@@ -5,20 +5,14 @@ use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Bill;
-use App\Services\RecurrentTransactionGenerator;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    public function __construct(private RecurrentTransactionGenerator $recurrentGenerator)
-    {
-    }
-
     // GET TRANSACTIONS
     public function index(Request $request)
     {
         $user = $request->user();
-        $this->recurrentGenerator->generateDue($user->rol == 'gestor' ? null : $user->id);
 
         if($user->rol != 'gestor'){
             $transactions = Transaction::where('user_id', $user->id)

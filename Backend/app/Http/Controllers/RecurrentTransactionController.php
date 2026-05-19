@@ -15,18 +15,11 @@ class RecurrentTransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $this->generator->generateDue($user->rol == 'gestor' ? null : $user->id);
 
-        if ($user->rol != 'gestor') {
-            $recurrentTransactions = RecurrentTransaction::where('user_id', $user->id)
-                ->orderBy('next_run_date', 'asc')
-                ->with(['category', 'user'])
-                ->get();
-        } else {
-            $recurrentTransactions = RecurrentTransaction::with(['category', 'user'])
-                ->orderBy('next_run_date', 'asc')
-                ->get();
-        }
+        $recurrentTransactions = RecurrentTransaction::where('user_id', $user->id)
+            ->orderBy('next_run_date', 'asc')
+            ->with(['category', 'user'])
+            ->get();
 
         return response()->json($recurrentTransactions);
     }
@@ -48,7 +41,9 @@ class RecurrentTransactionController extends Controller
             'creates_bill' => $data['creates_bill'] ?? false,
         ]);
 
-        return response()->json($recurrentTransaction->load(['category', 'user']), 201);
+        $this->generator->generateDue($user->id);
+
+        return response()->json($recurrentTransaction->fresh(['category', 'user']), 201);
     }
 
     public function update(Request $request, int $id)
@@ -76,6 +71,8 @@ class RecurrentTransactionController extends Controller
             'active' => $data['active'] ?? true,
             'creates_bill' => $data['creates_bill'] ?? false,
         ]);
+
+        $this->generator->generateDue($user->id);
 
         return response()->json($recurrentTransaction->fresh(['category', 'user']));
     }
