@@ -75,6 +75,7 @@ export type RegisterFormData = {
   estado_civil: string;
   empresa: string;
   irpf: string;
+  google_setup_token?: string;
 };
 
 export type AvailabilityResult = {

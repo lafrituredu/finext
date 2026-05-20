@@ -4,6 +4,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import GoogleCallback from "./pages/GoogleCallback";
 import Error404 from "./pages/Error404";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
@@ -101,6 +102,7 @@ function App() {
         <Route path="/home" element={<Navigate to="/" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />

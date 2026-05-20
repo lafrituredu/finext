@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FiNextIcon from "/src/assets/icons/finext.svg?react";
 
-import { loginUser } from "../api/AuthServices";
+import { getGoogleAuthUrl, loginUser } from "../api/AuthServices";
 import DarkButton from "../components/buttons/DarkButton.tsx";
 import Language from "../components/buttons/Lang.tsx";
 import { getFriendlyApiError } from "../utils/getFriendlyApiError";
@@ -47,6 +47,12 @@ const Login: React.FC = () => {
 
   const onGoToForgotPassword = () => {
     navigate("/forgot-password");
+  };
+
+  const handleGoogleLogin = () => {
+    setError("");
+    setSuccessMessage("");
+    window.location.assign(getGoogleAuthUrl());
   };
 
   const handleLogin = async (e?: React.FormEvent) => {
@@ -208,7 +214,11 @@ const Login: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
 
-          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer"
+          >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"

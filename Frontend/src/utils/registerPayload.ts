@@ -17,7 +17,8 @@ export const buildRegisterPayload = (
     modulo_iva: "",
     estado_civil: "",
     empresa: "",
-    irpf: ""
+    irpf: "",
+    google_setup_token: formData.google_setup_token
   };
 
   if (formData.rol === "autonomo") {

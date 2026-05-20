@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { registerUser, checkEmail, checkUsername } from "../api/AuthServices";
-import { useNavigate } from "react-router-dom";
+import {
+  checkEmail,
+  checkUsername,
+  getGoogleAuthUrl,
+  registerUser
+} from "../api/AuthServices";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Step1Form from "../components/register/Step1Form";
@@ -25,6 +30,12 @@ type FormDataType = RegisterFormData;
 const Register: React.FC = () => {
   const { t, i18n } = useTranslation("register");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const googleSetupToken = searchParams.get("google_setup_token") || "";
+  const googleEmail = searchParams.get("email") || "";
+  const googleFullName = searchParams.get("full_name") || "";
+  const googleUsername = searchParams.get("username") || "";
+  const isGoogleSetup = Boolean(googleSetupToken);
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -49,7 +60,8 @@ const Register: React.FC = () => {
     modulo_iva: "",
     estado_civil: "soltero",
     empresa: "",
-    irpf: ""
+    irpf: "",
+    google_setup_token: ""
   });
 
   const [availability, setAvailability] = useState<{
@@ -88,6 +100,25 @@ const Register: React.FC = () => {
       navigate("/dashboard");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (!googleSetupToken) {
+      return;
+    }
+
+    setFormData((current) => ({
+      ...current,
+      email: googleEmail || current.email,
+      username: googleUsername || current.username,
+      full_name: googleFullName || current.full_name,
+      password: "",
+      confirmPassword: "",
+      google_setup_token: googleSetupToken
+    }));
+    setAvailability({ email: true, username: true });
+    setStep(2);
+    setError("");
+  }, [googleEmail, googleFullName, googleSetupToken, googleUsername]);
 
   const handleChange = (
     e:
@@ -185,6 +216,11 @@ const Register: React.FC = () => {
   };
 
   const handleBackOrLogin = () => {
+    if (isGoogleSetup) {
+      navigate("/login");
+      return;
+    }
+
     if (step > 1) {
       prevStep();
       return;
@@ -195,6 +231,11 @@ const Register: React.FC = () => {
 
   const onGoToHome = () => {
     navigate("/");
+  };
+
+  const handleGoogleRegister = () => {
+    setError("");
+    window.location.assign(getGoogleAuthUrl());
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -228,6 +269,11 @@ const Register: React.FC = () => {
       if (data.token && data.user?.username) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", data.user.username);
+      }
+
+      if (isGoogleSetup && data.token) {
+        navigate("/dashboard", { replace: true });
+        return;
       }
 
       navigate(
@@ -351,7 +397,7 @@ const Register: React.FC = () => {
                 onRoleChange={(role) =>
                   setFormData((current) => ({ ...current, rol: role }))
                 }
-                prevStep={prevStep}
+                prevStep={isGoogleSetup ? () => navigate("/login") : prevStep}
                 nextStep={nextToStep3}
                 isStep2Complete={isStep2Complete}
                 loading={loading}
@@ -383,7 +429,11 @@ const Register: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
           </div>
 
-          <button className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer">
+          <button
+            type="button"
+            onClick={handleGoogleRegister}
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-xl py-3 flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-dark-background transition-colors cursor-pointer"
+          >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
               alt="google"

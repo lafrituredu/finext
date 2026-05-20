@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Autonomo;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -21,17 +23,52 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->normalizeIdentityDocumentInput($request, 'dni');
+        $googleProfile = null;
+        $googleSetupUser = null;
 
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users',
-            'full_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => [
+        if ($request->filled('google_setup_token')) {
+            $googleProfile = $this->decodeGoogleSetupToken((string) $request->input('google_setup_token'));
+
+            if (!$googleProfile) {
+                return response()->json([
+                    'message' => 'La sesion de Google ha caducado. Vuelve a intentarlo.',
+                ], 422);
+            }
+
+            $request->merge([
+                'email' => $googleProfile['email'],
+                'username' => $request->input('username') ?: $this->uniqueUsernameFromEmail($googleProfile['email']),
+            ]);
+
+            $googleSetupUser = User::where('google_id', $googleProfile['google_id'])
+                ->orWhere('email', $googleProfile['email'])
+                ->first();
+        }
+
+        $passwordRules = $googleProfile
+            ? ['nullable']
+            : [
                 'required',
                 'min:8',
                 'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
+            ];
+
+        $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($googleSetupUser?->id),
             ],
+            'full_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($googleSetupUser?->id),
+            ],
+            'password' => $passwordRules,
+            'google_setup_token' => 'nullable|string',
             'rol' => 'required|in:particular,autonomo',
             'dni' => [
                 'required_if:rol,autonomo',
@@ -50,15 +87,24 @@ class AuthController extends Controller
 
         $locale = $this->mailLocale($request->input('locale'));
 
-        $user = DB::transaction(function () use ($request) {
-            $user = User::create([
+        $user = DB::transaction(function () use ($request, $googleProfile, $googleSetupUser) {
+            $userData = [
                 'username' => $request->username,
                 'full_name' => $request->full_name,
                 'phone_number' => $request->phone_number,
                 'rol' => $request->rol,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+                'email_verified_at' => $googleProfile ? now() : null,
+                'google_id' => $googleProfile['google_id'] ?? null,
+                'password' => Hash::make($googleProfile ? Str::random(40) : $request->password),
+            ];
+
+            if ($googleSetupUser) {
+                $googleSetupUser->forceFill($userData)->save();
+                $user = $googleSetupUser->fresh();
+            } else {
+                $user = User::create($userData);
+            }
 
             if ($request->rol === 'autonomo') {
                 Autonomo::create([
@@ -77,15 +123,21 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        app()->terminating(function () use ($user, $locale) {
-            $this->sendVerificationEmail($user, $locale);
-        });
+        if (!$googleProfile) {
+            app()->terminating(function () use ($user, $locale) {
+                $this->sendVerificationEmail($user, $locale);
+            });
+        }
 
         return response()->json([
-            'message' => 'Te hemos enviado un correo para verificar tu cuenta.',
-            'user' => $user->only(['id', 'username', 'email']),
+            'message' => $googleProfile
+                ? 'Registro con Google completado correctamente.'
+                : 'Te hemos enviado un correo para verificar tu cuenta.',
+            'user' => $googleProfile
+                ? $this->withAvatarUrl($user->fresh()->load(['autonomo']))
+                : $user->only(['id', 'username', 'email']),
             'token' => $token,
-            'requires_verification' => true,
+            'requires_verification' => !$googleProfile,
         ], 201);
     }
 
@@ -97,7 +149,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', Str::lower(trim($request->email)))->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -120,6 +172,164 @@ class AuthController extends Controller
             'user' => $this->withAvatarUrl($user),
             'token' => $token
         ]);
+    }
+
+    public function redirectToGoogle()
+    {
+        $clientId = config('services.google.client_id');
+        $clientSecret = config('services.google.client_secret');
+        $redirectUri = config('services.google.redirect');
+
+        if (!$clientId || !$clientSecret || !$redirectUri) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'Google no esta configurado en el servidor.',
+            ]));
+        }
+
+        $query = http_build_query([
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'response_type' => 'code',
+            'scope' => 'openid email profile',
+            'access_type' => 'online',
+            'prompt' => 'select_account',
+            'state' => $this->makeGoogleState(),
+        ], '', '&', PHP_QUERY_RFC3986);
+
+        return redirect()->away('https://accounts.google.com/o/oauth2/v2/auth?' . $query);
+    }
+
+    public function handleGoogleCallback(Request $request)
+    {
+        if ($request->filled('error')) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'No se ha podido completar el acceso con Google.',
+            ]));
+        }
+
+        if (!$this->isValidGoogleState((string) $request->query('state', ''))) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'La sesion de Google ha caducado. Intentalo de nuevo.',
+            ]));
+        }
+
+        $code = (string) $request->query('code', '');
+        if ($code === '') {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'Google no ha devuelto un codigo de autorizacion.',
+            ]));
+        }
+
+        try {
+            $tokenResponse = $this->googleHttp()->asForm()->post('https://oauth2.googleapis.com/token', [
+                'client_id' => config('services.google.client_id'),
+                'client_secret' => config('services.google.client_secret'),
+                'code' => $code,
+                'grant_type' => 'authorization_code',
+                'redirect_uri' => config('services.google.redirect'),
+            ]);
+        } catch (ConnectionException $exception) {
+            report($exception);
+
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'No se ha podido conectar con Google. Revisa tu conexion o proxy local.',
+            ]));
+        }
+
+        if ($tokenResponse->failed()) {
+            report(new \RuntimeException('Google token exchange failed: ' . $tokenResponse->body()));
+
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'No se ha podido validar tu cuenta de Google.',
+            ]));
+        }
+
+        $accessToken = data_get($tokenResponse->json(), 'access_token');
+        if (!$accessToken) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'Google no ha devuelto un token valido.',
+            ]));
+        }
+
+        try {
+            $profileResponse = $this->googleHttp()
+                ->withToken($accessToken)
+                ->get('https://www.googleapis.com/oauth2/v3/userinfo');
+        } catch (ConnectionException $exception) {
+            report($exception);
+
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'No se ha podido leer tu perfil de Google. Revisa tu conexion o proxy local.',
+            ]));
+        }
+
+        if ($profileResponse->failed()) {
+            report(new \RuntimeException('Google profile request failed: ' . $profileResponse->body()));
+
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'No se ha podido leer tu perfil de Google.',
+            ]));
+        }
+
+        $googleUser = $profileResponse->json();
+        $googleId = (string) data_get($googleUser, 'sub', '');
+        $email = Str::lower((string) data_get($googleUser, 'email', ''));
+        $emailVerified = filter_var(data_get($googleUser, 'email_verified'), FILTER_VALIDATE_BOOLEAN);
+        $name = trim((string) data_get($googleUser, 'name', ''));
+
+        if ($googleId === '' || $email === '' || !$emailVerified) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'error' => 'Google no ha confirmado un email verificado.',
+            ]));
+        }
+
+        $user = DB::transaction(function () use ($googleId, $email, $name) {
+            $user = User::where('google_id', $googleId)
+                ->orWhere('email', $email)
+                ->first();
+
+            if ($user) {
+                $updates = ['google_id' => $googleId];
+
+                if (!$user->hasVerifiedEmail()) {
+                    $updates['email_verified_at'] = now();
+                }
+
+                if (!$user->full_name && $name !== '') {
+                    $updates['full_name'] = $name;
+                }
+
+                $user->forceFill($updates)->save();
+
+                return $user->fresh();
+            }
+            return null;
+        });
+
+        if (!$user) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'google_setup_token' => $this->makeGoogleSetupToken($googleId, $email, $name),
+                'email' => $email,
+                'full_name' => $name !== '' ? $name : Str::before($email, '@'),
+                'username' => $this->uniqueUsernameFromEmail($email),
+            ]));
+        }
+
+        if ($this->needsGoogleOnboarding($user)) {
+            return redirect()->away($this->googleFrontendCallbackUrl([
+                'google_setup_token' => $this->makeGoogleSetupToken($googleId, $email, $name),
+                'email' => $user->email,
+                'full_name' => $name !== '' ? $name : $user->full_name,
+                'username' => $user->username,
+            ]));
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return redirect()->away($this->googleFrontendCallbackUrl([
+            'token' => $token,
+            'username' => $user->username,
+            'email' => $user->email,
+        ]));
     }
 
     public function verifyEmail(Request $request, int $id, string $hash)
@@ -528,6 +738,147 @@ class AuthController extends Controller
         return preg_match('/^(\d)\1+$/', $numbers) === 1
             || str_contains('0123456789', $numbers)
             || str_contains('9876543210', $numbers);
+    }
+
+    private function uniqueUsernameFromEmail(string $email): string
+    {
+        $base = Str::of(Str::before($email, '@'))
+            ->lower()
+            ->replaceMatches('/[^a-z0-9_]+/', '_')
+            ->trim('_')
+            ->limit(30, '')
+            ->value();
+
+        if ($base === '') {
+            $base = 'google_user';
+        }
+
+        $username = $base;
+        $counter = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $suffix = '_' . $counter;
+            $username = Str::limit($base, 30 - strlen($suffix), '') . $suffix;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    private function googleHttp(): PendingRequest
+    {
+        return Http::withOptions([
+            'proxy' => '',
+            'curl' => [
+                CURLOPT_PROXY => '',
+                CURLOPT_NOPROXY => '*',
+            ],
+        ])->timeout(10);
+    }
+
+    private function needsGoogleOnboarding(User $user): bool
+    {
+        return $user->google_id !== null && (
+            empty($user->phone_number) ||
+            empty($user->full_name)
+        );
+    }
+
+    private function makeGoogleSetupToken(string $googleId, string $email, string $name): string
+    {
+        $payload = $this->base64UrlEncode(json_encode([
+            'google_id' => $googleId,
+            'email' => $email,
+            'name' => $name,
+            'iat' => now()->timestamp,
+        ], JSON_THROW_ON_ERROR));
+
+        return $payload . '.' . $this->googleSetupSignature($payload);
+    }
+
+    private function decodeGoogleSetupToken(string $token): ?array
+    {
+        [$payload, $signature] = array_pad(explode('.', $token, 2), 2, null);
+
+        if (!$payload || !$signature || !hash_equals($this->googleSetupSignature($payload), $signature)) {
+            return null;
+        }
+
+        $decoded = json_decode($this->base64UrlDecode($payload), true);
+
+        if (
+            !is_array($decoded) ||
+            empty($decoded['google_id']) ||
+            empty($decoded['email']) ||
+            !isset($decoded['iat'])
+        ) {
+            return null;
+        }
+
+        if (now()->timestamp - (int) $decoded['iat'] > 900) {
+            return null;
+        }
+
+        return [
+            'google_id' => (string) $decoded['google_id'],
+            'email' => Str::lower((string) $decoded['email']),
+            'name' => (string) ($decoded['name'] ?? ''),
+        ];
+    }
+
+    private function googleSetupSignature(string $payload): string
+    {
+        return hash_hmac('sha256', 'google_setup:' . $payload, (string) config('app.key'));
+    }
+
+    private function makeGoogleState(): string
+    {
+        $payload = $this->base64UrlEncode(json_encode([
+            'nonce' => Str::random(40),
+            'iat' => now()->timestamp,
+        ], JSON_THROW_ON_ERROR));
+
+        return $payload . '.' . $this->googleStateSignature($payload);
+    }
+
+    private function isValidGoogleState(string $state): bool
+    {
+        [$payload, $signature] = array_pad(explode('.', $state, 2), 2, null);
+
+        if (!$payload || !$signature || !hash_equals($this->googleStateSignature($payload), $signature)) {
+            return false;
+        }
+
+        $decoded = json_decode($this->base64UrlDecode($payload), true);
+
+        if (!is_array($decoded) || !isset($decoded['iat'])) {
+            return false;
+        }
+
+        return now()->timestamp - (int) $decoded['iat'] <= 600;
+    }
+
+    private function googleStateSignature(string $payload): string
+    {
+        return hash_hmac('sha256', $payload, (string) config('app.key'));
+    }
+
+    private function base64UrlEncode(string $value): string
+    {
+        return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+    }
+
+    private function base64UrlDecode(string $value): string
+    {
+        return base64_decode(strtr($value, '-_', '+/')) ?: '';
+    }
+
+    private function googleFrontendCallbackUrl(array $query): string
+    {
+        $callbackUrl = (string) config('services.google.frontend_redirect');
+        $separator = str_contains($callbackUrl, '?') ? '&' : '?';
+
+        return $callbackUrl . $separator . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
     }
 
     private function sendVerificationEmail(User $user, string $locale): bool

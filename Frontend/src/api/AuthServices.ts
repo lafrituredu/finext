@@ -1,4 +1,4 @@
-import api from './axiosInstance'
+import api, { API_BASE_URL } from './axiosInstance'
 
 export interface AuthResponse {
   user?: {
@@ -73,6 +73,7 @@ export const registerUser = async (data: {
   empresa?: string
   irpf?: string
   locale?: 'en' | 'es'
+  google_setup_token?: string
 }): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/register', data)
   return response.data
@@ -106,6 +107,9 @@ export const resetUserPassword = async (data: {
 
   return response.data
 }
+
+export const getGoogleAuthUrl = (): string =>
+  `${API_BASE_URL.replace(/\/$/, '')}/auth/google/redirect`
 
 // GET CURRENT USER
 export const getCurrentUser = async (): Promise<UserProfile> => {
