@@ -11,7 +11,7 @@ function Taxes() {
     const [expenses, setExpenses] = useState(0);
     const [collectedVat, setCollectedVat] = useState(0);
     const [inputVat, setInputVat] = useState(0);
-    const [irpf, setIrpf] = useState<any>();
+    const [irpf, setIrpf] = useState<any>(0);
     const [reserva,setReserva] = useState<number>();
     const [baseIRPF,setBaseIRPF] = useState<number>();
     const [payIRPF,setPayIRPF] = useState<number>();
@@ -65,28 +65,18 @@ function Taxes() {
         setBaseIRPF(base_irpf);
         setPayIRPF(_irpf);
 
-        console.log("===============================")
-
-        console.log(`Ingresos: ${incomesTotal}`);
-        console.log(`Gastos deducibles: ${expensesTotal}`)
-        console.log(`IVA repercutido: ${collectedVatTotal}`);
-        console.log(`beneficio: ${base_irpf}`);
-        console.log(`IRPF: ${_irpf}`);
     },[bills,quarter])
 
     useEffect(() =>{
         async function getIrpf() {
             let _irpf = await getCurrentUser().then(value => {return value?.autonomo?.irpf});
-            console.log(_irpf)
             if (_irpf == null) {
                 _irpf = 15;
                 setAlertIrpfNotSet(true);
             }
-            console.log(_irpf)
             setIrpf(_irpf);
         }
         getIrpf()
-        console.log(`Quarter: ${Math.floor(new Date().getMonth()/3*12)}`)
     },[])
 
 const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
