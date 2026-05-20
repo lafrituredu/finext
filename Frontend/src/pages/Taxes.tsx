@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useBills, type BillsContextType } from '../contexts/BillContext';
 import { getCurrentUser, type UserProfile } from '../api/AuthServices'
 import { useTranslation } from 'react-i18next';
-import api from '../api/axiosInstance';
+import InfoIcon from '/src/assets/icons/Info.svg?react'
 
 function Taxes() {
     const { bills, setBills, refetchBills } = useBills() as BillsContextType;
@@ -100,8 +100,8 @@ const months = ["january","february","march","april","may","june","july","august
             </div>
 
             {alertIrpfNotSet &&
-            <div className='inter px-8 py-5 bg-sky-50 rounded-2xl mb-5'>
-                <p className='text-xl'>Aviso sobre IRPF no configurado</p>
+            <div className='inter px-8 py-5 bg-sky-50 dark:bg-blue-950 dark:text-white rounded-2xl mb-5'>
+                <p className='text-xl flex items-center gap-2'><InfoIcon /> Aviso sobre IRPF no configurado</p>
                 <p>No tienes ningún tipo de IRPF asignado en tu cuenta. Para poder realizar cálculos más precisos y adaptados a tu situación fiscal, es recomendable que actualices tu porcentaje de IRPF en la configuración. Esto permitirá obtener resultados más ajustados a la realidad de tu caso.</p>
             </div>}
 
@@ -118,9 +118,9 @@ const months = ["january","february","march","april","may","june","july","august
                 <div>
                     <p className='text-xl mb-2'>Base de cálculo</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='bg-green-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{incomes}€</span></div>
-                        <div className='bg-red-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{expenses}€</span></div>
-                        <div className='bg-blue-50 border-[#E2E8F0] border'><span>Base imponible</span> <span>{incomes-expenses}€</span></div>
+                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{incomes}€</span></div>
+                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{expenses}€</span></div>
+                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>Base imponible</span> <span>{incomes-expenses}€</span></div>
                     </div>
                     
                 </div>
@@ -129,9 +129,9 @@ const months = ["january","february","march","april","may","june","july","august
                 <div>
                     <p className='text-xl mb-2'>IVA - Modelo 303</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='bg-green-50 border-[#E2E8F0] border'><span>IVA repercutido</span> <span>{collectedVat}€</span></div>
-                        <div className='bg-red-50 border-[#E2E8F0] border'><span>IVA soportado</span> <span>{inputVat}€</span></div>
-                        <div className='bg-blue-50 border-[#E2E8F0] border'><span>IVA a pagar</span> <span>{collectedVat-inputVat}€</span></div>
+                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IVA repercutido</span> <span>{collectedVat}€</span></div>
+                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>IVA soportado</span> <span>{inputVat}€</span></div>
+                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IVA a pagar</span> <span>{collectedVat-inputVat}€</span></div>
                     </div>
                 </div>
                 <div className='lg:hidden block w-full h-px bg-gray-300'/>
@@ -139,30 +139,24 @@ const months = ["january","february","march","april","may","june","july","august
                 <div>
                     <p className='text-xl mb-2'>IRPF + Cuota autonomos</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='bg-green-50 border-[#E2E8F0] border'><span>IRPF</span> <span>{payIRPF}€</span></div>
-                        <div className='bg-red-50 border-[#E2E8F0] border'><span>Cuota autonomos</span> <span>{cuota}€</span></div>
-                        <div className='bg-blue-50 border-[#E2E8F0] border'><span>IRPF + Cuota </span> <span>{(Number(irpf)/100)*( (incomes-collectedVat) - (expenses))+cuota}€</span></div>
+                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IRPF</span> <span>{payIRPF}€</span></div>
+                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>Cuota autonomos</span> <span>{cuota}€</span></div>
+                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IRPF + Cuota </span> <span>{(Number(irpf)/100)*( (incomes-collectedVat) - (expenses))+cuota}€</span></div>
                     </div>
                 </div>
-                <div className='lg:hidden block w-full h-px bg-gray-300'/>
+                <div className='lg:hidden block w-full h-px bg-gray-400'/>
                 
                 <div>
                     <p className='text-xl mb-2'>Reserva recomendada</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='bg-orange-100 border border-orange-300'><span>Total a pagar (IRPF {Number(irpf)}% + Cuota + IVA):</span> <span>{Math.abs(collectedVat-inputVat) + payIRPF! + cuota}€</span></div>
+                        <div className='bg-orange-100 border border-orange-300 dark:bg-orange-200 dark:text-black'><span>Total a pagar (IRPF {Number(irpf)}% + Cuota + IVA):</span> <span>{Math.abs(collectedVat-inputVat) + payIRPF! + cuota}€</span></div>
                     </div>
                 </div>
             </div>
-            {/* <select name="" id="" onChange={(e) =>  handleChange(e)}>
-                <option value="1">T1</option>
-                <option value="2">T2</option> 
-                <option value="3">T3</option>
-                <option value="4">T4</option>
-                <option value="0">Anual</option>
-            </select> */}
+
             {Number(irpf) != null && 
-                <div className='inter px-8 py-5 bg-orange-100 rounded-2xl mt-5'>
-                    <p className='text-xl'>Aviso sobre carácter orientativo de los cálculos</p>
+                <div className='inter px-8 py-5 bg-orange-50 dark:bg-orange-300 dark:text-black rounded-2xl mt-5'>
+                    <p className='text-xl flex items-center gap-2'><InfoIcon /> Aviso sobre carácter orientativo de los cálculos</p>
                     <p>Los cálculos mostrados son aproximados y tienen únicamente carácter informativo. Pueden no reflejar con exactitud la cantidad final a pagar, ya que dependen de factores fiscales, normativos y personales que pueden variar. Para una información definitiva, consulta con un asesor fiscal o con la administración tributaria correspondiente.</p>
                 </div>
             }

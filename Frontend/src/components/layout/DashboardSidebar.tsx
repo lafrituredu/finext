@@ -15,8 +15,10 @@ import File from '/src/assets/icons/File.svg?react'
 import FinextIcon from '/src/assets/icons/finext.svg?react'
 import DarkModeToggle from '../buttons/DarkButton'
 import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
+import TaxesIcon from '/src/assets/icons/Taxes-Icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
+import LoadingIcon from '/src/assets/icons/Loading.svg?react';
 import { getCurrentUser, logoutUser, type UserProfile } from '../../api/AuthServices'
 
 interface DashboardSidebar {
@@ -30,11 +32,13 @@ const [user, setUser] = useState<UserProfile | null>(null);
 const { t } = useTranslation("sidebar");
 const avatarUrl = user?.avatar_url || user?.avatar;
 const username = user?.username || localStorage.getItem('user') || '[username]';
+const [loading,setLoading] = useState(true);
 
 useEffect(() => {
   getCurrentUser()
     .then(setUser)
     .catch(() => setUser(null));
+    setLoading(false)
 
   const handleUserProfileUpdated = (event: Event) => {
     setUser((event as CustomEvent<UserProfile>).detail);
@@ -95,7 +99,7 @@ const menuItems = [{
   {
     id: 'taxes',
     label: t('taxes'),
-    icon: File,
+    icon: TaxesIcon,
     to: '/dashboard/taxes'
   },
   ]},
@@ -113,6 +117,7 @@ const menuItems = [{
     ]
   }
 ];
+
   return (
     <>
       <div id="sidebar" className={`
@@ -140,22 +145,27 @@ const menuItems = [{
             <p className='inter'> {t('welcome')} {username}!</p>
             <Language/>
           </div>
-          {menuItems.map((item,key) => (
+          {!loading && menuItems.map((item,key) => (
           <div key={key} id={`${key}`} className=" pt-14">
               <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
               <ul>
-                  {item.items.map( (el,key)=> (
-                      <SidebarItem
-                      key={key}
-                      id={el.id}
-                      icon={el.icon}
-                      label={el.label}
-                      to={el.to}
-                      children={el.children}
-                      openId={openId}
-                      setOpenId={setOpenId}
-                      onNavigate={onClose}
-                  />))}
+                  {item.items.map( (el,key) => {
+                    if(el.id ==  'taxes' && user?.rol == "particular"){
+                      return;
+                    }
+                    return ( 
+                        <SidebarItem
+                        key={key}
+                        id={el.id}
+                        icon={el.icon}
+                        label={el.label}
+                        to={el.to}
+                        children={el.children}
+                        openId={openId}
+                        setOpenId={setOpenId}
+                        onNavigate={onClose}
+                    />);
+                  })}
               </ul>
           </div>
           ))}
