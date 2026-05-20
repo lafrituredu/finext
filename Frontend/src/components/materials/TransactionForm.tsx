@@ -215,16 +215,11 @@ export function TransactionForm({ close, transactionEdit }: TransactionFormProps
               {!loading ? (
                 <select
                   {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
-                  className={inputCls}
+                  className={`${inputCls} capitalize`}
                 >
                   <option value="">{t('placeholders.noCategory')}</option>
                   {categories.map(c => (
-                    <option key={c.id} value={c.id}>
-                    {c.user_id == null
-                        ? ct(`categoryNames.${c.name}`, c.name)
-                        : c.name
-                    }
-                    </option>
+                    <option key={c.id} value={c.id}>{ct(`categoryNames.${c.name}`, c.name)}</option>
                   ))}
                 </select>
               ) : (

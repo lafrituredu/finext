@@ -6,10 +6,14 @@
   "no_description": "Sin descripción...",
 
   "type": {
-    "emitida": "Emitida",
-    "recibida": "Recibida"
+      "total" : "Todas",
+      "emitida": "Emitida",
+      "recibida": "Recibida"
   },
-
+  "order":{
+      "new": "Nuevas primero",
+      "old": "Antiguas primero"
+  },
   "fields": {
     "date": "Fecha",
     "iva": "% IVA",
@@ -38,5 +42,8 @@
 
   "error": {
     "delete": "Error al eliminar la factura"
-  }
+  },
+  "months" : "Todos los meses",
+  "years" : "Todos los años",
+  "IVA": "IVA"
 }

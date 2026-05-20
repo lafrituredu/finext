@@ -1,5 +1,5 @@
 //Library
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 //Bills
@@ -16,11 +16,16 @@ import FileIcon from '/src/assets/icons/File.svg?react'
 //Material
 import Confirmation from '../components/materials/Confirmation'
 import BillCard from '../components/bills/BillCard'
+import dayjs from 'dayjs'
+
+//Types
+type FilterType = 'total' | 'emitida' | 'recibida'
+type SortOrder = 'asc' | 'desc'
 
 function Bills() {
   //Variables-------------------
   const { t } = useTranslation("bills")
-  const { t:ct } = useTranslation("catTrans")
+  const { t:u } = useTranslation("utils")
 
   //Bills
   const { bills, setBills, refetchBills } = useBills() as BillsContextType
@@ -33,6 +38,26 @@ function Bills() {
 
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  //Filters
+  const [activeFilter, setActiveFilter] = useState<FilterType>('total')
+  const [selectedMonth, setSelectedMonth] = useState<string>('')
+  const [selectedYear, setSelectedYear] = useState<string>('')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+
+  const availableYears = useMemo<number[]>(() => 
+      [...new Set(bills.map(bill => dayjs(bill.date).year()))].sort((a, b) => b - a), 
+    [bills])
+
+  const FILTERS: {id: FilterType; label:string}[] = [
+    {id: 'total', label: t('type.total')},
+    {id: 'emitida', label: t('type.emitida')},
+    {id: 'recibida', label: t('type.recibida')}
+  ]
+
+  const activeFilterLabel = FILTERS.find(
+    filter => filter.id === activeFilter
+  )?.label
 
   const fetchBillTransactions = async (bills: Bill[]) => {
     const results: Record<number, number | null> = {}
@@ -52,6 +77,27 @@ function Bills() {
     )
     setBillsPaid(results)
   }
+
+  const sortedBills = useMemo (()=>{
+    const filtered = bills.filter(bill => {
+      const date = dayjs(bill.date)
+      if (selectedMonth && date.month() + 1 !== parseInt(selectedMonth)) return false
+      if (selectedYear && date.year() !== parseInt(selectedYear)) return false
+
+      if (activeFilter === 'emitida') return bill.type === 'emitida'
+      if (activeFilter === 'recibida') return bill.type === 'recibida'
+
+      return true //'total'
+    })
+
+    return filtered.sort((a,b) => {
+      if(sortOrder === 'asc'){
+        return dayjs(a.date).valueOf() - dayjs(b.date).valueOf();
+      }else{
+        return dayjs(b.date).valueOf() - dayjs(a.date).valueOf();
+      }
+    })
+  },[bills, activeFilter, selectedMonth, selectedYear, sortOrder])
 
   useEffect(() => {
     refetchBills()
@@ -106,7 +152,64 @@ function Bills() {
             </span>
           </button>
         </div>
-        <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
+        <hr className="-mx-6 sm:-mx-10 mt-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
+        <div>
+        {/* Filters */}
+        <div className='flex justify-between items-start md:items-center gap-2 flex-col md:flex-row'>
+          <div className='flex sm:flex-row flex-col items-center md:py-10 pt-10 pb-5 gap-6'>
+            <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit sm:px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat select-none'>
+              {FILTERS.map(({ id, label }) => (
+                <div
+                  key={id}
+                  onClick={() => setActiveFilter(id)}
+                  className={`${activeFilter === id ? 'bg-[#FFF] dark:bg-[#1a2957] rounded-2xl' : ''} 
+                  px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>
+                  {label}
+                </div>
+              ))}
+            </div>
+            
+            {/* Filtro por mes y año */}
+            <div className='flex items-center gap-2'>
+              <select
+                value={selectedMonth}
+                onChange={e => setSelectedMonth(e.target.value)}
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a] cursor-pointer'>
+                <option value=''>{t('months')}</option> {/* All months */}
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {u(`months.${dayjs().month(i).format('MMMM').toLocaleLowerCase()}`)}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={selectedYear}
+                onChange={e => setSelectedYear(e.target.value)}
+                className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a] cursor-pointer'>
+                <option value=''>{t('years')}</option> {/* All years */}
+                {availableYears.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className='pb-6 md:pb-0'>
+            <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
+              border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
+              transition-all duration-200 inter text-sm font-medium select-none cursor-pointer">
+              <span>
+                {sortOrder === 'asc' ? t('order.old') : t('order.new')}
+              </span>
+              <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
+                ↓
+              </span>
+            </button>
+          </div>
+        </div>
+        <p className='inter capitalize text-gray-400 pb-2'>{activeFilterLabel} {t('transactions')} → <span className='font-bold'>{sortedBills.length}</span></p>
+      </div>
         {/* States */}
         {loading && (
           <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
@@ -127,7 +230,7 @@ function Bills() {
         {!loading && !error && bills.length > 0 && (
         <>  
           <div className='grid gird-cols-1 xl:grid-cols-2 gap-4'>
-             {bills.map(bill => (
+             {sortedBills.map(bill => (
               <BillCard 
                 key={bill.id}
                 bill={bill}

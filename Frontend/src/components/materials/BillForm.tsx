@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
-import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
-import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
+import { useTranslation } from 'react-i18next'
+
 import { createBill, updateBill, type Bill } from "../../api/BillService"
-import React from "react";
 import { useForm, useFieldArray } from "react-hook-form"
 import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
 import { useTransactions, type TransactionsContextType } from '../../contexts/TransactionContext'
-import { useTranslation } from 'react-i18next'
+
+//Icons
+import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
+import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
+import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 
 type BillFormValues = {
   id: number
@@ -21,29 +23,26 @@ type BillFormValues = {
   payment_method: string
   status: boolean
   category_id?: number
-  plazos?: number
+  plazos?: number | null
   installments: { amount: number | string; date: string }[]
 };
+type BillType = 'emitida' | 'recibida'
+const BILL_TYPES: { id: BillType; labelKey: string; Icon: React.FC<any>; activeColor: string }[] = [
+  { id: 'emitida',  labelKey: 'type.emitida',  Icon: TrendingUpIcon,   activeColor: 'text-emerald-600 dark:text-emerald-400' },
+  { id: 'recibida', labelKey: 'type.recibida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+]
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
-  const [select, setSelected] = useState<any>(billEdit?.type || 'emitida');
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
   const { t } = useTranslation("billsform")
+  const { t:ct } = useTranslation("catTrans")
+
+  const [billType, setBillType] = useState<BillType>(billEdit?.type as BillType || 'emitida');
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { categories } = useCategories() as CategoriesContextType
   const { transactions, refetchTransactions } = useTransactions() as TransactionsContextType
 
-  const [billName, setBillName] = useState<string>(billEdit?.name || '')
-  const [billImport, setBillImport] = useState<number | string>(billEdit?.total_amount || '')
-  const [billDate, setBillDate] = useState<string>(billEdit?.date || '')
-  const [billIva, setBillIva] = useState<number | string>(billEdit?.iva_percent || 21.00)
-  const [billDescription, setBillDescription] = useState<string>(billEdit?.description || '')
-  const [billClient, setBillClient] = useState<string>(billEdit?.client || '')
-  const [billPaymentMethod, setBillPaymentMethod] = useState<string>(billEdit?.payment_method || '')
-  const [category, setCategory] = useState<number | string>(billEdit?.category_id ?? '')
-
-  const [isInstallment, setIsInstallment] = useState<boolean>(false)
+  const [isInstallment, setIsInstallment] = useState<boolean>(billEdit?.plazos != null && billEdit.plazos > 0)
 
   const {
     register,
@@ -54,7 +53,16 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     formState: { errors }
   } = useForm<BillFormValues>({
     defaultValues: {
+      name: billEdit?.name || '',
+      total_amount: billEdit?.total_amount,
+      date: billEdit?.date || '',
+      iva_percent: billEdit?.iva_percent ?? 0,
+      description: billEdit?.description || '',
+      client: billEdit?.client || '',
+      payment_method: billEdit?.payment_method || 'card',
+      category_id: billEdit?.category_id ?? undefined,
       type: billEdit?.type || 'emitida',
+      id: billEdit?.id,
       installments: [{ amount: '', date: '' }]
     }
   })
@@ -68,7 +76,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     if (billEdit?.id) {
       const billTransactions = transactions.filter(t => t.bill_id === billEdit.id)
       if (billTransactions.length > 0) {
-        setIsInstallment(true)
         replace(billTransactions.map(t => ({
           amount: t.total_amount,
           date: t.date
@@ -81,7 +88,9 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const totalInstallments = watchedInstallments.reduce(
     (sum, inst) => sum + (parseFloat(inst.amount as string) || 0), 0
   )
-  const remaining = (parseFloat(billImport as string) || 0) - totalInstallments
+  
+  const watchedAmount = watch('total_amount') ?? 0
+  const remaining = (watchedAmount || 0) - totalInstallments
   const isOverBudget = remaining < 0
 
   const onSubmit = async (data: BillFormValues) => {
@@ -91,7 +100,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
       const { id, ...dataWithoutId } = data
       const payload = {
         ...dataWithoutId,
-        type: select,
+        type: billType,
         plazos: isInstallment ? data.installments.length : null,
         installments: isInstallment ? data.installments : []
       }
@@ -110,12 +119,12 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   }
 
   useEffect(() => {
-    setValue("type", select);
+    setValue("type", billType);
     if (billEdit) {
       setValue("id", billEdit.id)
       setValue("category_id", billEdit.category_id ?? undefined)
     }
-  }, [select, setValue, billEdit])
+  }, [billType, setValue, billEdit])
 
   const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
     bg-gray-50 dark:bg-[#0f1b35]
@@ -166,22 +175,19 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               bg-gray-100 dark:bg-[#0F1732]
               rounded-2xl border border-gray-200 dark:border-gray-700
               montserrat">
-              {[
-                { id: 'emitida', label: t('type.emitida'), Icon: TrendingUpIcon, activeColor: 'text-emerald-600 dark:text-emerald-400' },
-                { id: 'recibida', label: t('type.recibida'), Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
-              ].map(({ id, label, Icon, activeColor }) => (
+              {BILL_TYPES.map(({ id, labelKey, Icon, activeColor }) => (
                 <button
                   key={id}
                   type="button"
-                  onClick={() => setSelected(id)}
+                  onClick={() => setBillType(id)}
                   className={`
                     flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold
                     transition-all duration-200 ease-in-out cursor-pointer
-                    ${select === id
+                    ${billType === id
                       ? `bg-white dark:bg-[#1a2957] shadow-sm ${activeColor}`
                       : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}>
                   <Icon className="w-4 h-4" />
-                  {label}
+                  {t(labelKey)}
                 </button>
               ))}
             </div>
@@ -198,8 +204,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               })}
               type="text"
               placeholder={t('fields.name.placeholder')}
-              value={billName}
-              onChange={(e) => setBillName(e.target.value)}
               className={inputCls} />
             {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
@@ -218,8 +222,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                   max: { value: 1_000_000, message: t('fields.amount.max') }
                 })}
                 placeholder={t('fields.amount.placeholder')}
-                value={billImport}
-                onChange={(e) => setBillImport(parseFloat(e.target.value))}
                 className={inputCls} />
               {errors.total_amount && <p className="mt-1 text-xs text-red-400">{errors.total_amount.message}</p>}
             </div>
@@ -228,8 +230,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <input
                 type="date"
                 {...register("date", { required: t('fields.date.required') })}
-                value={billDate}
-                onChange={(e) => setBillDate(e.target.value)}
                 className={inputCls} />
               {errors.date && <p className="mt-1 text-xs text-red-400">{errors.date.message}</p>}
             </div>
@@ -241,8 +241,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <label className={labelCls}>{t('fields.iva.label')}</label>
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
-                value={billIva}
-                onChange={(e) => setBillIva(e.currentTarget.value)}
                 className={inputCls}>
                 <option value="0">{t('fields.iva.options.none')}</option>
                 <option value="4.00">{t('fields.iva.options.super_reduced')}</option>
@@ -254,12 +252,10 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <label className={labelCls}>{t('fields.category.label')}</label>
               <select
                 {...register("category_id", { setValueAs: (v) => v === "" ? null : Number(v) })}
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className={inputCls}>
+                className={`${inputCls} capitalize`}>
                 <option value="">{t('fields.category.none')}</option>
                 {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
+                  <option className="capitalize" key={c.id} value={c.id}>{ct(`categoryNames.${c.name}`, c.name)}</option>
                 ))}
               </select>
             </div>
@@ -275,8 +271,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               })}
               type="text"
               placeholder={t('fields.description.placeholder')}
-              value={billDescription}
-              onChange={(e) => setBillDescription(e.target.value)}
               className={inputCls} />
             {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
@@ -292,8 +286,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                 })}
                 type="text"
                 placeholder={t('fields.client.placeholder')}
-                value={billClient}
-                onChange={(e) => setBillClient(e.target.value)}
                 className={inputCls} />
               {errors.client && <p className="mt-1 text-xs text-red-400">{errors.client.message}</p>}
             </div>
@@ -301,8 +293,6 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <label className={labelCls}>{t('fields.payment_method.label')}</label>
               <select
                 {...register("payment_method")}
-                value={billPaymentMethod}
-                onChange={(e) => setBillPaymentMethod(e.currentTarget.value)}
                 className={inputCls}>
                 <option value="card">{t('fields.payment_method.options.card')}</option>
                 <option value="cash">{t('fields.payment_method.options.cash')}</option>

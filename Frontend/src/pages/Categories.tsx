@@ -69,7 +69,7 @@ function Categories() {
                     </p>
                   </div>
 
-                  <div className='flex justify-center lg:text-3xl text-2xl truncate'>
+                  <div className='flex justify-center lg:text-3xl text-2xl truncate capitalize'>
                     {category.name}
                   </div>
 

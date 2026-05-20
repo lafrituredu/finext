@@ -28,6 +28,7 @@ return amount * (1 - ivaPercent / 100)
 }
 
 export default function BillCard({ bill, billPaid, onEdit, onDelete }: BillCardProps) {
+    console.log('plazos:', bill)
     const { t } = useTranslation("bills")
     const { t:ct } = useTranslation("catTrans")
 
@@ -107,7 +108,7 @@ export default function BillCard({ bill, billPaid, onEdit, onDelete }: BillCardP
                 <hr className="border-t border-gray-300 my-4 dark:border-gray-700"></hr>
                 <div className='flex flex-row justify-between items-end'>
                 <div className='flex flex-col'>
-                    <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {bill.type == 'recibida' && '-'}{Number(calculateBaseAmount(bill.total_amount, bill.iva_percent))} €</span>
+                    <span className='text-gray-500 dark:text-dark-text text-sm'>{t('fields.base_imponible')} {bill.type == 'recibida' && '-'}{Number(calculateBaseAmount(bill.total_amount, bill.iva_percent)).toFixed(2)} €</span>
                     <span className='text-primary font-medium text-3xl'>{bill.type == 'recibida' && '-'}{bill.total_amount}€</span>
                 </div>
                 <div className='flex flex-col items-end'>
@@ -127,7 +128,7 @@ export default function BillCard({ bill, billPaid, onEdit, onDelete }: BillCardP
                         </div></div>
                     ) : null}
                     {isHigher ? (
-                    <div className="cursor-pointer flex flex-row items-center gap-2" onClick={ onDelete }>
+                    <div className="cursor-pointer flex flex-row items-center gap-2" onClick={ onEdit }>
                         <div className='relative w-2.5 h-2.5 bg-red-500 rounded-full'>
                         <div className='w-2.5 h-2.5 bg-red-500 rounded-full animate-ping absolute'></div>
                         </div>

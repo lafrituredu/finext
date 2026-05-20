@@ -6,10 +6,14 @@
   "no_description": "No description...",
 
   "type": {
+    "total": "Total",
     "emitida": "Issued",
     "recibida": "Received"
   },
-
+  "order":{
+    "new": "Newest first",
+    "old": "Oldest first"
+  },
   "fields": {
     "date": "Date",
     "iva": "% VAT",
@@ -38,5 +42,9 @@
 
   "error": {
     "delete": "Error deleting the invoice"
-  }
+  },
+  
+  "months" : "All months",
+  "years" : "All years",
+  "IVA": "VAT"
 }

@@ -25,7 +25,7 @@ type SortOrder = 'asc' | 'desc'
 function Transactions() {
   //Variables-------------------------
   const { t } = useTranslation("transactions")
-
+  const { t:u } = useTranslation("utils")
   //Transactions
   const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType
   const [loading, setLoading] = useState(false)
@@ -156,7 +156,7 @@ function Transactions() {
                 <option value=''>{t('months')}</option> {/* All months */}
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
-                    {dayjs().month(i).format('MMMM')}
+                    {u(`months.${dayjs().month(i).format('MMMM').toLocaleLowerCase()}`)}
                   </option>
                 ))}
               </select>
