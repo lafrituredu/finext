@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "title": "Cookies policy",
+    "site": "www.finext.cat"
+  },
+  "blocks": [
+    {
+      "paragraphs": [
+        "Access to this Website may involve the use of cookies. Cookies are small amounts of information stored in the browser used by each User, on the different devices they may use to browse, so that the server remembers certain information that later only the server that implemented it will read. Cookies make browsing easier and more user-friendly, and do not damage the browsing device.",
+        "Cookies are automatic procedures for collecting information about preferences determined by the User during their visit to the Website in order to recognize them as a User, personalize their experience and use of the Website, and they may also, for example, help identify and resolve errors.",
+        "The information collected through cookies may include the date and time of visits to the Website, the pages viewed, the time spent on the Website and the sites visited immediately before and after it. However, no cookie allows it to contact the User's telephone number or any other personal contact method. No cookie can extract information from the User's hard drive or steal personal information. The only way for the User's private information to become part of the Cookie file is for the user to personally provide that information to the server.",
+        "Cookies that make it possible to identify a person are considered personal data. Therefore, the Privacy Policy described above shall apply to them. In this regard, the User's consent will be required for their use. This consent will be communicated based on a genuine choice, offered through an affirmative and positive decision, prior to initial processing, removable and documented."
+      ]
+    },
+    {
+      "heading": "First-party cookies",
+      "paragraphs": [
+        "These are cookies sent to the User's computer or device and managed exclusively by FiNext for the proper functioning of the Website. The information collected is used to improve the quality of the Website, its Content and the User experience. These cookies allow the User to be recognized as a recurring visitor to the Website and adapt the content to offer content that matches their preferences."
+      ]
+    },
+    {
+      "heading": "Disable, reject and delete cookies",
+      "paragraphs": [
+        "The User may disable, reject and delete cookies, in whole or in part, installed on their device through their browser settings (including, for example, Chrome, Firefox, Safari and Explorer). In this regard, the procedures for rejecting and deleting cookies may differ from one internet browser to another. Consequently, the User should refer to the instructions provided by the internet browser they are using. If the User rejects the use of cookies, in whole or in part, they may continue using the Website, although some of its features may be limited."
+      ]
+    }
+  ],
+  "generator": {
+    "before": "This Cookies Policy document was created using the online generator for",
+    "link": "free website cookies policy template",
+    "after": "on 20/05/2026."
+  }
+}

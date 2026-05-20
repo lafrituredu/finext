@@ -1,0 +1,181 @@
+{
+  "hero": {
+    "title": "Website privacy policy",
+    "site": "www.finext.cat"
+  },
+  "sections": [
+    {
+      "title": "I. Privacy policy and data protection",
+      "blocks": [
+        {
+          "paragraphs": [
+            "In accordance with current legislation, FiNext (hereinafter also the Website) undertakes to adopt the necessary technical and organizational measures according to the level of security appropriate to the risk of the data collected."
+          ]
+        },
+        {
+          "heading": "Laws included in this privacy policy",
+          "paragraphs": [
+            "This privacy policy is adapted to current Spanish and European regulations on the protection of personal data on the internet. Specifically, it observes the following rules:"
+          ],
+          "bullets": [
+            "Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016, on the protection of natural persons with regard to the processing of personal data and on the free movement of such data (GDPR).",
+            "Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights (LOPD-GDD).",
+            "Royal Decree 1720/2007, of December 21, approving the implementing Regulation of Organic Law 15/1999, of December 13, on Personal Data Protection (RDLOPD).",
+            "Law 34/2002, of July 11, on Information Society Services and Electronic Commerce (LSSI-CE)."
+          ]
+        },
+        {
+          "heading": "Identity of the controller of personal data",
+          "paragraphs": [
+            "The controller of the personal data collected by FiNext is: FiNext S.L., with NIF/CIF: 46497909M and registered in: the Commercial Registry of Barcelona with the following registration details: Volume 9, Page 134, Sheet 567, whose representative is: Marc Gilavert Orea (hereinafter, Data Controller). Its contact details are:",
+            "Address: Carrer Migdia Nº2, 08901 L'Hositalet de Llobregat (Barcelona)",
+            "Contact telephone: 634291916",
+            "Contact email: jeremy.secundaria@gmail.com"
+          ]
+        },
+        {
+          "heading": "Personal Data Record",
+          "paragraphs": [
+            "In compliance with the GDPR and the LOPD-GDD, we inform you that the personal data collected by FiNext through forms on its pages will be incorporated and processed in our file in order to facilitate, streamline and fulfill the commitments established between FiNext and the User, maintain the relationship established through the forms completed by the User, or respond to a request or query. Likewise, in accordance with the GDPR and the LOPD-GDD, unless the exception in article 30.5 of the GDPR applies, a record of processing activities is maintained specifying, according to their purposes, the processing activities carried out and the other circumstances established in the GDPR."
+          ]
+        },
+        {
+          "heading": "Principles applicable to the processing of personal data",
+          "paragraphs": [
+            "The processing of the User's personal data shall be subject to the following principles set out in article 5 of the GDPR and article 4 and following of Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights:"
+          ],
+          "bullets": [
+            "Principle of lawfulness, fairness and transparency: the User's consent will be required at all times after fully transparent information about the purposes for which personal data is collected.",
+            "Principle of purpose limitation: personal data will be collected for specified, explicit and legitimate purposes.",
+            "Principle of data minimization: the personal data collected will be only that strictly necessary in relation to the purposes for which it is processed.",
+            "Principle of accuracy: personal data must be accurate and always kept up to date.",
+            "Principle of storage limitation: personal data will only be kept in a way that allows the User to be identified for the time necessary for the purposes of processing.",
+            "Principle of integrity and confidentiality: personal data will be processed in a way that guarantees its security and confidentiality.",
+            "Principle of proactive responsibility: the Data Controller will be responsible for ensuring that the above principles are complied with."
+          ]
+        },
+        {
+          "heading": "Categories of personal data",
+          "paragraphs": [
+            "The categories of data processed by FiNext are only identification data. Under no circumstances are special categories of personal data processed within the meaning of article 9 of the GDPR."
+          ]
+        },
+        {
+          "heading": "Legal basis for processing personal data",
+          "paragraphs": [
+            "The legal basis for processing personal data is consent. FiNext undertakes to obtain the User's express and verifiable consent for the processing of their personal data for one or more specific purposes.",
+            "The User has the right to withdraw consent at any time. Withdrawing consent will be as easy as giving it. As a general rule, withdrawal of consent will not condition use of the Website.",
+            "When the User must or may provide data through forms to make inquiries, request information or for reasons related to the content of the Website, they will be informed if completion of any field is mandatory because it is essential for the proper development of the operation performed."
+          ]
+        },
+        {
+          "heading": "Purposes for which personal data is processed",
+          "paragraphs": [
+            "Personal data is collected and managed by FiNext in order to facilitate, streamline and fulfill the commitments established between the Website and the User, maintain the relationship established through forms completed by the User, or respond to a request or query.",
+            "Data may also be used for commercial personalization, operational and statistical purposes, and activities related to FiNext's corporate purpose, as well as for data extraction and storage and marketing studies to adapt the Content offered to the User and improve the quality, operation and navigation of the Website.",
+            "When personal data is obtained, the User will be informed about the specific purpose or purposes of the processing for which the personal data will be used; that is, the use or uses that will be made of the information collected."
+          ]
+        },
+        {
+          "heading": "Personal data retention periods",
+          "paragraphs": [
+            "Personal data will only be retained for the minimum time necessary for the purposes of processing and, in any case, only for the following period: Account deletion, or until the User requests deletion.",
+            "When personal data is obtained, the User will be informed about the period during which the personal data will be kept or, where this is not possible, the criteria used to determine that period."
+          ]
+        },
+        {
+          "heading": "Recipients of personal data",
+          "paragraphs": [
+            "The User's personal data will be shared with the following recipients or categories of recipients:"
+          ],
+          "pre": [
+            "- FiNext S.L. with registered address at Carrer Migdia Nº2, 08901 L'Hositalet de Llobregat (Barcelona)"
+          ]
+        },
+        {
+          "paragraphs": [
+            "If the Data Controller intends to transfer personal data to a third country or international organization, when the personal data is obtained the User will be informed about the third country or international organization to which the data is intended to be transferred, as well as the existence or absence of an adequacy decision by the Commission."
+          ]
+        },
+        {
+          "heading": "Personal data of minors",
+          "paragraphs": [
+            "In accordance with article 8 of the GDPR and article 7 of Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights, only those over 14 years old may lawfully consent to the processing of their personal data by FiNext. If the person is under 14 years old, the consent of parents or guardians will be required, and the processing will only be considered lawful to the extent that they have authorized it."
+          ]
+        },
+        {
+          "heading": "Secrecy and security of personal data",
+          "paragraphs": [
+            "FiNext undertakes to adopt the necessary technical and organizational measures according to the level of security appropriate to the risk of the data collected, so as to guarantee the security of personal data and avoid accidental or unlawful destruction, loss or alteration of personal data transmitted, stored or otherwise processed, or unauthorized disclosure of or access to such data.",
+            "The Website has an SSL (Secure Socket Layer) certificate, which ensures that personal data is transmitted securely and confidentially, with transmission between the server and the User, and in feedback, fully encrypted.",
+            "However, because FiNext cannot guarantee the invulnerability of the internet or the total absence of hackers or others fraudulently accessing personal data, the Data Controller undertakes to notify the User without undue delay when a personal data security breach occurs that is likely to pose a high risk to the rights and freedoms of natural persons. Pursuant to article 4 of the GDPR, a personal data security breach means any security breach that causes accidental or unlawful destruction, loss or alteration of personal data transmitted, stored or otherwise processed, or unauthorized disclosure of or access to such data.",
+            "Personal data will be treated as confidential by the Data Controller, who undertakes to inform and guarantee, by means of a legal or contractual obligation, that such confidentiality is respected by its employees, associates and any person to whom it makes the information accessible."
+          ]
+        },
+        {
+          "heading": "Rights arising from the processing of personal data",
+          "paragraphs": [
+            "The User has rights over FiNext and may therefore exercise before the Data Controller the following rights recognized in the GDPR and Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights:"
+          ],
+          "bullets": [
+            "Right of access: the User's right to obtain confirmation as to whether FiNext is processing their personal data and, if so, to obtain information about their specific personal data and the processing carried out or to be carried out by FiNext, as well as, among other things, available information about the origin of such data and the recipients of communications made or planned.",
+            "Right to rectification: the User's right to have personal data modified when it is inaccurate or, taking into account the purposes of processing, incomplete.",
+            "Right to erasure (the right to be forgotten): the User's right, provided that current legislation does not establish otherwise, to obtain deletion of personal data when it is no longer necessary for the purposes for which it was collected or processed; the User has withdrawn consent and there is no other legal basis; the User objects to processing and there is no overriding legitimate reason to continue it; the personal data has been unlawfully processed; the personal data must be deleted to comply with a legal obligation; or the personal data was obtained as a result of a direct offer of information society services to a child under 14. In addition to deleting the data, the Data Controller, taking into account available technology and implementation cost, must adopt reasonable measures to inform controllers processing the personal data of the data subject's request for deletion of any links to such personal data.",
+            "Right to restriction of processing: the User's right to restrict the processing of personal data. The User has the right to obtain restriction of processing when they dispute the accuracy of their personal data; the processing is unlawful; the Data Controller no longer needs the personal data, but the User needs it to make claims; and when the User has objected to processing.",
+            "Right to data portability: where processing is carried out by automated means, the User has the right to receive from the Data Controller their personal data in a structured, commonly used and machine-readable format, and to transmit it to another controller. Where technically possible, the Data Controller will transmit the data directly to that other controller.",
+            "Right to object: the User's right not to have their personal data processed or to have processing cease by FiNext.",
+            "Right not to be subject to a decision based solely on automated processing, including profiling: the User's right not to be subject to an individualized decision based solely on automated processing of personal data, including profiling, unless current legislation provides otherwise."
+          ]
+        },
+        {
+          "paragraphs": [
+            "The User may exercise their rights by written communication addressed to the Data Controller with the reference GDPR-www.finext.cat, specifying:"
+          ],
+          "bullets": [
+            "Name and surname of the User and a copy of their ID document. In cases where representation is admitted, identification by the same means of the person representing the User will also be necessary, as well as proof of representation. The photocopy of the ID document may be replaced by any other legally valid means proving identity.",
+            "Request with the specific reasons for the request or information to which access is sought.",
+            "Address for notifications.",
+            "Date and signature of the applicant.",
+            "Any document proving the request made."
+          ]
+        },
+        {
+          "paragraphs": [
+            "This request and any other attached document may be sent to the following address and/or email:",
+            "Postal address: Carrer Migdia Nº2, 08901 L'Hositalet de Llobregat (Barcelona)",
+            "Email: jeremy.secundaria@gmail.com"
+          ]
+        },
+        {
+          "heading": "Links to third-party websites",
+          "paragraphs": [
+            "The Website may include hyperlinks or links that allow access to third-party websites other than FiNext, and which are therefore not operated by FiNext. The owners of those websites will have their own data protection policies and will be responsible, in each case, for their own files and privacy practices."
+          ]
+        },
+        {
+          "heading": "Complaints to the supervisory authority",
+          "paragraphs": [
+            "If the User considers that there is a problem or breach of current regulations in the way their personal data is being processed, they have the right to effective judicial protection and to file a complaint with a supervisory authority, particularly in the State where they have their habitual residence, place of work or place of the alleged infringement. In Spain, the supervisory authority is the Spanish Data Protection Agency (https://www.aepd.es/)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "II. Acceptance and changes to this privacy policy",
+      "blocks": [
+        {
+          "paragraphs": [
+            "The User must have read and agree with the conditions regarding the protection of personal data contained in this Privacy Policy, and must accept the processing of their personal data so that the Data Controller may proceed with it in the manner, for the periods and for the purposes indicated. Use of the Website implies acceptance of its Privacy Policy.",
+            "FiNext reserves the right to modify its Privacy Policy according to its own criteria, or due to a legislative, jurisprudential or doctrinal change by the Spanish Data Protection Agency. Changes or updates to this Privacy Policy will not be explicitly notified to the User. The User is advised to consult this page periodically to stay informed of the latest changes or updates.",
+            "This Privacy Policy was updated to adapt to Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016, on the protection of natural persons with regard to the processing of personal data and on the free movement of such data (GDPR), and Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights."
+          ]
+        }
+      ]
+    }
+  ],
+  "generator": {
+    "before": "This website Privacy Policy document was created using the online generator for",
+    "link": "free website privacy policy template",
+    "after": "on 20/05/2026."
+  }
+}

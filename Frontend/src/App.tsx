@@ -22,6 +22,9 @@ import Contact from "./pages/Contact.tsx";
 import Profile from "./pages/Profile.tsx";
 import Bills from "./pages/Bills.tsx";
 import Taxes from "./pages/Taxes.tsx";
+import LegalNotice from "./pages/LegalNotice.tsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import CookiesPolicy from "./pages/CookiesPolicy.tsx";
 
 const SESSION_LAST_ACTIVITY_KEY = "session-last-activity";
 const INACTIVITY_LIMIT_MS = 2 * 60 * 60 * 1000;
@@ -103,6 +106,9 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/aviso-legal" element={<LegalNotice />} />
+        <Route path="/privacidad" element={<PrivacyPolicy />} />
+        <Route path="/cookies" element={<CookiesPolicy />} />
 
         <Route
           path="/dashboard"

@@ -28,6 +28,12 @@ import error404EN from "./language/en/error404.json";
 
 import footerES from "./language/es/footer.json";
 import footerEN from "./language/en/footer.json";
+import legalNoticeES from "./language/es/legalNotice.json";
+import legalNoticeEN from "./language/en/legalNotice.json";
+import privacyPolicyES from "./language/es/privacyPolicy.json";
+import privacyPolicyEN from "./language/en/privacyPolicy.json";
+import cookiesPolicyES from "./language/es/cookiesPolicy.json";
+import cookiesPolicyEN from "./language/en/cookiesPolicy.json";
 
 import overviewES from "./language/es/overview.json";
 import overviewEN from "./language/en/overview.json";
@@ -81,6 +87,9 @@ export const resources = {
     nav: navES,
     error404: error404ES,
     footer: footerES,
+    legalNotice: legalNoticeES,
+    privacyPolicy: privacyPolicyES,
+    cookiesPolicy: cookiesPolicyES,
     overview: overviewES,
     sidebar: sidebarES,
     transactions: transactionsES,
@@ -108,6 +117,9 @@ export const resources = {
     nav: navEN,
     error404: error404EN,
     footer: footerEN,
+    legalNotice: legalNoticeEN,
+    privacyPolicy: privacyPolicyEN,
+    cookiesPolicy: cookiesPolicyEN,
     overview: overviewEN,
     sidebar: sidebarEN,
     transactions: transactionsEN,

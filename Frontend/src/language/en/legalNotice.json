@@ -1,0 +1,92 @@
+{
+  "hero": {
+    "title": "Legal notice and general terms of use",
+    "site": "www.finext.cat"
+  },
+  "sections": {
+    "general": {
+      "title": "I. General information",
+      "paragraphs": {
+        "intro": "In compliance with the duty of information established in Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) of July 11, the following general information about this website is provided:",
+        "ownership": "The ownership of this website, www.finext.cat, (hereinafter, the Website) is held by: FiNext S.L., with NIF: 46497909M and registered in: the Commercial Registry of Barcelona with the following registration details: Volume 9, Page 134, Sheet 567+, whose representative is: Marc Gilavert Orea, and whose contact details are:",
+        "address": "Address: Carrer Migdia Nº2, 08901 L'Hositalet de Llobregat (Barcelona)",
+        "phone": "Contact telephone: 634291916",
+        "email": "Contact email: jeremy.secundaria@gmail.com"
+      }
+    },
+    "terms": {
+      "title": "II. General terms and conditions of use",
+      "subsections": {
+        "websiteObject": {
+          "title": "Purpose of the terms: The Website",
+          "paragraphs": {
+            "definition": "The purpose of these General Terms of Use (hereinafter, Terms) is to regulate access to and use of the Website. For the purposes of these Terms, Website shall mean the external appearance of the screen interfaces, both static and dynamic, that is, the navigation tree; and all elements integrated into both the screen interfaces and the navigation tree (hereinafter, Content), as well as any online services or resources that may be offered to Users (hereinafter, Services).",
+            "modification": "FiNext reserves the right to modify, at any time and without prior notice, the presentation and configuration of the Website and of the Content and Services that may be incorporated into it. The User acknowledges and accepts that FiNext may at any time interrupt, deactivate and/or cancel any of the elements integrated into the Website or access to them.",
+            "freeAccess": "Access to the Website by the User is free and, as a general rule, without charge, without the User having to provide consideration in order to enjoy it, except for the connection cost through the telecommunications network supplied by the access provider contracted by the User.",
+            "registration": "The use of some Content or Services of the Website may require prior subscription or registration by the User."
+          }
+        },
+        "user": {
+          "title": "The User",
+          "paragraphs": {
+            "acceptance": "Access, browsing and use of the Website confers the status of User, meaning that all the Terms established here are accepted from the moment browsing of the Website begins, as well as any subsequent modifications, without prejudice to the application of the corresponding mandatory legal regulations according to each case. Given the importance of the above, the User is advised to read them each time they visit the Website.",
+            "responsibilityIntro": "The FiNext Website provides a wide variety of information, services and data. The User assumes responsibility for making proper use of the Website. This responsibility shall extend to:"
+          },
+          "bullets": {
+            "properUse": "Use of the information, Content and/or Services and data offered by FiNext that is not contrary to these Terms, the Law, morality or public order, or that in any other way may harm the rights of third parties or the operation of the Website itself.",
+            "truthfulData": "The truthfulness and legality of the information provided by the User in forms issued by FiNext to access certain Content or Services offered by the Website. In any case, the User shall immediately notify FiNext of any event that allows improper use of the information registered in such forms, including but not limited to theft, loss, or unauthorized access to identifiers and/or passwords, in order to proceed with their immediate cancellation."
+          },
+          "closingParagraphs": {
+            "noCommercialRelationship": "Mere access to this Website does not imply any kind of commercial relationship between FiNext and the User.",
+            "allAges": "Always respecting current legislation, this FiNext Website is aimed at all people, regardless of age, who may access and/or browse the pages of the Website."
+          }
+        }
+      }
+    },
+    "access": {
+      "title": "III. Access and browsing on the website: exclusion of warranties and liability",
+      "paragraphs": {
+        "availability": "FiNext does not guarantee the continuity, availability or usefulness of the Website, nor of the Content or Services. FiNext will do everything possible for the proper functioning of the Website; however, it is not responsible for and does not guarantee that access to this Website will be uninterrupted or error-free.",
+        "software": "Nor does it assume responsibility or guarantee that the content or software that may be accessed through this Website is error-free or will not cause damage to the User's computer system (software and hardware). In no case shall FiNext be liable for losses, damages or harm of any kind arising from access, browsing and use of the Website, including but not limited to those caused to computer systems or those caused by the introduction of viruses.",
+        "misuse": "FiNext is also not responsible for damages that may be caused to users due to improper use of this Website. In particular, it is not responsible in any way for outages, interruptions, lack of telecommunications or defects in telecommunications that may occur."
+      }
+    },
+    "links": {
+      "title": "IV. Links policy",
+      "paragraphs": {
+        "thirdPartyLinks": "Users are informed that the FiNext Website provides or may provide linking tools (including links, banners and buttons), directories and search engines that allow Users to access websites owned and/or managed by third parties.",
+        "purpose": "The installation of these links, directories and search engines on the Website is intended to make it easier for Users to search for and access information available on the Internet, and cannot be considered a suggestion, recommendation or invitation to visit them.",
+        "noCommercialization": "FiNext does not offer or market, either by itself or through third parties, the products and/or services available on such linked sites.",
+        "noGuarantee": "Likewise, it will not guarantee the technical availability, accuracy, truthfulness, validity or legality of sites outside its ownership that may be accessed through links.",
+        "noReview": "FiNext will in no case review or control the content of other websites, nor does it approve, examine or endorse the products and services, content, files or any other material existing on the linked sites.",
+        "noResponsibility": "FiNext assumes no responsibility for damages that may arise from access to, use of, quality or legality of the content, communications, opinions, products and services of websites not managed by FiNext and linked on this Website.",
+        "hyperlinkIntro": "The User or third party who creates a hyperlink from another website to the FiNext Website should know that:",
+        "noReproduction": "The total or partial reproduction of any Content and/or Services of the Website is not permitted without express authorization from FiNext.",
+        "noFalseStatements": "No false, inaccurate or incorrect statements about the FiNext Website, or about its Content and/or Services, are permitted.",
+        "protectedElements": "Except for the hyperlink, the website on which such hyperlink is established shall not contain any element of this Website protected as intellectual property under Spanish law, unless expressly authorized by FiNext.",
+        "noRelationship": "The establishment of the hyperlink shall not imply the existence of relations between FiNext and the owner of the website from which it is made, nor the knowledge and acceptance by FiNext of the content, services and/or activities offered on that website, and vice versa."
+      }
+    },
+    "intellectualProperty": {
+      "title": "V. Intellectual and industrial property",
+      "paragraphs": {
+        "ownership": "FiNext, by itself or as assignee, owns all intellectual and industrial property rights of the Website, as well as the elements contained in it (including but not limited to images, sound, audio, video, software or texts, trademarks or logos, color combinations, structure and design, selection of materials used, computer programs necessary for its operation, access and use, etc.). They are therefore works protected as intellectual property by the Spanish legal system, with both Spanish and EU regulations in this field, as well as international treaties on the matter signed by Spain, being applicable to them.",
+        "rightsReserved": "All rights reserved. Pursuant to the Intellectual Property Law, the reproduction, distribution and public communication, including making available, of all or part of the contents of this website for commercial purposes, on any medium and by any technical means, is expressly prohibited without authorization from FiNext.",
+        "userCommitment": "The User undertakes to respect FiNext's intellectual and industrial property rights. The User may view the elements of the Website or even print, copy and store them on the hard drive of their computer or on any other physical medium provided that this is exclusively for personal use. However, the User may not delete, alter or manipulate any protection device or security system installed on the Website.",
+        "notification": "If the User or a third party considers that any of the Website Content constitutes a violation of intellectual property protection rights, they must immediately notify FiNext through the contact details in the General information section of this Legal Notice and General Terms of Use."
+      }
+    },
+    "legalActions": {
+      "title": "VI. Legal actions, applicable law and jurisdiction",
+      "paragraphs": {
+        "actions": "FiNext reserves the right to bring any civil or criminal actions it deems necessary for improper use of the Website and Content, or for breach of these Terms.",
+        "law": "The relationship between the User and FiNext shall be governed by the current regulations applicable in Spanish territory. Should any dispute arise in relation to the interpretation and/or application of these Terms, the parties shall submit their conflicts to ordinary jurisdiction, submitting to the judges and courts that correspond according to law."
+      }
+    }
+  },
+  "generator": {
+    "before": "This Legal Notice and General Terms of Use document for the website was created using the online generator for",
+    "link": "legal notice and terms of use template",
+    "after": "on 20/05/2026."
+  }
+}
