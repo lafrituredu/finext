@@ -266,8 +266,6 @@ const Register: React.FC = () => {
     switch (role) {
       case "autonomo":
         return t("role_autonomo");
-      case "gestor":
-        return t("role_gestor");
       case "particular":
       default:
         return t("role_particular");

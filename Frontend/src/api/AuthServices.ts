@@ -28,13 +28,12 @@ export interface UserProfile {
   username: string
   full_name: string
   phone_number?: string | null
-  rol: 'particular' | 'gestor' | 'autonomo'
+  rol: 'particular' | 'autonomo'
   email: string
   email_verified_at?: string | null
   avatar?: string | null
   avatar_url?: string | null
   autonomo: AutonomoProfile | null
-  gestor?: Record<string, unknown> | null
 }
 
 export interface UpdateUserProfilePayload {

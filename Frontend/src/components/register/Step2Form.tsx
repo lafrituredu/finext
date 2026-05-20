@@ -100,7 +100,7 @@ const Step2Form: React.FC<Props> = ({
 
           {isRolOpen && (
             <div className="absolute z-10 w-full mt-2 bg-white dark:bg-dark-background border border-gray-200 dark:border-gray-600 rounded-2xl shadow-lg overflow-hidden">
-              {["particular", "autonomo", "gestor"].map((role) => (
+              {["particular", "autonomo"].map((role) => (
                 <button
                   key={role}
                   type="button"

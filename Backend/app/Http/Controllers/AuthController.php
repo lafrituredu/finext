@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autonomo;
-use App\Models\Gestor;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -33,7 +32,7 @@ class AuthController extends Controller
                 'min:8',
                 'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
             ],
-            'rol' => 'required|in:particular,gestor,autonomo',
+            'rol' => 'required|in:particular,autonomo',
             'dni' => [
                 'required_if:rol,autonomo',
                 'nullable',
@@ -60,12 +59,6 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-
-            if ($request->rol === 'gestor') {
-                Gestor::create([
-                    'user_id' => $user->id,
-                ]);
-            }
 
             if ($request->rol === 'autonomo') {
                 Autonomo::create([
@@ -287,7 +280,7 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        $user = $request->user()->load(['autonomo', 'gestor']);
+        $user = $request->user()->load(['autonomo']);
 
         return response()->json($this->withAvatarUrl($user));
     }
@@ -345,7 +338,7 @@ class AuthController extends Controller
             }
         });
 
-        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo'])));
     }
 
     public function updateAvatar(Request $request)
@@ -363,7 +356,7 @@ class AuthController extends Controller
         $path = $request->file('avatar')->store("avatars/{$user->id}", 'public');
         $user->update(['avatar' => $path]);
 
-        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo'])));
     }
 
     public function deleteAvatar(Request $request)
@@ -375,7 +368,7 @@ class AuthController extends Controller
             $user->update(['avatar' => null]);
         }
 
-        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo', 'gestor'])));
+        return response()->json($this->withAvatarUrl($user->fresh()->load(['autonomo'])));
     }
 
     public function deleteAccount(Request $request)

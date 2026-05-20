@@ -108,7 +108,6 @@ const menuItems = [{
           icon: UsersIcon,
           children: [
           { label: 'Edit', to: '/dashboard/profile' },
-          // { label: 'Invite Manager', to: '/dashboard/invite' }
           ]
         }
     ]

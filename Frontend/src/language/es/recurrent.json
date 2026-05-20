@@ -76,7 +76,7 @@
     "paymentMethod": "Selecciona metodo",
     "description": "Descripcion opcional",
     "client": "Ej. Cliente mensual",
-    "provider": "Ej. Arrendador, Netflix, gestoria..."
+    "provider": "Ej. Arrendador, Netflix, proveedor..."
   },
   "payment": {
     "card": "Tarjeta",
