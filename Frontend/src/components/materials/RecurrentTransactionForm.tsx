@@ -10,6 +10,7 @@ import {
   updateRecurrentTransaction,
   type RecurrentTransaction
 } from "../../api/RecurrentTransactionService";
+import { getCurrentUser, type UserProfile } from "../../api/AuthServices";
 import DropdownSelect from "./DropdownSelect";
 
 type RecurrentFormValues = {
@@ -44,6 +45,7 @@ export function RecurrentTransactionForm({
   const [select, setSelected] = useState(recurrentEdit?.type || 'expense');
   const { categories, loading } = useCategories();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userRole, setUserRole] = useState<UserProfile["rol"] | null>(null);
 
   const [name, setName] = useState(recurrentEdit?.name || '');
   const [amount, setAmount] = useState<number | string>(recurrentEdit?.total_amount || '');
@@ -58,6 +60,7 @@ export function RecurrentTransactionForm({
   const [endDate, setEndDate] = useState(dateInputValue(recurrentEdit?.end_date));
   const [active, setActive] = useState(recurrentEdit?.active ?? true);
   const [createsBill, setCreatesBill] = useState(recurrentEdit?.creates_bill ?? false);
+  const isAutonomo = userRole === "autonomo";
 
   const {
     register,
@@ -65,6 +68,26 @@ export function RecurrentTransactionForm({
     setValue,
     formState: { errors }
   } = useForm<RecurrentFormValues>();
+
+  useEffect(() => {
+    let mounted = true;
+
+    getCurrentUser()
+      .then((user) => {
+        if (mounted) {
+          setUserRole(user.rol);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setUserRole(null);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     setValue("type", select);
@@ -91,7 +114,7 @@ export function RecurrentTransactionForm({
       type: select,
       frequency,
       active,
-      creates_bill: createsBill,
+      creates_bill: isAutonomo ? createsBill : false,
       iva_percent: Number(iva || 0),
       payment_method: paymentMethod,
       category_id: category === '' ? null : Number(category),
@@ -348,15 +371,17 @@ export function RecurrentTransactionForm({
                   className="w-4 h-4 accent-primary" />
                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('form.active')}</span>
               </label>
-              <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
-                <input type="checkbox" checked={createsBill}
-                  {...register("creates_bill")}
-                  onChange={(e) => setCreatesBill(e.target.checked)}
-                  className="w-4 h-4 accent-primary" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {select === 'income' ? t('form.billable') : t('form.deductible')}
-                </span>
-              </label>
+              {isAutonomo && (
+                <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+                  <input type="checkbox" checked={createsBill}
+                    {...register("creates_bill")}
+                    onChange={(e) => setCreatesBill(e.target.checked)}
+                    className="w-4 h-4 accent-primary" />
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    {select === 'income' ? t('form.billable') : t('form.deductible')}
+                  </span>
+                </label>
+              )}
             </div>
           </div>
 
