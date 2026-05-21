@@ -148,7 +148,7 @@ const months = ["january","february","march","april","may","june","july","august
                     <p className='text-xl mb-2'>Base de cálculo</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
                         <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E9E8F0] border'><span>Ingresos totales</span> <span>{incomes}€</span></div>
-                        <div className='dark:bg-red-200  dark:border-red-800 dark:text-black bg-red-50 border-[#E9E8F0] border'><span>Ingresos totales</span> <span>{expenses}€</span></div>
+                        <div className='dark:bg-red-200  dark:border-red-800 dark:text-black bg-red-50 border-[#E9E8F0] border'><span>Gastos totales</span> <span>{expenses}€</span></div>
                         <div className='dark:bg-blue-200  dark:border-blue-800 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>Base imponible</span> <span>{baseIRPF}€</span></div>
                     </div>
                     
