@@ -11,6 +11,7 @@
   "email": "Correo electronico",
   "email_locked_hint": "El correo no se puede cambiar desde el perfil.",
   "phone": "Telefono",
+  "phone_hint": "Puedes usar prefijo internacional, espacios o guiones.",
   "role": "Tipo de perfil",
   "role_particular": "Particular",
   "role_autonomo": "Autonomo",
@@ -34,7 +35,6 @@
   "delete_account_success": "Tu cuenta se ha eliminado correctamente.",
   "delete_account_error": "No se pudo eliminar la cuenta.",
   "member_since": "Miembro desde",
-  "dni": "DNI/NIE",
   "birth_date": "Fecha de nacimiento",
   "modulo_iva": "Modulo de IVA (%)",
   "civil_state": "Estado civil",
@@ -52,5 +52,20 @@
   "saved": "Perfil actualizado correctamente.",
   "load_error": "No se pudo cargar el perfil.",
   "save_error": "No se pudo guardar el perfil.",
-  "loading": "Cargando perfil..."
+  "loading": "Cargando perfil...",
+  "validation": {
+    "full_name_required": "El nombre completo es obligatorio.",
+    "full_name_min": "El nombre debe tener al menos 3 caracteres.",
+    "full_name_max": "El nombre no puede superar 50 caracteres.",
+    "full_name_no_numbers": "El nombre no puede contener numeros.",
+    "username_required": "El usuario es obligatorio.",
+    "phone_required": "El telefono es obligatorio.",
+    "phone_format": "El numero de telefono no puede tener ese formato.",
+    "birth_date_required": "La fecha de nacimiento es obligatoria.",
+    "birth_date_future": "La fecha de nacimiento no puede ser futura.",
+    "iva_required": "Selecciona un tipo de IVA.",
+    "irpf_required": "Selecciona un tipo de IRPF.",
+    "company_required": "La empresa es obligatoria.",
+    "company_min": "La empresa debe tener al menos 2 caracteres."
+  }
 }

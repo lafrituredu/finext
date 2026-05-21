@@ -5,11 +5,7 @@ import type { UserProfile } from "../../api/AuthServices";
 import type { ProfileFormData, ProfileRole } from "../../pages/Profile";
 import DropdownSelect from "../materials/DropdownSelect";
 import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
-import {
-  hasNumbers,
-  isValidPhoneNumber,
-  isValidSpanishDniNie
-} from "../../utils/profileValidation";
+import { hasNumbers, isValidPhoneNumber } from "../../utils/profileValidation";
 import GearIcon from "/src/assets/icons/Gear.svg?react";
 import PadlockIcon from "/src/assets/icons/Padlock.svg?react";
 
@@ -17,6 +13,11 @@ const inputClass =
   "w-full mt-2 px-4 py-3 rounded-xl border border-[#0000001a] dark:border-[#1d2344] bg-white dark:bg-[#070d22] text-black dark:text-dark-text focus:outline-none focus:ring-2 focus:ring-primary transition-all";
 const labelClass = "text-sm text-[#7B7B7B] dark:text-dark-text inter";
 const errorClass = "mt-1 text-xs text-red-500";
+
+const sanitizeFullNameInput = (value: string) => value.replace(/\d/g, "");
+
+const sanitizePhoneInput = (value: string) =>
+  value.replace(/[^\d+\s().-]/g, "").replace(/(?!^)\+/g, "");
 
 type ProfileFormProps = {
   form: ProfileFormData;
@@ -28,7 +29,7 @@ type ProfileFormProps = {
   register: UseFormRegister<ProfileFormData>;
   errors: FieldErrors<ProfileFormData>;
   onSubmit: () => void;
-  onFieldChange: (name: string, value: string) => void;
+  onFieldChange: (name: keyof ProfileFormData, value: string) => void;
 };
 
 function ProfileForm({
@@ -45,32 +46,24 @@ function ProfileForm({
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
   const isAutonomo = form.rol === "autonomo";
-  const hasStoredDni = Boolean(user?.autonomo?.dni_set);
   const fullNameField = register("full_name", {
-    required: "El nombre completo es obligatorio.",
+    required: t("validation.full_name_required"),
     minLength: {
       value: 3,
-      message: "El nombre debe tener al menos 3 caracteres."
+      message: t("validation.full_name_min")
     },
     maxLength: {
       value: 50,
-      message: "El nombre no puede superar 50 caracteres."
+      message: t("validation.full_name_max")
     },
     validate: (value) =>
-      !hasNumbers(value) || "El nombre no puede contener numeros."
+      !hasNumbers(value) || t("validation.full_name_no_numbers")
   });
   const phoneField = register("phone_number", {
+    required: t("validation.phone_required"),
     validate: (value) =>
-      !value ||
       isValidPhoneNumber(value) ||
-      "El telefono debe contener solo numeros y tener entre 9 y 15 digitos."
-  });
-  const dniField = register("dni", {
-    required: hasStoredDni ? false : "El DNI o NIE es obligatorio.",
-    validate: (value) =>
-      (hasStoredDni && !value) ||
-      isValidSpanishDniNie(value) ||
-      "El DNI o NIE no tiene un formato valido."
+      t("validation.phone_format")
   });
 
   return (
@@ -110,9 +103,9 @@ function ProfileForm({
           <input
             className={inputClass}
             {...fullNameField}
+            value={form.full_name}
             onChange={(event) => {
-              event.target.value = event.target.value.replace(/\d/g, "");
-              fullNameField.onChange(event);
+              onFieldChange("full_name", sanitizeFullNameInput(event.target.value));
             }}
           />
           {errors.full_name && (
@@ -129,7 +122,7 @@ function ProfileForm({
               aria-readonly="true"
               tabIndex={-1}
               {...register("username", {
-                required: "El usuario es obligatorio."
+                required: t("validation.username_required")
               })}
             />
             <PadlockIcon className="absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-[#7B7B7B] dark:text-[#7F8AA9]" />
@@ -160,15 +153,20 @@ function ProfileForm({
           {t("phone")}
           <input
             className={inputClass}
-            inputMode="numeric"
+            inputMode="tel"
             {...phoneField}
+            value={form.phone_number}
             onChange={(event) => {
-              event.target.value = event.target.value.replace(/\D/g, "");
-              phoneField.onChange(event);
+              onFieldChange("phone_number", sanitizePhoneInput(event.target.value));
             }}
           />
           {errors.phone_number && (
             <p className={errorClass}>{errors.phone_number.message}</p>
+          )}
+          {!errors.phone_number && (
+            <p className="mt-1 text-xs text-[#7B7B7B] dark:text-dark-text">
+              {t("phone_hint")}
+            </p>
           )}
         </label>
       </div>
@@ -189,33 +187,17 @@ function ProfileForm({
 
           <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
             <label className={labelClass}>
-              {t("dni")}
-              <input
-                className={inputClass}
-                placeholder={hasStoredDni ? "DNI/NIE guardado. Escribe uno nuevo para cambiarlo." : undefined}
-                {...dniField}
-                onChange={(event) => {
-                  event.target.value = event.target.value
-                    .toUpperCase()
-                    .replace(/\s/g, "");
-                  dniField.onChange(event);
-                }}
-              />
-              {errors.dni && <p className={errorClass}>{errors.dni.message}</p>}
-            </label>
-
-            <label className={labelClass}>
               {t("birth_date")}
               <input
                 className={inputClass}
                 type="date"
                 {...register("birth_date", {
-                  required: "La fecha de nacimiento es obligatoria.",
+                  required: t("validation.birth_date_required"),
                   validate: (value) => {
-                    if (!value) return "La fecha de nacimiento es obligatoria.";
+                    if (!value) return t("validation.birth_date_required");
                     return (
                       new Date(value) <= new Date() ||
-                      "La fecha de nacimiento no puede ser futura."
+                      t("validation.birth_date_future")
                     );
                   }
                 })}
@@ -238,7 +220,7 @@ function ProfileForm({
               <input
                 type="hidden"
                 {...register("modulo_iva", {
-                  required: "Selecciona un tipo de IVA."
+                  required: t("validation.iva_required")
                 })}
               />
               {errors.modulo_iva && (
@@ -259,7 +241,7 @@ function ProfileForm({
               <input
                 type="hidden"
                 {...register("irpf", {
-                  required: "Selecciona un tipo de IRPF."
+                  required: t("validation.irpf_required")
                 })}
               />
               {errors.irpf && (
@@ -287,10 +269,10 @@ function ProfileForm({
               <input
                 className={inputClass}
                 {...register("company", {
-                  required: "La empresa es obligatoria.",
+                  required: t("validation.company_required"),
                   minLength: {
                     value: 2,
-                    message: "La empresa debe tener al menos 2 caracteres."
+                    message: t("validation.company_min")
                   }
                 })}
               />

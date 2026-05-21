@@ -40,7 +40,6 @@ export interface UpdateUserProfilePayload {
   username: string
   full_name: string
   phone_number?: string
-  dni?: string
   birth_date?: string
   modulo_iva?: string
   civil_state?: string

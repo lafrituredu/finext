@@ -28,7 +28,6 @@ export type ProfileFormData = {
   full_name: string;
   phone_number: string;
   rol: ProfileRole;
-  dni: string;
   birth_date: string;
   modulo_iva: string;
   civil_state: string;
@@ -88,8 +87,8 @@ function Profile() {
 
   const roleLabel = (role: ProfileRole) => t(`role_${role}`);
 
-  const handleFieldChange = (name: string, value: string) => {
-    setValue(name as keyof ProfileFormData, value, {
+  const handleFieldChange = (name: keyof ProfileFormData, value: string) => {
+    setValue(name, value, {
       shouldDirty: true,
       shouldValidate: true
     });

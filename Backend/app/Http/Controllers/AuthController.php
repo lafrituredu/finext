@@ -498,8 +498,14 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         $user = $request->user();
-        $this->normalizeIdentityDocumentInput($request, 'dni');
+        $phoneFormatMessage = 'El numero de telefono no puede tener ese formato.';
         $user->loadMissing('autonomo');
+
+        if ($request->has('phone_number') && is_string($request->input('phone_number'))) {
+            $request->merge([
+                'phone_number' => preg_replace('/[\s().-]+/', '', trim($request->input('phone_number'))),
+            ]);
+        }
 
         $data = $request->validate([
             'username' => [
@@ -509,35 +515,46 @@ class AuthController extends Controller
                 Rule::unique('users', 'username')->ignore($user->id),
             ],
             'full_name' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:255',
-            'dni' => [
-                Rule::requiredIf($user->rol === 'autonomo' && !$user->autonomo?->dni),
-                'nullable',
+            'phone_number' => [
+                'required',
                 'string',
-                'max:255',
-                $this->validUniqueSpanishDniNieRule($user->id),
+                'max:16',
+                'regex:/^\+?\d{7,15}$/',
             ],
-            'birth_date' => 'nullable|date',
+            'birth_date' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'date'],
             'modulo_iva' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
-            'civil_state' => 'nullable|in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho',
+            'civil_state' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho'],
             'company' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'string', 'max:255'],
             'irpf' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
+        ], [
+            'phone_number.required' => 'El telefono es obligatorio.',
+            'phone_number.regex' => $phoneFormatMessage,
+            'phone_number.max' => $phoneFormatMessage,
+            'birth_date.required' => 'La fecha de nacimiento es obligatoria.',
+            'modulo_iva.required' => 'Selecciona un tipo de IVA.',
+            'civil_state.required' => 'Selecciona un estado civil.',
+            'company.required' => 'La empresa es obligatoria.',
+            'irpf.required' => 'Selecciona un tipo de IRPF.',
         ]);
+
+        $data['username'] = trim($data['username']);
+        $data['full_name'] = preg_replace('/\s+/', ' ', trim($data['full_name']));
+
+        if (isset($data['company'])) {
+            $data['company'] = preg_replace('/\s+/', ' ', trim($data['company']));
+        }
 
         DB::transaction(function () use ($user, $data) {
             $user->update([
                 'username' => $data['username'],
                 'full_name' => $data['full_name'],
-                'phone_number' => $data['phone_number'] ?? null,
+                'phone_number' => $data['phone_number'],
             ]);
 
             if ($user->rol === 'autonomo') {
                 Autonomo::updateOrCreate(
                     ['user_id' => $user->id],
                     [
-                        'dni' => isset($data['dni']) && $data['dni'] !== ''
-                            ? $this->hashIdentityDocument($data['dni'])
-                            : $user->autonomo?->dni,
                         'birth_date' => $data['birth_date'] ?? null,
                         'modulo_iva' => $data['modulo_iva'] ?? null,
                         'civil_state' => $data['civil_state'] ?? null,

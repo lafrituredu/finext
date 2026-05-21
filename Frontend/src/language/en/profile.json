@@ -11,6 +11,7 @@
   "email": "Email",
   "email_locked_hint": "The email cannot be changed from the profile.",
   "phone": "Phone",
+  "phone_hint": "You can use an international prefix, spaces or hyphens.",
   "role": "Profile type",
   "role_particular": "Individual",
   "role_autonomo": "Self-employed",
@@ -34,7 +35,6 @@
   "delete_account_success": "Your account has been deleted successfully.",
   "delete_account_error": "Could not delete the account.",
   "member_since": "Member since",
-  "dni": "ID number",
   "birth_date": "Birth date",
   "modulo_iva": "VAT module (%)",
   "civil_state": "Marital status",
@@ -52,5 +52,20 @@
   "saved": "Profile updated successfully.",
   "load_error": "Could not load the profile.",
   "save_error": "Could not save the profile.",
-  "loading": "Loading profile..."
+  "loading": "Loading profile...",
+  "validation": {
+    "full_name_required": "Full name is required.",
+    "full_name_min": "Full name must be at least 3 characters.",
+    "full_name_max": "Full name cannot exceed 50 characters.",
+    "full_name_no_numbers": "Full name cannot contain numbers.",
+    "username_required": "Username is required.",
+    "phone_required": "Phone is required.",
+    "phone_format": "The phone number cannot have that format.",
+    "birth_date_required": "Birth date is required.",
+    "birth_date_future": "Birth date cannot be in the future.",
+    "iva_required": "Select a VAT type.",
+    "irpf_required": "Select an income tax type.",
+    "company_required": "Company is required.",
+    "company_min": "Company must be at least 2 characters."
+  }
 }

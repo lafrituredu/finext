@@ -18,7 +18,6 @@ export const emptyProfileForm: ProfileFormData = {
   full_name: "",
   phone_number: "",
   rol: "particular",
-  dni: "",
   birth_date: "",
   modulo_iva: "",
   civil_state: "soltero",
@@ -31,7 +30,6 @@ export const userToProfileForm = (user: UserProfile): ProfileFormData => ({
   full_name: user.full_name ?? "",
   phone_number: user.phone_number ?? "",
   rol: user.rol ?? "particular",
-  dni: user.autonomo?.dni ?? "",
   birth_date: user.autonomo?.birth_date ?? "",
   modulo_iva: normalizeTaxValue(user.autonomo?.modulo_iva),
   civil_state: user.autonomo?.civil_state ?? "soltero",
@@ -49,9 +47,6 @@ export const profileFormToPayload = (
   };
 
   if (form.rol === "autonomo") {
-    if (form.dni.trim()) {
-      payload.dni = form.dni.trim();
-    }
     payload.birth_date = form.birth_date;
     payload.modulo_iva = form.modulo_iva;
     payload.civil_state = form.civil_state;
