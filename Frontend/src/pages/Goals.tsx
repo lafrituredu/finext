@@ -78,6 +78,7 @@ function Goals() {
                       <TrashcanIcon onClick={() => setGoalDelete(goal)} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
                     </span>
                   </p>
+                  
                   <div>
                     <p className='flex justify-between text-[#A1A1A1]'><span>{diffDays <= 0 || goal.completed == 1 ? <span className='text-secondary dark:text-accent animate-pulse'> Finalizado</span> :  `${diffDays} ${t('days')}` }</span> <span>{goal.current_amount}€ / {goal.target_amount}€</span></p>
                     <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden'>
@@ -88,7 +89,6 @@ function Goals() {
                   <div className={`${recomendation.bg} p-2`}>
                     <p>{recomendation.status == 0 ? t('recommendations.onTrack') : recomendation.status == 1 ? t('recommendations.aboveTarget') : t('recommendations.onBelow')}</p>
                   </div>
-                    {/* <p>You’re <span className='text-green-600 font-semibold'>ahead of pace</span> and should reach your goal <b>{progress}%</b> ahead of schedule</p> */}
 
                   <div className='w-full h-px bg-slate-200' />
                   <button  disabled={goal.completed == 1} onClick={() => {setGoalEdit(goal);setShowGoalAmountForm(true)} } className='w-full p-2 bg-primary text-white dark:bg-primary cursor-pointer hover:scale-[102%] transition rounded-full disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:scale-100'>{t('contribute')}</button>

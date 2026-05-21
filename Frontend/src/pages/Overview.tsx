@@ -140,14 +140,12 @@ function calculateIncomes(){
     return transactions
         .filter(t => t.type === 'income' && isCurrent(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
-        .toFixed(2)
 }
 
 function calculateYearIncomes(){
     return transactions
         .filter(t => t.type === 'income' && isCurrentYear(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
-        .toFixed(2)
 }
 
 function calculateIncomesIva(){
@@ -158,21 +156,18 @@ function calculateIncomesIva(){
             const iva = Number(t.iva_percent)
             return acc + amount - (amount * (iva / 100))
         }, 0)
-        .toFixed(2)
 }
 
 function calculateExpenses(){
     return transactions
         .filter(t => t.type === 'expense' && isCurrent(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
-        .toFixed(2)
 }
 
 function calculateYearExpenses(){
     return transactions
         .filter(t => t.type === 'expense' && isCurrentYear(t))
         .reduce((acc, t) => acc + Number(t.total_amount), 0)
-        .toFixed(2)
 }
 
 function calculateExpensesIva(){
@@ -183,17 +178,15 @@ function calculateExpensesIva(){
             const iva = Number(t.iva_percent)
             return acc + amount - (amount * (iva / 100))
         }, 0)
-        .toFixed(2)
 }
 
 function calculateCashflow(){
-    return (Number(calculateIncomes()) - Number(calculateExpenses())).toFixed(2)
+    return (Number(calculateIncomes()) - Number(calculateExpenses())).toLocaleString()
 }
 
 function calculateYearCashflow(){
-    return (Number(calculateYearIncomes()) - Number(calculateYearExpenses())).toFixed(2)
+    return (Number(calculateYearIncomes()) - Number(calculateYearExpenses())).toLocaleString()
 }
-
 useEffect(() => {
     const observer = new MutationObserver(() => {
         setIsDark(document.documentElement.classList.contains("dark"));
@@ -220,8 +213,8 @@ useEffect(() => {
                     <KpiStatsUp className='text-green-600 right-0'/>
                 </div>
                 <div>
-                    <p className='text-4xl text-green-600'>{calculateIncomes()}€</p>
-                    <p className='text-xl text-green-500'>{calculateIncomesIva()}€</p>
+                    <p className='text-4xl text-green-600'>{calculateIncomes().toLocaleString()}€</p>
+                    <p className='text-xl text-green-500'>{calculateIncomesIva().toLocaleString()}€</p>
                 </div>
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
@@ -234,8 +227,8 @@ useEffect(() => {
                     <KpiStatsDown className='text-red-600 right-0'/>
                 </div>
                 <div>
-                    <p className='text-4xl text-red-600'>{calculateExpenses()}€</p>
-                    <p className='text-xl text-red-500'>{calculateExpensesIva()}€</p>
+                    <p className='text-4xl text-red-600'>{calculateExpenses().toLocaleString()}€</p>
+                    <p className='text-xl text-red-500'>{calculateExpensesIva().toLocaleString()}€</p>
                 </div>
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name }  {today.getFullYear()}</p>
             </div>
@@ -330,30 +323,6 @@ useEffect(() => {
             </div>
 
 
-            {/* <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344]'>
-                <p className='flex items-center montserrat font-semibold gap-2 mb-3'><Goals className='size-6' /> {t('financial_goals')}</p>
-                
-                <div className='mb-8'>
-                    <p className='flex justify-between text-[#7B7B7B] dark:text-dark-text text-xl mb-1'>
-                        <span>Goal 1</span>
-                        <span>1400€ / 1800€</span>
-                    </p>
-                    <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden
-                    after:bg-[#641895] after:w-10/12 after:h-full after:absolute after:bg-clip-border'></div>
-                    <p className='text-green-600'>You need to save 200€/m. You’re doing great!</p>
-                </div>
-
-                <div className='mb-3'>
-                    <p className='flex justify-between text-[#7B7B7B] dark:text-dark-text text-xl mb-1'>
-                        <span>Goal 1</span>
-                        <span>1400€ / 1800€</span>
-                    </p>
-                    <div className='relative w-full bg-[#D9D9D9] h-3 rounded-2xl overflow-hidden
-                    after:bg-[#641895] after:w-1/12 after:h-full after:absolute after:bg-clip-border'></div>
-                    <p className='text-[#FF9D00]'>You need to save 375€/m. But your average cashflow is about 1100€/m.</p>
-                </div>
-            </div> */}
-
             {/* SUMMARY */}
             <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-dark-text'>
                 <p className='flex items-center montserrat font-semibold gap-2 mb-3'><File className='size-6' /> {t('summary')} {currentYear}</p>
@@ -375,7 +344,7 @@ useEffect(() => {
                 {/* TOTAL INCOMES */}
                 <p className='flex justify-between text-lg'>
                     <span className='text-[#7B7B7B] dark:text-dark-text'>{t('cash_flow')}</span>
-                    <span className={`${ Number(calculateYearCashflow()) > 0 ? 'text-green-600' : 'text-red-600'}`}>{calculateYearCashflow()}€</span>
+                    <span className={`${ Number(calculateYearCashflow()) > 0 ? 'text-green-600' : 'text-red-600'}`}>{Number(calculateYearCashflow()).toLocaleString()}€</span>
                 </p>
 
             </div>
