@@ -46,6 +46,14 @@ function ProfileForm({
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
   const isAutonomo = form.rol === "autonomo";
+  const civilStateOptions = [
+    { value: "soltero", label: t("civil_single") },
+    { value: "casado", label: t("civil_married") },
+    { value: "divorciado", label: t("civil_divorced") },
+    { value: "separado", label: t("civil_separated") },
+    { value: "viudo", label: t("civil_widowed") },
+    { value: "pareja_de_hecho", label: t("civil_partner") }
+  ];
   const fullNameField = register("full_name", {
     required: t("validation.full_name_required"),
     minLength: {
@@ -251,17 +259,15 @@ function ProfileForm({
 
             <label className={labelClass}>
               {t("civil_state")}
-              <select
-                className={inputClass}
-                {...register("civil_state")}
-              >
-                <option value="soltero">{t("civil_single")}</option>
-                <option value="casado">{t("civil_married")}</option>
-                <option value="divorciado">{t("civil_divorced")}</option>
-                <option value="separado">{t("civil_separated")}</option>
-                <option value="viudo">{t("civil_widowed")}</option>
-                <option value="pareja_de_hecho">{t("civil_partner")}</option>
-              </select>
+              <DropdownSelect
+                name="civil_state"
+                value={form.civil_state}
+                placeholder={t("select_option")}
+                options={civilStateOptions}
+                onChange={onFieldChange}
+                buttonClassName={inputClass}
+              />
+              <input type="hidden" {...register("civil_state")} />
             </label>
 
             <label className={labelClass}>
