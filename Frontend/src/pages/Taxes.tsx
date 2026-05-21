@@ -79,6 +79,18 @@ function Taxes() {
             setIrpf(_irpf);
         }
         getIrpf()
+
+        let quarter = 0;
+        if (todayMonth < 3) {
+            quarter = 1;
+        }else if (todayMonth >= 3 && todayMonth < 6) {
+            quarter = 2;
+        }else if (todayMonth >= 6 && todayMonth < 9) {
+            quarter = 3;
+        }else if (todayMonth >= 6 && todayMonth < 12) {
+            quarter = 4;
+        }
+        setQuarter(quarter)
     },[])
 
     // const FILTERS: {id: string; label:string}[] = [
@@ -130,14 +142,14 @@ const months = ["january","february","march","april","may","june","july","august
                 </>)}
             </div> */}
 
-            <div className='inter w-full h-full border border-[#0000001a] rounded-2xl py-5 px-8 flex flex-col gap-5'>
+            <div className='inter *:inter w-full h-full border border-[#0000001a] rounded-2xl py-5 px-8 flex flex-col gap-5'>
                 {quarter != 0 ? <p>Trimestre {quarter} -  {tUtils(`months.${months[(quarter-1)*3]}`).slice(0,3)}-{tUtils(`months.${months[quarter*3-1]}`).slice(0,3)} {today.getFullYear()}</p> : <p>Anual</p>}
                 <div>
                     <p className='text-xl mb-2'>Base de cálculo</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{incomes}€</span></div>
-                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>Ingresos totales</span> <span>{expenses}€</span></div>
-                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>Base imponible</span> <span>{incomes-expenses}€</span></div>
+                        <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E9E8F0] border'><span>Ingresos totales</span> <span>{incomes}€</span></div>
+                        <div className='dark:bg-red-200  dark:border-red-800 dark:text-black bg-red-50 border-[#E9E8F0] border'><span>Ingresos totales</span> <span>{expenses}€</span></div>
+                        <div className='dark:bg-blue-200  dark:border-blue-800 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>Base imponible</span> <span>{incomes-expenses}€</span></div>
                     </div>
                     
                 </div>
@@ -146,9 +158,9 @@ const months = ["january","february","march","april","may","june","july","august
                 <div>
                     <p className='text-xl mb-2'>IVA - Modelo 303</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IVA repercutido</span> <span>{collectedVat}€</span></div>
-                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>IVA soportado</span> <span>{inputVat}€</span></div>
-                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IVA a pagar</span> <span>{collectedVat-inputVat}€</span></div>
+                        <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IVA repercutido</span> <span>{collectedVat}€</span></div>
+                        <div className='dark:bg-red-200 dark:border-red-800 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>IVA soportado</span> <span>{inputVat}€</span></div>
+                        <div className='dark:bg-blue-200 dark:border-blue-800 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IVA a pagar</span> <span>{collectedVat-inputVat}€</span></div>
                     </div>
                 </div>
                 <div className='lg:hidden block w-full h-px bg-gray-300'/>
@@ -156,9 +168,9 @@ const months = ["january","february","march","april","may","june","july","august
                 <div>
                     <p className='text-xl mb-2'>IRPF + Cuota autonomos</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='dark:bg-green-300 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IRPF</span> <span>{payIRPF}€</span></div>
-                        <div className='dark:bg-red-300 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>Cuota autonomos</span> <span>{cuota}€</span></div>
-                        <div className='dark:bg-blue-300 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IRPF + Cuota </span> <span>{(Number(irpf)/100)*( (incomes-collectedVat) - (expenses))+cuota}€</span></div>
+                        <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E2E8F0] border'><span>IRPF</span> <span>{payIRPF}€</span></div>
+                        <div className='dark:bg-red-200 dark:border-green-800 dark:text-black bg-red-50 border-[#E2E8F0] border'><span>Cuota autonomos</span> <span>{cuota}€</span></div>
+                        <div className='dark:bg-blue-200 dark:border-green-800 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>IRPF + Cuota </span> <span>{(Number(irpf)/100)*( (incomes-collectedVat) - (expenses))+cuota}€</span></div>
                     </div>
                 </div>
                 <div className='lg:hidden block w-full h-px bg-gray-400'/>
