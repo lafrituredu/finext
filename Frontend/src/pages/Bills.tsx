@@ -226,7 +226,9 @@ function Bills() {
           </div>
         )}
 
-        {/* Cards */}
+        {/* Carflex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
+              border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
+              transition-all duration-200 inter text-sm font-medium select-none cursor-pointer */}
         {!loading && !error && bills.length > 0 && (
         <>  
           <div className='grid gird-cols-1 xl:grid-cols-2 gap-4'>

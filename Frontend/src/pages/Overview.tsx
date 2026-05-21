@@ -99,8 +99,6 @@ const lastMonths = months.filter( (month,key) => {
     return month;
 })
 
-console.log(lastMonths)
-
 const configLastThreeMonths: {options: ApexOptions, series: any} = {
     options: {
 
@@ -270,7 +268,7 @@ useEffect(() => {
 
         <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
             <div id='cashflow' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'cashflow' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('cash_flow')}</div>
-            <div id='savings' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'savings' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >{t('savings')}</div>
+            <div id='lastMonths' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'lastMonths' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >{t('lastMonths')}</div>
         </div>
 
         <div className='bg-[#F9F9FA] dark:bg-[#0F1732] px-7 py-5 rounded-2xl mb-10 border border-[#0000001a] dark:border-[#1d2344]'>
@@ -285,8 +283,8 @@ useEffect(() => {
                 />
             </div>
 
-            <div id='cashflow_content' className={`${select == 'savings' ? 'visible' : 'hidden' }`}>
-                <p className='montserrat'>{t('savings')}</p>
+            <div id='cashflow_content' className={`${select == 'lastMonths' ? 'visible' : 'hidden' }`}>
+                <p className='montserrat'>{t('lastMonths')}</p>
                 <Chart
                 options={configLastThreeMonths.options}
                 series={configLastThreeMonths.series}

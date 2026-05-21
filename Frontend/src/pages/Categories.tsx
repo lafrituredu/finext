@@ -68,7 +68,6 @@ function Categories() {
                       <TrashcanIcon onClick={() => setCategoryToDelete(category)} className='text-red-400 cursor-pointer hover:rotate-12 transition-all hover:bg-red-100 dark:hover:bg-red-300 dark:text-red-400 dark:hover:text-red-500 rounded-xl' />
                     </p>
                   </div>
-
                   <div className='flex justify-center lg:text-3xl text-2xl truncate capitalize'>
                     {category.name}
                   </div>

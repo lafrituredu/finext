@@ -28,7 +28,6 @@ return amount * (1 - ivaPercent / 100)
 }
 
 export default function BillCard({ bill, billPaid, onEdit, onDelete }: BillCardProps) {
-    console.log('plazos:', bill)
     const { t } = useTranslation("bills")
     const { t:ct } = useTranslation("catTrans")
 
