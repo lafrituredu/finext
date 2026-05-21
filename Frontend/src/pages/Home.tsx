@@ -17,12 +17,108 @@ import PDFIcon from '/src/assets/icons/PDF-Icon.svg?react'
 import ArrowDownDotsIcon from '/src/assets/icons/ArrowDownDots.svg?react'
 
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { animate, stagger } from 'animejs';
 
 function Home() {
   const { t } = useTranslation("home");
   const [PDFanimation,setPDFanimation] = useState(false);
 
+  animate("#HeroLeft > *",{
+      x: ["-100px", "0px"],
+      opacity: [0, 1],
+      duration: '1000',
+      delay: stagger(100)
+  });
+
+  animate('#arrowDownIcon',{
+      y: ["-50px", "0px"],
+      opacity: [0, 1],
+      duration: '1500'
+  });
+  animate('#hr_arrow_left', {
+      x: ["-150px", "0px"],
+      duration: '1000'
+  });
+  animate('#hr_arrow_right', {
+      x: ["150px", "0px"],
+      duration: '1000'
+  });
+
+    useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const el = entry.target as HTMLElement;
+
+          if (el.id === "everything_one_place") {
+            animate(`#${el.id}`,{
+              y: ["150px", "0px"],
+              duration: 1000,
+              easing: "easeOutQuad"
+            });
+
+            observer.unobserve(el);
+          }
+          
+          if (el.id === "everything_one_place_text") {
+            animate('#everything_one_place_text',{
+              y: ["150px", "0px"],
+              duration: 1000,
+              easing: "easeOutQuad"
+            });
+
+            observer.unobserve(el);
+          }
+
+          if (el.id === "cards_hero") {
+            animate('#cards_hero > *',{
+              y: ["250px", "0px"],
+              opacity: [0, 1],
+              duration: 1000,
+              delay: stagger(200),
+              easing: "easeOutQuad"
+            });
+
+            observer.unobserve(el);
+          }
+
+          if (el.id === "icons_text") {
+            animate('#icons_text > *',{
+              opacity: [0,1],
+              duration: 1500,
+              easing: "easeOutQuad",
+              delay: stagger(400)
+            });
+
+            observer.unobserve(el);
+          }
+
+          if (el.id === "built_for_you") {
+            animate('#built_for_you > *', {
+              y: ["150px", "0px"],
+              opacity: [0,1],
+              duration: 1000,
+              easing: "easeOutQuad"
+            });
+          }
+        });
+      });
+
+      const everything = document.getElementById("everything_one_place");
+      const everything_text = document.getElementById("everything_one_place_text");
+      const icons_text = document.getElementById("icons_text");
+      const cards = document.getElementById("cards_hero");
+      const built_for_you = document.getElementById("built_for_you");
+
+      if (everything) observer.observe(everything);
+      if (cards) observer.observe(cards);
+      if (everything_text) observer.observe(everything_text);
+      if (icons_text) observer.observe(icons_text);
+      if (built_for_you) observer.observe(built_for_you);
+
+    }, []);
   return (
     <>
       <Navbar/>
@@ -30,8 +126,8 @@ function Home() {
       <div className="bg-[url(/home/homebg.png)] w-full bg-no-repeat bg-cover xl:bg-[position:center_-80px] bg-[position:center]">
         <div className="flex flex-row xl:justify-center justify-start items-around mx-5 xxl:mx-[120px] pt-50 gap-56">
           {/*Hero Left*/}
-          <div className="flex flex-col justify-center text-dark-text gap-3">
-            <p className="mont_mid text-xl">FiNext</p>
+          <div id="HeroLeft" className="flex flex-col justify-center text-dark-text gap-3">
+            <p className="mont_mid text-xl" >FiNext</p>
             <p className="mont_semibold md:text-6xl text-3xl max-w-160 uppercase">{t('next_step')}</p>
             <p className="inter text-lg">{t('simplest_way')}.</p>
             <div className="pt-12">
@@ -54,19 +150,19 @@ function Home() {
         </div>
         <div className="h-64"></div>
       </div>
-      <div className="hidden sm:flex flex-row justify-center items-center w-full gap-4 px-10">
-        <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
-        <a href="#everything_one_place"><ArrowDownDotsIcon className="shrink-0 animate-pulse text-gray-500 text-gray-700" /></a>
-        <hr className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
+      <div className="hidden sm:flex flex-row justify-center items-center w-full gap-4 px-10 overflow-hidden">
+        <hr id="hr_arrow_left" className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
+        <a id="arrowDownIcon" href="#everything_one_place"><ArrowDownDotsIcon   className="shrink-0 animate-pulse text-gray-500 text-gray-700" /></a>
+        <hr id="hr_arrow_right" className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
       </div>
       {/* --- COINTAINER 1 (Everything in one place) --- */}
       <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
         <div>
           <h4 id="everything_one_place" className="montserrat text-5xl sm:text-center dark:text-dark-text ">{t('everything_in_one_place')}</h4>
-          <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
+          <p id="everything_one_place_text" className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('bring_all')}</p>
         </div>
         {/*--- CARDS HERO ---*/}
-        <div className="flex justify-center pt-25 xl:gap-20 gap-5">
+        <div id="cards_hero" className="w-full flex justify-center pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
           <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
@@ -144,7 +240,7 @@ function Home() {
       {/* <Sponsors/> */}
       {/* --- COINTAINER 3 (INFO CARDS) --- */}
       <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">
-        <div>
+        <div id="built_for_you">
           <h4 className="montserrat text-5xl sm:text-center dark:text-dark-text">{t('built_for_you')}</h4>
           <p className="inter pt-6 max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('built_to_simplify')}</p>
         </div>
@@ -205,7 +301,7 @@ function Home() {
         </iframe>
       </div>
       {/* --- CONTAINER 5 (INFO) --- */}
-      <div className="flex flex-col justify-center items-center text-black dark:text-dark-text mx-4 sm:py-20 py-20">
+      <div id="icons_text" className="flex flex-col justify-center items-center text-black dark:text-dark-text mx-4 sm:py-20 py-20">
         <div className="flex flex-col justify-center items-center">
           <SentimentStressedIcon className="w-24 h-24 text-black dark:text-dark-text hover:text-yellow-500 hover:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)] duration-500 ease-out transition-all"/>
           <p className="montserrat text-4xl text-center">{t('managing_money')}</p>
