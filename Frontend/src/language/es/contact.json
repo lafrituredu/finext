@@ -35,5 +35,20 @@
   "reason2_title": "Consultas comerciales",
   "reason2_description": "Información sobre planes, precios y funcionalidades premium",
   "reason3_title": "Sugerencias",
-  "reason3_description": "Tus ideas nos ayudan a mejorar FiNext cada día"
+  "reason3_description": "Tus ideas nos ayudan a mejorar FiNext cada día",
+
+  "errors": {
+    "nameRequired": "El nombre es obligatorio",
+    "nameTooLong": "El nombre no puede superar los 40 caracteres",
+    "nameInvalidChars": "El nombre contiene caracteres no válidos",
+
+    "emailRequired": "El email es obligatorio",
+    "emailInvalid": "Introduce un email válido",
+
+    "subjectRequired": "El asunto es obligatorio",
+    "subjectTooLong": "El asunto no puede superar los 100 caracteres",
+
+    "messageRequired": "El mensaje es obligatorio",
+    "messageTooLong": "El mensaje no puede superar los 100 caracteres"
+  }
 }

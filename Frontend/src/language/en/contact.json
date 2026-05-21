@@ -10,7 +10,7 @@
   "name_label": "Full name",
   "name_placeholder": "John Doe",
   "email_label": "Email address",
-  "email_placeholder": "your@email.com",
+  "email_placeholder": "finext@email.com",
   "subject_label": "Subject",
   "subject_placeholder": "How can we help you?",
   "message_label": "Message",
@@ -35,5 +35,20 @@
   "reason2_title": "Sales inquiries",
   "reason2_description": "Information about plans, pricing, and premium features",
   "reason3_title": "Suggestions",
-  "reason3_description": "Your ideas help us improve FiNext every day"
+  "reason3_description": "Your ideas help us improve FiNext every day",
+
+  "errors": {
+    "nameRequired": "Name is required",
+    "nameTooLong": "Name cannot exceed 40 characters",
+    "nameInvalidChars": "Name contains invalid characters",
+
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email",
+
+    "subjectRequired": "Subject is required",
+    "subjectTooLong": "Subject cannot exceed 100 characters",
+
+    "messageRequired": "Message is required",
+    "messageTooLong": "Message cannot exceed 100 characters"
+  }
 }

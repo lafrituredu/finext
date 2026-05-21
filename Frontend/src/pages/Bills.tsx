@@ -45,6 +45,8 @@ function Bills() {
   const [selectedYear, setSelectedYear] = useState<string>('')
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
+  //Get the avariable years declared at the bills, and sort them from recent to oldest
+  //Set -> Delete duplicated years.
   const availableYears = useMemo<number[]>(() => 
       [...new Set(bills.map(bill => dayjs(bill.date).year()))].sort((a, b) => b - a), 
     [bills])
@@ -55,6 +57,11 @@ function Bills() {
     {id: 'recibida', label: t('type.recibida')}
   ]
 
+  const months = []
+  for (let i = 0; i < 12; i++) {
+    months.push(i)
+  }
+  
   const activeFilterLabel = FILTERS.find(
     filter => filter.id === activeFilter
   )?.label
@@ -176,9 +183,9 @@ function Bills() {
                 onChange={e => setSelectedMonth(e.target.value)}
                 className='montserrat text-md rounded-full px-3 py-1 bg-[#EFEFEF] dark:bg-dark-card dark:border-[#1d2344] border border-[#0000001a] cursor-pointer'>
                 <option value=''>{t('months')}</option> {/* All months */}
-                {Array.from({ length: 12 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {u(`months.${dayjs().month(i).format('MMMM').toLocaleLowerCase()}`)}
+                {months.map(month => (
+                  <option key={month + 1} value={month + 1}>
+                    {u(`months.${dayjs().month(month).format('MMMM').toLocaleLowerCase()}`)}
                   </option>
                 ))}
               </select>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import Loading from '/src/assets/icons/Loading.svg?react'
 import List from '/src/assets/icons/List-icon.svg?react'
@@ -14,6 +14,9 @@ import CategoryForm from '../components/materials/CategoryForm'
 import { useCategories, type CategoriesContextType } from '../contexts/CategoryContext'
 import { useTranslation } from 'react-i18next'
 
+//Types
+type SortOrder = 'asc' | 'desc'
+
 function Categories() {
 
     const { categories, setCategories, refetchCategories } = useCategories() as CategoriesContextType;
@@ -25,15 +28,16 @@ function Categories() {
     const [showCategoryForm, setShowCategoryForm] = useState(false)
     const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
     const [categoryToEdit,setCategoryToEdit] = useState<Category | null>(null)
+    const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
     const { t } = useTranslation("categories");
     const { t:ct } = useTranslation("catTrans")
+
     useEffect(() => {
       refetchCategories()
     },[categories])
 
-    const categoriasPropias = categories.filter(c => c.user_id != null);
-    const categoriasDefault = categories.filter(c => c.user_id == null);
+
 
     const handleDelete = async (id: number) => {
       try {
@@ -44,6 +48,22 @@ function Categories() {
       }
     }
 
+    const sortedCategories = useMemo(() => {
+      return [...categories].sort((a, b) => {
+        if (a.user_id === null && b.user_id !== null) return 1
+        if (a.user_id !== null && b.user_id === null) return -1
+        
+        if (sortOrder === 'desc') {
+          return a.name.localeCompare(b.name)
+        } else {
+          return b.name.localeCompare(a.name)
+        }
+      })
+    }, [categories, sortOrder])
+
+    const categoriasPropias = sortedCategories.filter(c => c.user_id != null);
+    const categoriasDefault = sortedCategories.filter(c => c.user_id == null);
+    
     const displayDataSquares = () => {
       return (
         <>
@@ -142,7 +162,7 @@ function Categories() {
           </thead>
 
           <tbody>
-            {categories.map((category, key) =>
+            {sortedCategories.map((category, key) =>
               <tr key={key} className='border-b border-gray-100 dark:border-gray-700 *:py-2'>
                 <td className='capitalize'>
                   {category.user_id == null
@@ -198,8 +218,21 @@ function Categories() {
           </div>
         ) : (
           <>
-            <div className='md:py-10 pt-10 pb-5 flex justify-end'>
-              <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+            <div className='md:py-10 pt-10 pb-5 flex justify-between items-center'>
+              <div className='pb-6 md:pb-0'>
+                <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
+                  border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
+                  transition-all duration-200 inter text-sm font-medium select-none cursor-pointer">
+                  <span>
+                    {sortOrder === 'asc' ? t('order.asc') : t('order.desc')}
+                  </span>
+                  <span className={`transition-transform duration-200 ${sortOrder === 'asc' ? 'rotate-180' : ''}`}>
+                    ↓
+                  </span>
+                </button>
+              </div>
+              <div className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] montserrat'>
 
                 <div id='squares' onClick={(e) => setSelected(e.currentTarget.id)} className={`${select == 'squares' && 'bg-[#FFF] dark:bg-[#1a2957] w-fit rounded-full'} p-2 cursor-pointer`}>
                   <Squares className='size-5' />

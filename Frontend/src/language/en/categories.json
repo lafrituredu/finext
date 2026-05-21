@@ -53,5 +53,9 @@
       "color": "Color",
       "name": "Name"
     }
+  },
+  "order": {
+    "desc" : "A - Z",
+    "asc" : "Z - A"
   }
 }
