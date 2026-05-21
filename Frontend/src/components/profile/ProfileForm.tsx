@@ -19,6 +19,8 @@ const sanitizeFullNameInput = (value: string) => value.replace(/\d/g, "");
 const sanitizePhoneInput = (value: string) =>
   value.replace(/[^\d+\s().-]/g, "").replace(/(?!^)\+/g, "");
 
+const hasMaxTwoDecimals = (value: string) => /^\d+(\.\d{1,2})?$/.test(value);
+
 type ProfileFormProps = {
   form: ProfileFormData;
   user: UserProfile | null;
@@ -241,9 +243,10 @@ function ProfileForm({
               <input
                 className={inputClass}
                 type="number"
+                inputMode="decimal"
                 min={0}
                 max={60}
-                step={1}
+                step={0.01}
                 {...register("irpf", {
                   required: t("validation.irpf_required"),
                   min: {
@@ -253,7 +256,9 @@ function ProfileForm({
                   max: {
                     value: 60,
                     message: t("validation.irpf_range")
-                  }
+                  },
+                  validate: (value) =>
+                    hasMaxTwoDecimals(value) || t("validation.irpf_decimals")
                 })}
               />
               {errors.irpf && (

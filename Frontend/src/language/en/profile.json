@@ -66,6 +66,7 @@
     "iva_required": "Select a VAT type.",
     "irpf_required": "Select an income tax type.",
     "irpf_range": "Income tax must be between 0 and 60.",
+    "irpf_decimals": "Income tax can have up to 2 decimal places.",
     "company_required": "Company is required.",
     "company_min": "Company must be at least 2 characters."
   }

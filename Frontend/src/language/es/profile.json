@@ -66,6 +66,7 @@
     "iva_required": "Selecciona un tipo de IVA.",
     "irpf_required": "Selecciona un tipo de IRPF.",
     "irpf_range": "El IRPF debe estar entre 0 y 60.",
+    "irpf_decimals": "El IRPF puede tener como maximo 2 decimales.",
     "company_required": "La empresa es obligatoria.",
     "company_min": "La empresa debe tener al menos 2 caracteres."
   }
