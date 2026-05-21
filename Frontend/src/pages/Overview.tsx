@@ -91,6 +91,46 @@ const config: {options: ApexOptions, series: any} = {
     ],
 };
 
+const lastMonths = months.filter( (month,key) => {
+    let valid_months = [today.getMonth(),today.getMonth()-1,today.getMonth()-2];
+    if (!valid_months.some(el => el == key)) {
+        return;
+    }
+    return month;
+})
+
+console.log(lastMonths)
+
+const configLastThreeMonths: {options: ApexOptions, series: any} = {
+    options: {
+
+    chart: {
+        id: "basic-bar",
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        foreColor: isDark ? "#E5E7EB" : "#424242",
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3
+    },
+    markers: { size: 5 },
+    xaxis: {
+        categories: lastMonths.map(m => m.name)
+    }
+    
+    },
+    series: [
+    {
+        name: t('incomes'),
+        data: lastMonths.map(m => m.incomes)    
+    },
+    {
+        name: t('outcomes'),
+        data: lastMonths.map(m => m.expense)
+    }
+    ],
+};
 const isCurrent = (t: Transaction): boolean => {
     return new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear();
 }
@@ -247,7 +287,13 @@ useEffect(() => {
 
             <div id='cashflow_content' className={`${select == 'savings' ? 'visible' : 'hidden' }`}>
                 <p className='montserrat'>{t('savings')}</p>
-                <p>Not yet!</p>
+                <Chart
+                options={configLastThreeMonths.options}
+                series={configLastThreeMonths.series}
+                type="line"
+                width="100%"
+                height={400}
+                />
             </div>
         </div>
 

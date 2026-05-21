@@ -20,8 +20,8 @@ export function ToggleOption({ value, onSelect, children }: Props) {
   return (
     <button
       onClick={handleClick}
-      className={`px-3 transition-all ease hover:cursor-pointer
-        ${isActive ? "bg-black/20" : "hover:bg-black/10"}`}
+      className={`flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer
+        ${isActive ? "bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl" : ""}`}
     >
         <span className={`flex items-center ${isActive && 'gap-2'}`}><CheckIcon className={`${isActive ? 'size-4' : 'size-0' } transition-all ease`} />{children}</span>
       

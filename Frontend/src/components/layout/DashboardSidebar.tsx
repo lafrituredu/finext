@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Children, useEffect, useState } from 'react'
 import SidebarItem from './SidebarItem'
 
 //i8n
@@ -95,13 +95,7 @@ const menuItems = [{
     label: t('reports'),
     icon: File,
     to: '/dashboard/reports'
-  },
-  {
-    id: 'taxes',
-    label: t('taxes'),
-    icon: TaxesIcon,
-    to: '/dashboard/taxes'
-  },
+  }
   ]},
   {
     name: t('utils'),
@@ -117,6 +111,21 @@ const menuItems = [{
     ]
   }
 ];
+
+if (user != null && user?.rol != "particular") {
+  let taxes = {
+    id: 'taxes',
+    label: t('taxes'),
+    icon: TaxesIcon,
+    to: '/dashboard/taxes',
+    children: null
+  }
+  menuItems[0].items.push(taxes)
+}
+
+// let reportsIndex = menuItems[0].items.findIndex(el => el.id == 'reports');
+// console.log(menuItems[0])
+// console.log(reportsIndex)
 
   return (
     <>
@@ -150,9 +159,6 @@ const menuItems = [{
               <p className="text-[#00000066] dark:text-[#ffffffc5] text-base">{item.name}</p>
               <ul>
                   {item.items.map( (el,key) => {
-                    if(el.id ==  'taxes' && user?.rol == "particular"){
-                      return;
-                    }
                     return ( 
                         <SidebarItem
                         key={key}

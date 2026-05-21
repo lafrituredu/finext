@@ -3,6 +3,8 @@ import { useBills, type BillsContextType } from '../contexts/BillContext';
 import { getCurrentUser, type UserProfile } from '../api/AuthServices'
 import { useTranslation } from 'react-i18next';
 import InfoIcon from '/src/assets/icons/Info.svg?react'
+import { ToggleContainer } from '../components/materials/ToggleContainer';
+import { ToggleOption } from '../components/materials/ToggleOption';
 
 function Taxes() {
     const { bills, setBills, refetchBills } = useBills() as BillsContextType;
@@ -79,13 +81,21 @@ function Taxes() {
         getIrpf()
     },[])
 
+    // const FILTERS: {id: string; label:string}[] = [
+    //     {id: '1', label: 'T1'},
+    //     {id: '2', label: 'T2'},
+    //     {id: '3', label: 'T3'},
+    //     {id: '4', label: 'T4'},
+    //     {id: '0', label: 'Anual'},
+    // ]
+
 const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 
   return (
     <>
     
-        <div className='p-10'>
-            <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6 mb-10'>
+        <div className='p-6 sm:p-10 inter'>
+            <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6'>
                 <p className='mont_semibold text-4xl'>Taxes</p>
                 {/* <button 
                 onClick={(e) => alert()}
@@ -98,6 +108,7 @@ const months = ["january","february","march","april","may","june","july","august
                 </span>
                 </button> */}
             </div>
+            <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
 
             {alertIrpfNotSet &&
             <div className='inter px-8 py-5 bg-sky-50 dark:bg-blue-950 dark:text-white rounded-2xl mb-5'>
@@ -106,12 +117,18 @@ const months = ["january","february","march","april","may","june","july","august
             </div>}
 
             <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-full px-2 py-1 rounded-3xl flex justify-between items-center gap-5 border border-[#0000001a] mb-4 montserrat'>
-                <div id='1' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 1 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>T1 {todayMonth < 3 && 'Actual'}</div>
+                <div id='1' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 1 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>T1 {todayMonth < 3 && <span className='w-2 h-2 bg-primary rounded-2xl relative after:w-2 after:h-2 after:bg-primary after:rounded-2xl after:animate-ping after:top-0 after:left-0 after:absolute '/>}</div>
                 <div id='2' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 2 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T2 {todayMonth >= 3 && todayMonth < 6 && <span className='w-2 h-2 bg-primary rounded-2xl relative after:w-2 after:h-2 after:bg-primary after:rounded-2xl after:animate-ping after:top-0 after:left-0 after:absolute '/>}</div>
-                <div id='3' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 3 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T3 {todayMonth >= 6 && todayMonth < 9 && 'Actual'}</div>
-                <div id='4' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 4 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T4 {todayMonth >= 9 && 'Actual'}</div>
+                <div id='3' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 3 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T3 {todayMonth >= 6 && todayMonth < 9 && <span className='w-2 h-2 bg-primary rounded-2xl relative after:w-2 after:h-2 after:bg-primary after:rounded-2xl after:animate-ping after:top-0 after:left-0 after:absolute '/>}</div>
+                <div id='4' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 4 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >T4 {todayMonth >= 9 && <span className='w-2 h-2 bg-primary rounded-2xl relative after:w-2 after:h-2 after:bg-primary after:rounded-2xl after:animate-ping after:top-0 after:left-0 after:absolute '/>}</div>
                 <div id='0' onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == 0 ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >Anual</div>
             </div>
+
+            {/* <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-full px-2 py-1 rounded-3xl flex justify-between items-center gap-5 border border-[#0000001a] mb-4 montserrat'>
+                {FILTERS.map( el => <>
+                    <div id={el.id} onClick={(e) => setQuarter(Number(e.currentTarget.id))} className={`${quarter == Number(el.id) ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} flex gap-3 items-center justify-center text-center w-full px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{el.label}</div>
+                </>)}
+            </div> */}
 
             <div className='inter w-full h-full border border-[#0000001a] rounded-2xl py-5 px-8 flex flex-col gap-5'>
                 {quarter != 0 ? <p>Trimestre {quarter} -  {tUtils(`months.${months[(quarter-1)*3]}`).slice(0,3)}-{tUtils(`months.${months[quarter*3-1]}`).slice(0,3)} {today.getFullYear()}</p> : <p>Anual</p>}
