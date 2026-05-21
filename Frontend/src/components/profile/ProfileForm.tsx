@@ -4,7 +4,7 @@ import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { UserProfile } from "../../api/AuthServices";
 import type { ProfileFormData, ProfileRole } from "../../pages/Profile";
 import DropdownSelect from "../materials/DropdownSelect";
-import { irpfOptions, ivaOptions } from "../../utils/taxOptions";
+import { ivaOptions } from "../../utils/taxOptions";
 import { hasNumbers, isValidPhoneNumber } from "../../utils/profileValidation";
 import GearIcon from "/src/assets/icons/Gear.svg?react";
 import PadlockIcon from "/src/assets/icons/Padlock.svg?react";
@@ -238,18 +238,22 @@ function ProfileForm({
 
             <label className={labelClass}>
               {t("irpf")}
-              <DropdownSelect
-                name="irpf"
-                value={form.irpf}
-                placeholder={t("select_option")}
-                options={irpfOptions}
-                onChange={onFieldChange}
-                buttonClassName={inputClass}
-              />
               <input
-                type="hidden"
+                className={inputClass}
+                type="number"
+                min={0}
+                max={60}
+                step={1}
                 {...register("irpf", {
-                  required: t("validation.irpf_required")
+                  required: t("validation.irpf_required"),
+                  min: {
+                    value: 0,
+                    message: t("validation.irpf_range")
+                  },
+                  max: {
+                    value: 60,
+                    message: t("validation.irpf_range")
+                  }
                 })}
               />
               {errors.irpf && (

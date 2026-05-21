@@ -525,7 +525,7 @@ class AuthController extends Controller
             'modulo_iva' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
             'civil_state' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'in:soltero,casado,divorciado,separado,viudo,pareja_de_hecho'],
             'company' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'string', 'max:255'],
-            'irpf' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:100'],
+            'irpf' => [Rule::requiredIf($user->rol === 'autonomo'), 'nullable', 'numeric', 'min:0', 'max:60'],
         ], [
             'phone_number.required' => 'El telefono es obligatorio.',
             'phone_number.regex' => $phoneFormatMessage,
