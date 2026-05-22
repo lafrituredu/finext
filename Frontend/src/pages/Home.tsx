@@ -153,9 +153,9 @@ function Home() {
         <div className="h-64"></div>
       </div>
       <div className="hidden sm:flex flex-row justify-center items-center w-full gap-4 px-10 overflow-hidden">
-        <hr id="hr_arrow_left" className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
-        <a id="arrowDownIcon" href="#everything_one_place"><ArrowDownDotsIcon   className="shrink-0 animate-pulse text-gray-500 text-gray-700" /></a>
-        <hr id="hr_arrow_right" className="flex-1 border-t border-gray-300 dark:border-gray-800 mx-20" />
+        <hr id="hr_arrow_left" className="flex-1 border-t border-gray-300 dark:border-gray-700 mx-20" />
+        <a id="arrowDownIcon" href="#everything_one_place"><ArrowDownDotsIcon   className="shrink-0 animate-pulse text-gray-500 dark:text-gray-700" /></a>
+        <hr id="hr_arrow_right" className="flex-1 border-t border-gray-300 dark:border-gray-700 mx-20" />
       </div>
       {/* --- COINTAINER 1 (Everything in one place) --- */}
       <div className="flex flex-col justify-center items-center mx-5 sm:py-20 py-15">

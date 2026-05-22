@@ -10,7 +10,7 @@ function Navbar() {
     const { t } = useTranslation("nav");
 
     //Arrow function linkClass: Detecta la ruta que esta activa y le da un estilo diferente
-    const linkClass = ({ isActive }: { isActive: boolean }) => `cursor-pointer lg:px-8 px-4 transition ${isActive ? "text-[#84A2EB] drop-shadow-[0_0_6px_rgb(59,130,246,0.2)] font-bold" : "text-black dark:text-[#D8E0F9] hover:text-[#9bb3ef]"}`
+    const linkClass = ({ isActive }: { isActive: boolean }) => `whitespace-nowrap cursor-pointer lg:px-8 px-4 transition ${isActive ? "text-[#84A2EB] drop-shadow-[0_0_6px_rgb(59,130,246,0.2)] font-bold" : "text-black dark:text-[#D8E0F9] hover:text-[#9bb3ef]"}`
 
     const [opened, setOpened] = useState(false);
     const toggleMenu = () => {
@@ -60,7 +60,7 @@ function Navbar() {
     
     <div className={`md:hidden flex flex-col fixed z-2 w-full h-fit bg-gray-200 dark:bg-gray-700 shadow-md rounded-b-[30px] items-center
       transition-transform duration-300 ease-in-out ${opened ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="pt-30 pb-5">
+        <div className="flex flex-wrap justify-center items-center pt-30 pb-5 gap-2">
             <NavLink to="/" className={linkClass}>{t("home")}</NavLink>
             <NavLink to="/about" className={linkClass}>{t("about_us")}</NavLink>
             <NavLink to="/contact" className={linkClass}>{t("contact_us")}</NavLink>
