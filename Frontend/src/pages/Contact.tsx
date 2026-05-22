@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
+import api from "../api/axiosInstance";
 
 
 type ContactFormValues = {
@@ -35,10 +36,7 @@ function Contact() {
       if (isSubmitting) return //Return so it doesn't send duplicates
       setIsSubmitting(true)
       try {
-        console.log("Name: " + data.name)
-        console.log("Email: " + data.email)
-        console.log("Subject: " + data.subject)
-        console.log("Message: " + data.message)
+        await api.post<{ message: string }>('/contact', data);
       } catch (error) {
         setIsSubmitting(false)
       }
@@ -52,7 +50,7 @@ function Contact() {
       <p className="inter max-w-160 sm:text-center text-gray-600 dark:text-dark-text">{t('hero_subtitle')}</p>
     </div>
     <div className="flex flex-col justify-center items-center">
-      <div className="bg-white dark:bg-dark-card rounded-2xl md:rounded-3xl shadow-sm p-5 md:p-8 ring-1 ring-gray-300 dark:ring-[#1d2344] w-[35%]">
+      <div className="bg-white dark:bg-dark-card rounded-2xl md:rounded-3xl shadow-sm p-5 md:p-8 ring-1 ring-gray-300 dark:ring-[#1d2344] sm:w-[35%] w-full">
         <h3 className="mont_semibold text-xl md:text-2xl text-black dark:text-white mb-2">
           {t('form_title')}
         </h3>
@@ -139,7 +137,8 @@ function Contact() {
           <button
             type="submit"
             disabled={!isValid}
-            className="w-full bg-primary text-white py-3 rounded-lg mont_semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            className="w-full bg-primary text-white py-3 rounded-lg mont_semibold text-sm hover:bg-primary/90 
+            transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
             {t('send_button')}
           </button>
         </form>
