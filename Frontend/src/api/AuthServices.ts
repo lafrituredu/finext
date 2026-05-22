@@ -149,6 +149,10 @@ export const deleteCurrentUserAccount = async (): Promise<AuthResponse> => {
 // LOGOUT
 export const logoutUser = async (): Promise<void> => {
   await api.post('/logout');
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("session-last-activity");
+  
 };
 
 // CHECK EMAIL

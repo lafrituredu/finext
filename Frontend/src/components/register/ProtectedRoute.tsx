@@ -39,32 +39,31 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     checkToken();
   }, []);
 
-  if (authState.status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-dark-background">
-        <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
-        <div className="hidden">
-          <DarkButton />
-          <Language />
-        </div>
-      </div>
-    );
-  }
+  // if (authState.status === "loading") {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-dark-background">
+  //       <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
+  //       <div className="hidden">
+  //         <DarkButton />
+  //         <Language />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (authState.status === "unauthenticated") {
     return <Navigate to="/login" />;
-  }
-
-  if (authState.status === "unverified") {
+  }else if (authState.status === "unverified") {
     return (
       <Navigate
         to={`/verify-email?status=pending&email=${encodeURIComponent(authState.email)}`}
         replace
       />
     );
+  }else if (authState.status === "authenticated"){
+    return children;
   }
 
-  return children;
 };
 
 export default ProtectedRoute;
