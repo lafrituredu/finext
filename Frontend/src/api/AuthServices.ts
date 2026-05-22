@@ -36,6 +36,12 @@ export interface UserProfile {
   autonomo: AutonomoProfile | null
 }
 
+export type UserRole = UserProfile['rol']
+
+export interface CurrentUserRoleResponse {
+  rol: UserRole
+}
+
 export interface UpdateUserProfilePayload {
   username: string
   full_name: string
@@ -47,7 +53,8 @@ export interface UpdateUserProfilePayload {
   irpf?: string
 }
 
-// LOGIN
+// LOGIN: envia credenciales al backend. Si son validas, Laravel devuelve
+// el usuario y un token Sanctum que la vista guardara en localStorage.
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/login', {
     email,
@@ -57,7 +64,8 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
   return response.data
 }
 
-// REGISTER
+// REGISTER: recibe el payload ya preparado desde la vista. El backend decide
+// si crea solo User o tambien Autonomo segun el campo rol.
 export const registerUser = async (data: {
   email: string
   password: string
@@ -110,10 +118,16 @@ export const resetUserPassword = async (data: {
 export const getGoogleAuthUrl = (): string =>
   `${API_BASE_URL.replace(/\/$/, '')}/auth/google/redirect`
 
-// GET CURRENT USER
+// GET CURRENT USER: endpoint protegido. Sirve para cargar perfil y tambien
+// para comprobar si el token actual sigue siendo valido.
 export const getCurrentUser = async (): Promise<UserProfile> => {
   const response = await api.get<UserProfile>('/me');
   return response.data;
+};
+
+export const getCurrentUserRole = async (): Promise<UserRole> => {
+  const response = await api.get<CurrentUserRoleResponse>('/me/role');
+  return response.data.rol;
 };
 
 export const updateCurrentUser = async (
@@ -146,7 +160,7 @@ export const deleteCurrentUserAccount = async (): Promise<AuthResponse> => {
   return response.data;
 };
 
-// LOGOUT
+
 export const logoutUser = async (): Promise<void> => {
   await api.post('/logout');
   localStorage.removeItem("token");
@@ -155,13 +169,13 @@ export const logoutUser = async (): Promise<void> => {
   
 };
 
-// CHECK EMAIL
+//validacion previa al registro para avisar antes de enviar todo el formulario.
 export const checkEmail = async (email: string) => {
   const response = await api.get(`/check-email?email=${email}`)
   return response.data
 }
 
-// CHECK USERNAME
+//validacion previa al registro para evitar usernames duplicados.
 export const checkUsername = async (username: string) => {
   const response = await api.get(`/check-username?username=${username}`)
   return response.data

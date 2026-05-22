@@ -52,6 +52,8 @@ const Login: React.FC = () => {
   const handleGoogleLogin = () => {
     setError("");
     setSuccessMessage("");
+    // Google empieza fuera de React: mandamos el navegador al endpoint Laravel,
+    // y el backend se encarga de redirigir a Google con sus credenciales OAuth.
     window.location.assign(getGoogleAuthUrl());
   };
 
@@ -67,18 +69,24 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
+      // loginUser llama a POST /api/login. Si el backend acepta las credenciales,
+      // devuelve el modelo de usuario y el token de acceso Sanctum.
       const data = await loginUser(email.trim(), password);
 
       if (!data.token || !data.user?.username) {
         throw new Error("La respuesta del servidor no incluye la sesión esperada.");
       }
 
+      // El token queda guardado en el navegador. axiosInstance lo leera en
+      // cada request y lo enviara en Authorization: Bearer TOKEN.
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", data.user.username);
       navigate("/dashboard");
     } catch (err: any) {
       const responseData = err.response?.data;
 
+      // Caso especial: credenciales correctas pero correo sin verificar.
+      // No se entra al dashboard hasta que el backend marque email_verified_at.
       if (responseData?.code === "EMAIL_NOT_VERIFIED" && responseData?.email) {
         navigate(
           `/verify-email?status=pending&email=${encodeURIComponent(responseData.email)}`,

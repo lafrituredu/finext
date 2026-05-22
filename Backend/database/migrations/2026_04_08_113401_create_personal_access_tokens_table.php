@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Sanctum guarda aqui el hash del token que se entrega al frontend.
+        // El token completo solo se ve una vez, cuando createToken() lo devuelve.
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');

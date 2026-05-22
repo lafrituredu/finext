@@ -5,6 +5,8 @@ export type RegisterPayload = Omit<RegisterFormData, "confirmPassword">;
 export const buildRegisterPayload = (
   formData: RegisterFormData
 ): RegisterPayload => {
+  // El formulario trabaja con confirmPassword para la vista, pero el backend
+  // no lo necesita. Aqui se crea solo el contrato que espera /api/register.
   const payload: RegisterPayload = {
     email: formData.email,
     password: formData.password,
@@ -21,6 +23,8 @@ export const buildRegisterPayload = (
     google_setup_token: formData.google_setup_token
   };
 
+  // Los campos fiscales solo viajan cuando el usuario se registra como autonomo.
+  // Para particulares se dejan vacios y Laravel no los exige.
   if (formData.rol === "autonomo") {
     payload.dni = formData.dni;
     payload.birthdate = formData.birthdate;

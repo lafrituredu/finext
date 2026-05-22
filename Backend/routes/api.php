@@ -10,7 +10,8 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\RecurrentTransactionController;
 use App\Http\Controllers\ContactController;
 
-// AUTH
+// AUTH PUBLICO: estas rutas no necesitan token porque sirven para crear sesion,
+// registrar usuarios, verificar correo, recuperar password o iniciar Google OAuth.
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
@@ -23,11 +24,13 @@ Route::get('/check-email', [AuthController::class, 'checkEmail']);
 Route::get('/check-username', [AuthController::class, 'checkUsername']);
 Route::post('/contact', [ContactController::class, 'send']);
 
-
+// AUTH PRIVADO: Sanctum lee el Bearer token, busca el usuario propietario
+// y solo entonces permite entrar a las operaciones del dashboard.
 Route::middleware(['auth:sanctum','generate.recurrents'])->group(function () {
 
     // Usuario autenticado
     Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/me/role', [AuthController::class, 'currentUserRole']);
     Route::put('/me', [AuthController::class, 'updateProfile']);
     Route::delete('/me', [AuthController::class, 'deleteAccount']);
     Route::post('/me/avatar', [AuthController::class, 'updateAvatar']);

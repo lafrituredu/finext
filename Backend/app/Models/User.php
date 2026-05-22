@@ -12,6 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
+    // HasApiTokens conecta el modelo con Laravel Sanctum y permite crear,
+    // consultar y borrar tokens en la tabla personal_access_tokens.
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -20,15 +22,15 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
-    'username',
-    'full_name',
-    'phone_number',
-    'rol',
-    'email',
-    'email_verified_at',
-    'google_id',
-    'avatar',
-    'password'
+        'username',
+        'full_name',
+        'phone_number',
+        'rol',
+        'email',
+        'email_verified_at',
+        'google_id',
+        'avatar',
+        'password'
     ];
 
     /**
@@ -56,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
 public function autonomo()
 {
+    // Datos fiscales adicionales. Solo existe para usuarios con rol autonomo.
     return $this->hasOne(Autonomo::class);
 }
 

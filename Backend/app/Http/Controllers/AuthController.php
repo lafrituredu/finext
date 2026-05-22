@@ -22,10 +22,13 @@ class AuthController extends Controller
     // REGISTER
     public function register(Request $request)
     {
+        // Normalizamos DNI/NIE antes de validar para comparar siempre el mismo formato.
         $this->normalizeIdentityDocumentInput($request, 'dni');
         $googleProfile = null;
         $googleSetupUser = null;
 
+        // Si el registro viene desde Google, el token temporal confirma que
+        // Google ya ha validado email e identidad basica del usuario.
         if ($request->filled('google_setup_token')) {
             $googleProfile = $this->decodeGoogleSetupToken((string) $request->input('google_setup_token'));
 
@@ -53,6 +56,8 @@ class AuthController extends Controller
                 'regex:/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/'
             ];
 
+        // Validacion del contrato que llega desde Register.tsx. Los campos fiscales
+        // solo son obligatorios cuando rol=autonomo.
         $request->validate([
             'username' => [
                 'required',
@@ -87,6 +92,8 @@ class AuthController extends Controller
 
         $locale = $this->mailLocale($request->input('locale'));
 
+        // User y Autonomo se crean dentro de una transaccion para evitar medias altas:
+        // si falla una parte, no queda un usuario incompleto.
         $user = DB::transaction(function () use ($request, $googleProfile, $googleSetupUser) {
             $userData = [
                 'username' => $request->username,
@@ -99,6 +106,8 @@ class AuthController extends Controller
                 'password' => Hash::make($googleProfile ? Str::random(40) : $request->password),
             ];
 
+            // En el onboarding de Google puede existir ya un usuario parcial.
+            // En ese caso se completa en vez de crear un duplicado.
             if ($googleSetupUser) {
                 $googleSetupUser->forceFill($userData)->save();
                 $user = $googleSetupUser->fresh();
@@ -106,6 +115,7 @@ class AuthController extends Controller
                 $user = User::create($userData);
             }
 
+            // El modelo Autonomo almacena los datos fiscales y se relaciona por user_id.
             if ($request->rol === 'autonomo') {
                 Autonomo::create([
                     'user_id' => $user->id,
@@ -121,8 +131,11 @@ class AuthController extends Controller
             return $user;
         });
 
+        // Sanctum crea el token de API que el frontend guardara y reenviara como Bearer.
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // En registro normal se envia correo de verificacion. Google ya devuelve
+        // un email verificado, por eso no necesita este paso.
         if (!$googleProfile) {
             app()->terminating(function () use ($user, $locale) {
                 $this->sendVerificationEmail($user, $locale);
@@ -144,6 +157,8 @@ class AuthController extends Controller
     // LOGIN
     public function login(Request $request)
     {
+        // El login solo acepta email/password. La password nunca se compara en claro:
+        // se valida contra el hash guardado en users.password.
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -157,6 +172,8 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Aunque las credenciales sean correctas, no se deja entrar al dashboard
+        // hasta que email_verified_at tenga valor.
         if (!$user->hasVerifiedEmail()) {
             return response()->json([
                 'message' => 'Debes verificar tu correo antes de iniciar sesión.',
@@ -165,6 +182,7 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Cada login genera un token nuevo. El logout borrara solo el token actual.
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -213,6 +231,8 @@ class AuthController extends Controller
             ]));
         }
 
+        // Google devuelve un code temporal. Laravel lo intercambia por access_token
+        // y despues pide el perfil real del usuario a Google.
         $code = (string) $request->query('code', '');
         if ($code === '') {
             return redirect()->away($this->googleFrontendCallbackUrl([
@@ -306,6 +326,8 @@ class AuthController extends Controller
             return null;
         });
 
+        // Si no existe usuario, no se crea aun: se manda al frontend con un token
+        // temporal para terminar el registro con los campos propios de Finext.
         if (!$user) {
             return redirect()->away($this->googleFrontendCallbackUrl([
                 'google_setup_token' => $this->makeGoogleSetupToken($googleId, $email, $name),
@@ -315,6 +337,8 @@ class AuthController extends Controller
             ]));
         }
 
+        // Si el usuario existe pero le faltan datos obligatorios de Finext,
+        // tambien pasa por onboarding antes de recibir token definitivo.
         if ($this->needsGoogleOnboarding($user)) {
             return redirect()->away($this->googleFrontendCallbackUrl([
                 'google_setup_token' => $this->makeGoogleSetupToken($googleId, $email, $name),
@@ -324,6 +348,7 @@ class AuthController extends Controller
             ]));
         }
 
+        // Usuario Google completo: se emite token Sanctum y se devuelve al callback React.
         $token = $user->createToken('auth_token')->plainTextToken;
         return redirect()->away($this->googleFrontendCallbackUrl([
             'token' => $token,
@@ -490,9 +515,20 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
+        // auth:sanctum ya ha identificado al usuario por el Bearer token.
+        // Aqui solo devolvemos su perfil y la relacion autonomo si existe.
         $user = $request->user()->load(['autonomo']);
 
         return response()->json($this->withAvatarUrl($user));
+    }
+
+    public function currentUserRole(Request $request)
+    {
+        // Devuelve solo el rol del usuario autenticado. Es util cuando el
+        // frontend necesita activar vistas o campos sin cargar todo el perfil.
+        return response()->json([
+            'rol' => $request->user()->rol,
+        ]);
     }
 
     public function updateProfile(Request $request)
@@ -622,6 +658,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // Elimina solo el token usado en esta peticion. Otros dispositivos
+        // podrian conservar sus tokens hasta que se borren o caduquen.
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
@@ -631,6 +669,8 @@ class AuthController extends Controller
 
     private function withAvatarUrl(User $user): User
     {
+        // La API devuelve una URL lista para pintar el avatar. Si es autonomo,
+        // nunca devuelve el DNI real: solo informa de si esta guardado.
         $user->setAttribute(
             'avatar_url',
             $user->avatar ? Storage::disk('public')->url($user->avatar) : null

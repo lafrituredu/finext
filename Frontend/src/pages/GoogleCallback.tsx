@@ -36,6 +36,8 @@ const GoogleCallback: React.FC = () => {
       return;
     }
 
+    // Si el backend no encuentra usuario completo, devuelve google_setup_token.
+    // Se manda a Register para completar telefono, rol y datos fiscales si toca.
     if (googleSetupToken) {
       const params = new URLSearchParams({
         google_setup_token: googleSetupToken,
@@ -53,6 +55,8 @@ const GoogleCallback: React.FC = () => {
       return;
     }
 
+    // Usuario Google ya existente o completado: se guarda el token Sanctum
+    // recibido del backend y se entra en el dashboard.
     localStorage.setItem("token", token);
     localStorage.setItem("user", username);
     window.history.replaceState({}, document.title, "/auth/google/callback");

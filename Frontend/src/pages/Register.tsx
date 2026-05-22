@@ -106,6 +106,8 @@ const Register: React.FC = () => {
       return;
     }
 
+    // Cuando Google devuelve un usuario nuevo, Laravel no lo registra completo
+    // todavia. Rellena email/nombre/username y obliga a terminar el formulario.
     setFormData((current) => ({
       ...current,
       email: googleEmail || current.email,
@@ -147,6 +149,8 @@ const Register: React.FC = () => {
     setError("");
 
     try {
+      // Antes de pasar al siguiente paso se pregunta al backend si email y username
+      // ya existen en la tabla users. Asi el usuario no rellena todo para fallar al final.
       const [emailData, usernameData] = await Promise.all([
         checkEmail(formData.email),
         checkUsername(formData.username)
@@ -202,11 +206,14 @@ const Register: React.FC = () => {
     }
 
     if (formData.rol === "autonomo") {
+      // Los autonomos necesitan un tercer paso con datos fiscales que se guardan
+      // en la tabla autonomos relacionada con users.
       setError("");
       setStep(3);
       return;
     }
 
+    // Los particulares no tienen datos fiscales, asi que el registro se envia ya.
     void handleSubmit();
   };
 
@@ -235,6 +242,7 @@ const Register: React.FC = () => {
 
   const handleGoogleRegister = () => {
     setError("");
+    // Igual que en login, el flujo OAuth empieza redirigiendo al endpoint Laravel.
     window.location.assign(getGoogleAuthUrl());
   };
 
@@ -262,10 +270,14 @@ const Register: React.FC = () => {
     }
 
     try {
+      // buildRegisterPayload quita confirmPassword y prepara los nombres de campos
+      // que espera AuthController::register.
       const dataToSend = buildRegisterPayload(formData);
       const locale = i18n.language.startsWith("es") ? "es" : "en";
       const data = await registerUser({ ...dataToSend, locale });
 
+      // El backend devuelve token tambien tras registrar. Para registro normal
+      // se conserva mientras el usuario verifica email; para Google entra directo.
       if (data.token && data.user?.username) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", data.user.username);

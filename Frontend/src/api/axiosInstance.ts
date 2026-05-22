@@ -15,6 +15,8 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
 
+    // Todas las peticiones protegidas pasan por aqui. Si existe token,
+    // se envia como Bearer para que Laravel Sanctum identifique al usuario.
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
@@ -28,8 +30,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Un 401 significa que el backend no acepta la sesion actual:
+    // token borrado, caducado o invalido. Se limpia el navegador y se vuelve al login.
     if (error.response?.status === 401) {
-      
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
