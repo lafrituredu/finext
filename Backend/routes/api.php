@@ -22,6 +22,7 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/check-email', [AuthController::class, 'checkEmail']);
 Route::get('/check-username', [AuthController::class, 'checkUsername']);
+// Contacto publico: valida el formulario y dispara el envio por Mailtrap.
 Route::post('/contact', [ContactController::class, 'send']);
 
 // AUTH PRIVADO: Sanctum lee el Bearer token, busca el usuario propietario

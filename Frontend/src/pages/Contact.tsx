@@ -20,7 +20,8 @@ function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  //React form hook
+  // React Hook Form gestiona los valores y valida el formulario antes de enviarlo.
+  // La API volvera a validar en Laravel, asi que esta capa es solo ayuda para la vista.
   const {register, handleSubmit, setValue, formState: { errors, isValid }} = useForm<ContactFormValues>({
     mode: "onChange",
     defaultValues: {
@@ -31,9 +32,10 @@ function Contact() {
     }
   })
 
-  //Submit form
+  // Envia el formulario a POST /api/contact. El backend no crea registros:
+  // valida los datos y manda una respuesta automatica usando Mailtrap.
     const onSubmit = async (data: ContactFormValues) => {
-      if (isSubmitting) return //Return so it doesn't send duplicates
+      if (isSubmitting) return // Evita dobles envios si el usuario pulsa varias veces.
       setIsSubmitting(true)
       try {
         await api.post<{ message: string }>('/contact', data);

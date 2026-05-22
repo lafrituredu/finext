@@ -10,6 +10,7 @@ class ContactController extends Controller
 {
     public function send(Request $request): JsonResponse
     {
+        //valida todo aqui antes de usar los datos para el correo de Mailtrap.
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -29,6 +30,7 @@ class ContactController extends Controller
             ], 500);
         }
 
+        // Se envia una respuesta automatica al correo introducido por el usuario.
         $response = Http::withHeaders([
             'Api-Token' => $token,
         ])->post($endpoint, [
