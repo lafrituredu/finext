@@ -12,5 +12,9 @@
     "october": "October",
     "november": "November",
     "december": "December"
+  },
+  "confirmation" : {
+    "delete" : "Delete",
+    "abort" : "Abort"
   }
 }

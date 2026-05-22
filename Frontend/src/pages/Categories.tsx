@@ -53,13 +53,16 @@ function Categories() {
         if (a.user_id === null && b.user_id !== null) return 1
         if (a.user_id !== null && b.user_id === null) return -1
         
+        const nameA = a.user_id !== null ? a.name : ct(`categoryNames.${a.name}`, a.name)
+        const nameB = b.user_id !== null ? b.name : ct(`categoryNames.${b.name}`, b.name)
+        
         if (sortOrder === 'desc') {
-          return a.name.localeCompare(b.name)
+          return nameA.localeCompare(nameB)
         } else {
-          return b.name.localeCompare(a.name)
+          return nameB.localeCompare(nameA)
         }
       })
-    }, [categories, sortOrder])
+    }, [categories, sortOrder, ct])
 
     const categoriasPropias = sortedCategories.filter(c => c.user_id != null);
     const categoriasDefault = sortedCategories.filter(c => c.user_id == null);

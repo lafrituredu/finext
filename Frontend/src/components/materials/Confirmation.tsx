@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 type IconType = React.FC<React.SVGProps<SVGSVGElement>>
 
 interface ConfirmationProps {
@@ -10,16 +11,17 @@ interface ConfirmationProps {
     cancelLabel?: string
     confirmDisabled?: boolean
 }
+
 export function Confirmation({
   Icon,
   children,
   close,
   onConfirm,
-  confirmLabel = "Delete",
-  cancelLabel = "Abort",
+  confirmLabel,
+  cancelLabel,
   confirmDisabled = false
 }:ConfirmationProps) {
-
+  const { t } = useTranslation("utils")
   return (
     <>
         <div className="flex flex-col items-center justify-center fixed bg-[#0000006b] min-w-full min-h-full z-60 top-0 left-0">
@@ -33,10 +35,10 @@ export function Confirmation({
                       onClick={onConfirm}
                       disabled={confirmDisabled}
                     >
-                      {confirmLabel}
+                      {confirmLabel ?? t("confirmation.delete")}
                     </button>
                     <button className="bg-background ring-1 ring-gray-300 dark:bg-dark-background dark:ring-dark-card rounded-full py-2 w-full cursor-pointer select-none 
-                    hover:scale-104 transition-all duration-100 ease-in-out" onClick={close}>{cancelLabel}</button>
+                    hover:scale-104 transition-all duration-100 ease-in-out" onClick={close}>{cancelLabel ?? t("confirmation.abort")}</button>
                 </div>
             </div>
 
