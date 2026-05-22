@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DarkButton from "../buttons/DarkButton.tsx";
 import Language from "../buttons/Lang.tsx";
 import api from "../../api/axiosInstance";
+import FiNextIcon from '/src/assets/icons/finext.svg?react'
 
 type AuthState =
   | { status: "loading" }
@@ -45,17 +46,21 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     checkToken();
   }, []);
 
-  // if (authState.status === "loading") {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-dark-background">
-  //       <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
-  //       <div className="hidden">
-  //         <DarkButton />
-  //         <Language />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (authState.status === "loading") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-dark-background gap-4">
+        <FiNextIcon className="w-12"/>
+        <div className="flex flex-row gap-2 *:w-2 *:h-2 *:rounded-full *:bg-primary *:animate-pulse">
+          <div className=" delay-100" />
+          <div className=" delay-150" />
+          <div className=" delay-200" />
+        </div>
+        <div className="hidden">
+          <Language/><DarkButton/>
+        </div>
+      </div>
+    );
+  }
 
   if (authState.status === "unauthenticated") {
     return <Navigate to="/login" />;

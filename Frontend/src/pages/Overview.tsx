@@ -76,8 +76,10 @@ const config: {options: ApexOptions, series: any} = {
     markers: { size: 5 },
     xaxis: {
         categories: months.map(m => m.name)
-    }
-    
+    },
+    tooltip: {
+      theme: isDark ? "dark" : "light",
+    },
     },
     series: [
     {
@@ -115,8 +117,10 @@ const configLastThreeMonths: {options: ApexOptions, series: any} = {
     markers: { size: 5 },
     xaxis: {
         categories: lastMonths.map(m => m.name)
-    }
-    
+    },    
+    tooltip: {
+      theme: isDark ? "dark" : "light",
+    },
     },
     series: [
     {
