@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs' //dayjs -> JS library used to format dates.
 
 //Transactions
-import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext'
+import { useTransactions} from '../contexts/TransactionContext'
 import { deleteTransaction, getTransactions, type Transaction } from '../api/TransactionService'
 import TransactionForm from "../components/materials/TransactionForm"
 import TransactionCard from '../components/transactions/TransactionCard'
@@ -27,8 +27,7 @@ function Transactions() {
   const { t } = useTranslation("transactions")
   const { t:u } = useTranslation("utils")
   //Transactions
-  const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType
-  const [loading, setLoading] = useState(false)
+  const { transactions, loading, setTransactions, refetchTransactions } = useTransactions()
   const [error, setError] = useState<string | null>(null)
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)

@@ -3,6 +3,7 @@ import { TransactionsProvider } from "./TransactionContext";
 import { CategoryProvider } from "./CategoryContext";
 import { BillsProvider } from "./BillContext";
 import { GoalProvider } from "./GoalContext";
+import { DashboardLoader } from "./DashboardLoader";
 const DashboardContext = createContext<any>(null);
 
 export const DashboardProvider = ({children}: any) => {
@@ -12,7 +13,9 @@ export const DashboardProvider = ({children}: any) => {
             <CategoryProvider>
                 <TransactionsProvider>
                     <BillsProvider>
-                    {children}
+                        <DashboardLoader>
+                            {children}
+                        </DashboardLoader>
                     </BillsProvider>
                 </TransactionsProvider>
             </CategoryProvider>

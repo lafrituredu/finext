@@ -35,7 +35,7 @@ function Categories() {
 
     useEffect(() => {
       refetchCategories()
-    },[categories])
+    },[])
 
 
 
