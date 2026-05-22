@@ -24,28 +24,30 @@ function Home() {
   const { t } = useTranslation("home");
   const [PDFanimation,setPDFanimation] = useState(false);
 
-  animate("#HeroLeft > *",{
-      x: ["-100px", "0px"],
-      opacity: [0, 1],
-      duration: '1000',
-      delay: stagger(100)
-  });
 
-  animate('#arrowDownIcon',{
-      y: ["-50px", "0px"],
-      opacity: [0, 1],
-      duration: '1500'
-  });
-  animate('#hr_arrow_left', {
-      x: ["-150px", "0px"],
-      duration: '1000'
-  });
-  animate('#hr_arrow_right', {
-      x: ["150px", "0px"],
-      duration: '1000'
-  });
 
     useEffect(() => {
+      animate("#HeroLeft > *",{
+          x: ["-100px", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: stagger(100)
+      });
+
+      animate('#arrowDownIcon',{
+          y: ["-50px", "0px"],
+          opacity: [0, 1],
+          duration: '1500'
+      });
+      animate('#hr_arrow_left', {
+          x: ["-150px", "0px"],
+          duration: '1000'
+      });
+      animate('#hr_arrow_right', {
+          x: ["150px", "0px"],
+          duration: '1000'
+      });
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
