@@ -63,7 +63,7 @@
     }
   },
     "recommendations": {
-        "belowTarget": "Vas por debajo del ritmo recomendado. Deberías aumentar tu aportación mensual para alcanzar la meta a tiempo.",
+        "onBelow": "Vas por debajo del ritmo recomendado. Deberías aumentar tu aportación mensual para alcanzar la meta a tiempo.",
         "aboveTarget": "Vas por encima del ritmo recomendado. Podrías reducir ligeramente tus aportaciones o alcanzarás la meta antes de lo previsto.",
         "onTrack": "Vas en buen camino. Tu ritmo de aportación es adecuado para alcanzar la meta."
     }

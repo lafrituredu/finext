@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Goals from '/src/assets/icons/Goals.svg?react'
 import KpiStatsUp from '/src/assets/icons/Kpi-stats-up.svg?react'
 import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
-import TrendUpIcon from '/src/assets/icons/Trending-up.svg?react'
-import TrendDownIcon from '/src/assets/icons/Trending-down.svg?react'
+// import TrendUpIcon from '/src/assets/icons/Trending-up.svg?react'
+// import TrendDownIcon from '/src/assets/icons/Trending-down.svg?react'
 import Chart from "react-apexcharts";
 import File from "/src/assets/icons/File.svg?react"
 import { getTransactions, type Transaction } from '../api/TransactionService';
@@ -23,8 +23,8 @@ const [select,setSeleceted] = useState<any>('cashflow');
 const { transactions, setTransactions } = useTransactions() as TransactionsContextType;
 const { goals, setGoals } = useGoals() as GoalsContextType;
 
-const [loading, setLoading] = useState(true)
-const [error, setError] = useState<string | null>(null)
+// const [loading, setLoading] = useState(true)
+// const [error, setError] = useState<string | null>(null)
 const today = new Date();
 const currentYear = new Date().getFullYear();
 
@@ -205,7 +205,7 @@ useEffect(() => {
         {/* VISTA GENERAL */}
         <p className='font-semibold mb-2 montserrat'>{t('overview')}</p>
         <div className='w-full grid xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 grid-cols-1 content-between justify-between xl:gap-10 gap-5 mb-10'>
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
                 <div className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('incomes')}
@@ -219,7 +219,7 @@ useEffect(() => {
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
                 <div className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('outcomes')}
@@ -233,22 +233,22 @@ useEffect(() => {
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name }  {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
                 <p className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('cash_flow')}
                     </span>
                     {Number(calculateCashflow()) > 0 ? (
-                        <KpiStatsUp className='text-[#84A2EB] right-0'/>
+                        <KpiStatsUp className='text-primary right-0'/>
                     ) : (
-                        <KpiStatsDown className='text-[#84A2EB] right-0'/>
+                        <KpiStatsDown className='text-primary right-0'/>
                     )}
                 </p>
-                <p className='text-4xl text-[#84A2EB]'>{calculateCashflow()}€</p>
+                <p className='text-4xl text-primary'>{calculateCashflow()}€</p>
                 <p className='text-[#040919b3] dark:text-dark-text'>{ months[today.getMonth()].name } {today.getFullYear()}</p>
             </div>
 
-            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-[#0F1732] px-7 py-5 flex flex-col justify-between gap-3'>
+            <div className='border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-card px-7 py-5 flex flex-col justify-between gap-3'>
                 <p className='flex items-center justify-between'>
                     <span className='flex items-center montserrat'>
                         <span className='bg-[#84A2EB66] p-1 rounded-full me-2'><Goals /></span> {t('open_goals')}
@@ -259,12 +259,12 @@ useEffect(() => {
             </div>
         </div>
 
-        <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-[#0F1732] w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
+        <div id='toggle' className='relative bg-[#EFEFEF] dark:bg-dark-card w-fit px-2 py-1 rounded-3xl flex items-center gap-2 border border-[#0000001a] mb-4 montserrat'>
             <div id='cashflow' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'cashflow' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`}>{t('cash_flow')}</div>
             <div id='lastMonths' onClick={(e) => setSeleceted(e.currentTarget.id)} className={`${select == 'lastMonths' ? 'bg-[#FFF] dark:bg-[#1a2957] w-fit  rounded-2xl' : ''} px-2 py-1 transition-all ease-in-out duration-200 cursor-pointer`} >{t('lastMonths')}</div>
         </div>
 
-        <div className='bg-[#F9F9FA] dark:bg-[#0F1732] px-7 py-5 rounded-2xl mb-10 border border-[#0000001a] dark:border-[#1d2344]'>
+        <div className='bg-[#F9F9FA] dark:bg-dark-card px-7 py-5 rounded-2xl mb-10 border border-[#0000001a] dark:border-[#1d2344]'>
             <div id='cashflow_content' className={`${select == 'cashflow' ? 'visible' : 'hidden' }`}>
                 <p className='montserrat'>{t('incomes_outcomes')}</p>
                 <Chart
@@ -291,7 +291,7 @@ useEffect(() => {
         {/* Financial goals + summary */}
         <div className='grid md:grid-cols-2 grid-cols-1 gap-10'>
             {/* FINANCIAL GOALS */}
-            <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] flex flex-col gap-4'>
+            <div className='w-full bg-[#F9F9FA] px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-dark-card dark:border-[#1d2344] flex flex-col gap-4'>
             {goals?.map( (goal,key) => 
             { const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
               const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
@@ -324,7 +324,7 @@ useEffect(() => {
 
 
             {/* SUMMARY */}
-            <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-[#0F1732] dark:border-[#1d2344] dark:text-dark-text'>
+            <div className='w-full bg-[#F9F9FA] h-fit px-7 py-5 rounded-2xl border border-[#0000001a] dark:bg-dark-card dark:border-[#1d2344] dark:text-dark-text'>
                 <p className='flex items-center montserrat font-semibold gap-2 mb-3'><File className='size-6' /> {t('summary')} {currentYear}</p>
                 
                 {/* TOTAL INCOMES */}

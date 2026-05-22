@@ -23,6 +23,9 @@ function Taxes() {
     const todayMonth = today.getMonth();
     const { t: tUtils } = useTranslation("utils");
 
+    useEffect(() => {
+        
+    },[]);
     
     useEffect(() => {
         let min = (quarter-1)*3;
