@@ -11,5 +11,6 @@
     "financial_goals":"Metas Financieras",
     "summary":"Resumen",
     "total_incomes":"Ingresos Totales",
-    "total_outcomes":"Gastos Totales"
+    "total_outcomes":"Gastos Totales",
+    "no_goals":"No tienes metas abiertas aún."
 }

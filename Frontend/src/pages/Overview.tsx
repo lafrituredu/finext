@@ -323,7 +323,7 @@ useEffect(() => {
           
             )}
                 { goals.length > 2 && <Link className='text-primary underline hover:text-blue-500'  to='/dashboard/goals'>Ver las demás metas</Link>}
-                { goals.length == 0 && <p>No tienes metas abiertas aún</p>}
+                { goals.length == 0 && <p>{t('no_goals')}</p>}
             </div>
 
 

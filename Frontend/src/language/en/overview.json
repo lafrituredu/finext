@@ -11,5 +11,6 @@
     "financial_goals":"Financial Goals",
     "summary":"Summary",
     "total_incomes":"Total Incomes",
-    "total_outcomes":"Total Outcomes"
+    "total_outcomes":"Total Outcomes",
+    "no_goals":"You don't have any open goals yet."
 }
