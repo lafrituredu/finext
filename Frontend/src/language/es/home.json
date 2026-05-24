@@ -1,4 +1,7 @@
 {
+"incomes":"Ingresos",
+"outcomes":"Gastos",
+
 "start_now":"Empieza ahora",
 "lets_go":"Vamos!",
 "next_step": "El siguiente paso en tus finanzas",
@@ -24,5 +27,15 @@
 
 "managing_money_text":"Cuando tus finanzas están repartidas en diferentes herramientas y cuentas, se vuelve difícil entender tu situación real. Los gastos, impuestos y objetivos acaban convirtiéndose rápidamente en confusión.",
 "why_built_text":"Creamos esta plataforma para simplificar la gestión financiera y ofrecer a las personas una visión clara de su dinero, sin complejidad ni confusión.",
-"ready_try_text":"Únete ahora y descubre una forma más inteligente de gestionar tu dinero."
+"ready_try_text":"Únete ahora y descubre una forma más inteligente de gestionar tu dinero.",
+
+"clear_view" : "Gestiona tus finanzas con una vista clara y sencilla",
+"manage_with_a" : "Administra tus finanzas con una",
+"personal_account" : "Cuenta personal",
+
+"generate_pdf":"Generar PDF personalizado como",
+"freelancer":"Autónomo",
+"taxes":"Impuestos",
+"taxes_of":"Impuestos de",
+"auto-generated":"auto-generados"
 }

@@ -19,12 +19,12 @@ import ArrowDownDotsIcon from '/src/assets/icons/ArrowDownDots.svg?react'
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { animate, stagger } from 'animejs';
+import dayjs from "dayjs";
 
 function Home() {
   const { t } = useTranslation("home");
+  const { t:ct } = useTranslation("utils");
   const [PDFanimation,setPDFanimation] = useState(false);
-
-
 
     useEffect(() => {
       animate("#HeroLeft > *",{
@@ -104,6 +104,8 @@ function Home() {
               duration: 1000,
               easing: "easeOutQuad"
             });
+
+            observer.unobserve(el);
           }
         });
       });
@@ -166,32 +168,32 @@ function Home() {
         {/*--- CARDS HERO ---*/}
         <div id="cards_hero" className="w-full flex justify-center pt-25 xl:gap-20 gap-5">
           {/*--- Card left ---*/}
-          <div id="card1" className="lg:flex hidden relative bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div id="card1" className="flex relative bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform overflow-hidden">
             <div className="p-5 inter">
-              <p className="text-2xl bold_montserrat">Gestiona tus finanzas con una vista clara y sencilla</p>
+              <p className="text-2xl bold_montserrat">{t('clear_view')}</p>
             </div>
-            <div className="absolute bottom-0 left-5 translate-x-20 translate-y-0 hover:-translate-y-5 transition-all ease-out w-100 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b border-r px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@jeremyin</span></p>
-            </div>
-
-            <div className="absolute bottom-0 left-5 translate-x-10 translate-y-10 hover:translate-y-5  transition-all ease-out w-100 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@erubio</span></p>
+            <div className="absolute bottom-0 left-5 translate-x-20 translate-y-0 hover:-translate-y-5 transition-all ease-out w-150 bg-white dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b border-r px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><img src="/img/FiNext.png" alt="FiNext-Logo" className="w-5 h-5 min-w-5"/> Finext <span className="font-semibold">@jeremyin</span></p>
             </div>
 
-            <div className="absolute bottom-0 left-5 translate-x-0 translate-y-20 hover:translate-y-15  transition-all ease-out w-120 bg-background dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
-              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><FiNextIcon className="size-5"/> Finext <span className="font-semibold">@magi</span></p>
+            <div className="absolute bottom-0 left-5 translate-x-10 translate-y-10 hover:translate-y-5  transition-all ease-out w-150 bg-white dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><img src="/img/FiNext.png" alt="FiNext-Logo" className="w-5 h-5 min-w-5"/> Finext <span className="font-semibold">@erubio</span></p>
+            </div>
+
+            <div className="absolute bottom-0 left-5 translate-x-0 translate-y-20 hover:translate-y-15  transition-all ease-out w-150 bg-white dark:bg-dark-background border border-gray-300 dark:border-gray-800 h-30  rounded-2xl" >
+              <p className="flex gap-2 items-center inter border-b px-5 py-3.5 border-gray-200 dark:border-gray-900 inter"><img src="/img/FiNext.png" alt="FiNext-Logo" className="w-5 h-5 min-w-5"/> Finext <span className="font-semibold">@magi</span></p>
             </div>
           </div>
           {/*--- Card Middle ---*/}
-          <div id="card2" className="flex flex-col bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
+          <div id="card2" className="lg:flex hidden flex-col bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative overflow-clip">
             <div className="p-5 inter">
-              <p className="text-2xl bold_montserrat">Manage your finances with a <span className="font-bold">Personal account</span></p>
+              <p className="text-2xl bold_montserrat">{t('manage_with_a')} <span className="font-bold">{t('personal_account')}</span></p>
             </div>
 
             <div className="-bottom-2 left-10 absolute w-fit h-fit flex hover:-translate-x-106 transition-all ease-in-out duration-1000 gap-5">
-              <div className='w-100 border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
+              <div className='bg-white w-100 border rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
                   <div className='flex items-center justify-between'>
                       <span className='flex items-center montserrat'>
                           <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('incomes')}
@@ -199,10 +201,10 @@ function Home() {
                       <KpiStatsUp className='text-green-600 right-0'/>
                   </div>
                     <p className='text-4xl text-green-600'>112.321€</p>
-                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ct('months.may')} {dayjs().year()}</p>
               </div>
 
-              <div className='w-100 border transition-all ease-out duration-300 rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
+              <div className='bg-white w-100 border transition-all ease-out duration-300 rounded-2xl border-[#0000001a] dark:border-[#1d2344] dark:bg-dark-background px-7 py-5 flex flex-col gap-3'>
                   <div className='flex items-center justify-between'>
                       <span className='flex items-center montserrat'>
                           <span className='bg-[#84A2EB66] p-1 rounded-full me-2'> <Goals /></span> {t('outcomes')}
@@ -210,7 +212,7 @@ function Home() {
                       <KpiStatsDown className='text-red-600 right-0'/>
                   </div>
                     <p className='text-4xl text-red-600'>112.321€</p>
-                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>May 2026</p>
+                    <p className='text-[#040919b3] dark:text-[#D8E0F9]'>{ct('months.may')} {dayjs().year()}</p>
               </div>
             </div>
           </div>
@@ -218,24 +220,18 @@ function Home() {
           <div  id="card3" className="lg:flex hidden bg-background dark:bg-dark-card w-full sm:w-[420px] h-[250px] rounded-2xl shadow-md ring-1 ring-gray-200 dark:ring-[#050b1f]
           hover:-translate-y-4 duration-400 ease-out transition-transform relative">
             <div className="p-5 inter">
-              <p className="text-2xl bold_montserrat">Generate custom PDF as <span className="font-bold">Freelancer</span></p>
+              <p className="text-2xl bold_montserrat">{t('generate_pdf')} <span className="font-bold">{t('freelancer')}</span></p>
             </div>
               <div className={`absolute w-full h-[50%] bottom-0 left-0 flex items-center justify-center gap-5 overflow-hidden`}>
                 <button onClick={() => setPDFanimation(!PDFanimation)} className="relative bg-primary p-2 border border-primary rounded-full cursor-pointer shadow-md hover:scale-110 transition
                 after:content-[''] after:absolute after:rounded-full after:w-3 after:h-3 after:bg-red-500 after:top-0 after:right-0 after:animate-ping
                 before:content-[''] before:absolute before:rounded-full before:w-3 before:h-3 before:bg-red-500 before:top-0 before:right-0"><PDFIcon className="size-5 text-dark-text" /> </button>
-                <div className={`border border-[#0000001a] dark:border-[#1d2344] h-36  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-4'} transition duration-300 ease-out dark:bg-dark-background`}>
-                  <p className="bold_montserrat font-bold">Taxes | auto-generated</p>
-                  <p className="montserrat">Taxes of { new Date().toLocaleDateString() }</p>
+                <div className={`border bg-white border-[#0000001a] dark:border-[#1d2344] h-36  w-60 px-5 py-3 rounded-2xl ${!PDFanimation ? 'translate-y-35' : 'translate-y-4'} transition duration-300 ease-out dark:bg-dark-background`}>
+                  <p className="bold_montserrat font-bold">{t('taxes')} <span className="text-sm text-gray-400 font-normal">{t('auto-generated')}</span></p>
+                  <p className="montserrat">{t('taxes_of')} { new Date().toLocaleDateString() }</p>
                 </div>
               </div>
           </div>
-        </div>
-        {/* Dots */}
-        <div className="flex flex-row justify-center items-center pt-5 gap-2 lg:hidden">
-          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
-          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
-          <div className="bg-gray-700 rounded-full w-2 h-2"></div>
         </div>
       </div>
       {/* --- COINTAINER 2 (SPONSORS) --- */}

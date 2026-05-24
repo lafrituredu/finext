@@ -1,4 +1,7 @@
 {
+"incomes":"Incomes",
+"outcomes":"Outcomes",
+
 "start_now":"Start Now",
 "lets_go":"Lets go!",
 "next_step": "The next step at your finances",
@@ -24,5 +27,15 @@
 
 "managing_money_text":"When your finances are spread across different tools and accounts, it becomes difficult to understand your real situation. Expenses, taxes, and goals quickly turn into confusion.",
 "why_built_text":"We created this platform to simplify financial management and give people a clear understanding of their money, without complexity or confusion.",
-"ready_try_text":"Join now and experience a smarter way to manage your money."
+"ready_try_text":"Join now and experience a smarter way to manage your money.",
+
+"clear_view" : "Manage your finances with a clear and simple view",
+"manage_with_a" : "Manage your finances with a",
+"personal_account" : "Personal account",
+
+"generate_pdf":"Generate custom PDF as",
+"freelancer":"Freelancer",
+"taxes":"Taxes",
+"taxes_of":"Taxes of",
+"auto-generated":"auto-generated"
 }
