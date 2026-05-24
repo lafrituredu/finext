@@ -80,6 +80,9 @@ import reportsEN from "./language/en/reports.json";
 import catTransES from "./language/es/catTrans.json";
 import catTransEN from "./language/en/catTrans.json";
 
+import taxesES from "./language/es/taxes.json";
+import taxesEN from "./language/en/taxes.json";
+
 export const resources = {
   es: {
     common: es,
@@ -109,7 +112,8 @@ export const resources = {
     categories: categoriesES,
     goals: goalsES,
     reports: reportsES,
-    catTrans: catTransES
+    catTrans: catTransES,
+    taxes: taxesES
   },
   en: {
     common: en,
@@ -139,7 +143,8 @@ export const resources = {
     categories: categoriesEN,
     goals: goalsEN,
     reports: reportsEN,
-    catTrans: catTransEN
+    catTrans: catTransEN,
+    taxes: taxesEN
   },
 } as const;
 

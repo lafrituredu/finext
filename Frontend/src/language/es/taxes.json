@@ -1,0 +1,43 @@
+{
+    "taxes":"Impuestos",
+    "alert_no_irpf": {
+        "title":"Aviso sobre IRPF no configurado",
+        "message": "No tienes ningún tipo de IRPF asignado en tu cuenta. Para poder realizar cálculos más precisos y adaptados a tu situación fiscal, es recomendable que actualices tu porcentaje de IRPF en la configuración. Esto permitirá obtener resultados más ajustados a la realidad de tu caso."
+    },
+    
+    "alert_taxes":{
+        "title":"Aviso sobre carácter orientativo de los cálculos",
+        "message":"Los cálculos mostrados son aproximados y tienen únicamente carácter informativo. Pueden no reflejar con exactitud la cantidad final a pagar, ya que dependen de factores fiscales, normativos y personales que pueden variar. Para una información definitiva, consulta con un asesor fiscal o con la administración tributaria correspondiente."
+    },
+    "quarter":"trimestre",
+    "quarters": {
+        "T1":"T1",
+        "T2":"T2",
+        "T3":"T3",
+        "T4":"T4",
+        "yearly":"Anual"
+    },
+    "base": {
+        "title":"Base de cálculo",
+        "total_incomes":"Ingresos totales",
+        "total_outcomes":"Gastos totales",
+        "bi":"Base imponible"
+    },
+    "IVA": {
+        "title":"IVA - Modelo 303",
+        "collectedVat":"IVA repercutido",
+        "inputVat":"IVA soportado",
+        "toPayVat":"IVA a pagar"
+    },
+    "IRPF+CUOTA":{
+        "title":"IRPF + Cuota autonomos",
+        "IRPF":"IRPF",
+        "cuota":"Cuota autonomos",
+        "irpf+cuota":"IRPF + Cuota"
+    },
+
+    "SavingRecommendation":"Reserva recomendada",
+    "TotalToPay":"Total a pagar"
+
+
+}

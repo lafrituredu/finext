@@ -1,0 +1,47 @@
+{
+  "taxes": "Taxes",
+  
+  "alert_no_irpf": {
+    "title": "IRPF Not Configured Warning",
+    "message": "You do not have any IRPF rate assigned to your account. To perform more accurate calculations tailored to your tax situation, it is recommended that you update your IRPF percentage in the settings. This will allow results that better reflect your actual situation."
+  },
+
+  "alert_taxes": {
+    "title": "Notice About the Informative Nature of Calculations",
+    "message": "The displayed calculations are approximate and intended for informational purposes only. They may not accurately reflect the final amount to be paid, as they depend on tax, legal, and personal factors that may vary. For definitive information, consult a tax advisor or the corresponding tax authority."
+  },
+
+  "quarter": "quarter",
+
+  "quarters": {
+    "T1": "Q1",
+    "T2": "Q2",
+    "T3": "Q3",
+    "T4": "Q4",
+    "yearly": "Yearly"
+  },
+
+  "base": {
+    "title": "Calculation Base",
+    "total_incomes": "Total Incomes",
+    "total_outcomes": "Total Expenses",
+    "bi": "Taxable Base"
+  },
+
+  "IVA": {
+    "title": "VAT - Form 303",
+    "collectedVat": "Collected VAT",
+    "inputVat": "Input VAT",
+    "toPayVat": "VAT to Pay"
+  },
+
+  "IRPF+CUOTA": {
+    "title": "Income Tax + Self-Employed Contribution",
+    "IRPF": "Income Tax",
+    "cuota": "Self-Employed Contribution",
+    "irpf+cuota": "Income Tax + Contribution"
+  },
+
+  "SavingRecommendation": "Recommended Savings",
+  "TotalToPay": "Total to Pay"
+}
