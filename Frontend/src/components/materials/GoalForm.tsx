@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react";
 import { createGoal, updateGoal, type Goal } from "../../api/GoalService";
+import { useTranslation } from "react-i18next";
 
 export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;}) {
   const {
@@ -21,6 +22,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
   });
 
   const [isSubmitting,setIsSubmitting] = useState(false); 
+  const { t } = useTranslation('goals')
 
   const onSubmit = async (data: Goal) => {
     if (isSubmitting) {
@@ -69,20 +71,20 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
           <div className="flex justify-between items-center">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <MoneyBagIcon className="w-6 h-6" />
-              {goalEdit ? "Editar Meta" : "Crear Meta"}
+              {goalEdit ?  t('buttons.updateGoal') : t('buttons.createGoal')} 
             </h2>
             <button onClick={close}>✕</button>
           </div>
 
           {/* NAME */}
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('labels.name')} *</label>
             <input
               {...register("name", {
-                required: "El nombre es obligatorio",
+                required: t('errors.required'),
                 pattern: {
                   value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
-                  message: "Nombre no valido."//t('errors.nameInvalidChars')
+                  message: t('errors.invalidChars')
                 },
               })}
               className={inputCls}
@@ -92,13 +94,13 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
 
           {/* TARGET */}
           <div>
-            <label className={labelCls}>Cantidad objetivo *</label>
+            <label className={labelCls}>{t('labels.targetAmount')} *</label>
             <input
               type="number"
               {...register("target_amount", {
-                required: "Obligatorio",
+                required: t('errors.required'),
                 valueAsNumber: true,
-                min: { value: 1, message: "Debe ser mayor a 0" }
+                min: { value: 1, message: t('errors.higherThan0') }
               })}
               className={inputCls}
             />
@@ -107,7 +109,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
 
           {/* CURRENT */}
           <div>
-            <label className={labelCls}>Cantidad actual</label>
+            <label className={labelCls}>{t('labels.currentAmount')}</label>
             <input
               type="number"
               {...register("current_amount", {
@@ -121,7 +123,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
           {/* DATES */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Inicio *</label>
+              <label className={labelCls}>{t('labels.startDate')} *</label>
               <input
                 type="date"
                 {...register("start_date", {
@@ -133,11 +135,11 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
             </div>
 
             <div>
-              <label className={labelCls}>Fin *</label>
+              <label className={labelCls}>{t('labels.endDate')} *</label>
               <input
                 type="date"
                 {...register("end_date", {
-                  required: "Obligatorio",
+                  required: t('errors.required'),
                   validate: (value) => {
                     const end = new Date(value);
                     const start = new Date(startDate);
@@ -148,11 +150,11 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
                     end.setHours(0, 0, 0, 0);
 
                     if (end <= today) {
-                      return "Debe ser una fecha futura";
+                      return t('errors.dateHasToBeFuture');
                     }
 
                     if (end <= start) {
-                      return "Debe ser posterior a la fecha de inicio";
+                      return t('errors.dateHasToBePastStartDate');
                     }
 
                     return true;
@@ -164,17 +166,6 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
             </div>
           </div>
 
-          {/* STATUS */}
-          {/* <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register("completed", {setValueAs: (value) => value ? 0 : false})}
-            />
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Meta completada
-            </label>
-          </div> */}
-
           {/* SUBMIT */}
           <div className="flex gap-3 pt-4">
             <button
@@ -182,7 +173,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
               disabled={isSubmitting}
               className="flex-1 bg-primary text-white py-2 rounded-xl cursor-pointer"
             >
-              {goalEdit ? "Actualizar" : "Crear"}
+              {goalEdit ? t('buttons.updateGoal') : t('buttons.createGoal')}
             </button>
 
             <button
@@ -190,7 +181,7 @@ export function GoalForm({close,goalEdit}: {close: () => void;goalEdit?: Goal;})
               onClick={close}
               className="flex-1 bg-gray-200 dark:bg-gray-700 py-2 rounded-xl"
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
         </div>

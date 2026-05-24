@@ -1,6 +1,6 @@
 {
   "title": "Metas",
-  "newGoal": "Nuevo meta",
+  "newGoal": "Nueva meta",
   "create": "Crear",
   "goal": "meta",
   "days": "días",
@@ -51,6 +51,14 @@
     "updateGoal": "Actualizar",
     "deleteGoal": "Eliminar",
     "cancel": "Cancelar"
+  },
+
+  "errors":{
+    "invalidChars":"Los caracteres no son validos",
+    "required":"El campo es obligatorio",
+    "higherThan0":"Debe ser mayor a 0",
+    "dateHasToBeFuture":"Debe ser una fecha futura",
+    "dateHasToBePastStartDate":"Debe ser posterior a la fecha de inicio"
   },
 
   "form": {
