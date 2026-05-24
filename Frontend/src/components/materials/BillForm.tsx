@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { createBill, updateBill, type Bill } from "../../api/BillService"
 import { useForm, useFieldArray } from "react-hook-form"
 import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
-import { useTransactions, type TransactionsContextType } from '../../contexts/TransactionContext'
+import { useTransactions } from '../../contexts/TransactionContext'
 
 //Icons
 import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
@@ -17,7 +17,7 @@ type BillFormValues = {
   date: string
   type: string
   total_amount: number
-  iva_percent: number
+  iva_percent: string
   client: string
   description: string
   payment_method: string
@@ -26,10 +26,20 @@ type BillFormValues = {
   plazos?: number | null
   installments: { amount: number | string; date: string }[]
 };
+
 type BillType = 'emitida' | 'recibida'
+type IVAType = '0.00' | '4.00' | '10.00' | '21.00'
+
 const BILL_TYPES: { id: BillType; labelKey: string; Icon: React.FC<any>; activeColor: string }[] = [
   { id: 'emitida',  labelKey: 'type.emitida',  Icon: TrendingUpIcon,   activeColor: 'text-emerald-600 dark:text-emerald-400' },
   { id: 'recibida', labelKey: 'type.recibida', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
+]
+
+const IVA_OPTIONS: {id: IVAType; labelKey: string}[] =  [
+  {id: "0.00", labelKey: 'fields.iva.options.none'},
+  {id: "4.00", labelKey: 'fields.iva.options.superreduced'},
+  {id: "10.00", labelKey: 'fields.iva.options.reduced'},
+  {id: "21.00", labelKey: 'fields.iva.options.general'},
 ]
 
 export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
@@ -40,7 +50,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { categories } = useCategories() as CategoriesContextType
-  const { transactions, refetchTransactions } = useTransactions() as TransactionsContextType
+  const { transactions, refetchTransactions } = useTransactions()
 
   const [isInstallment, setIsInstallment] = useState<boolean>(billEdit?.plazos != null && billEdit.plazos > 0)
 
@@ -56,7 +66,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
       name: billEdit?.name || '',
       total_amount: billEdit?.total_amount,
       date: billEdit?.date || '',
-      iva_percent: billEdit?.iva_percent ?? 0,
+      iva_percent: billEdit?.iva_percent.toString() ?? "21.00",
       description: billEdit?.description || '',
       client: billEdit?.client || '',
       payment_method: billEdit?.payment_method || 'card',
@@ -242,10 +252,9 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
                 className={inputCls}>
-                <option value="0">{t('fields.iva.options.none')}</option>
-                <option value="4.00">{t('fields.iva.options.super_reduced')}</option>
-                <option value="10.00">{t('fields.iva.options.reduced')}</option>
-                <option value="21.00">{t('fields.iva.options.general')}</option>
+              {IVA_OPTIONS.map(({ id, labelKey }) => (
+                <option value={id}>{t(labelKey)}</option>
+              ))}
               </select>
             </div>
             <div>

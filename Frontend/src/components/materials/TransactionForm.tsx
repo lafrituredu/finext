@@ -19,7 +19,7 @@ type TransactionFormValues = {
   date: string
   type: string
   total_amount: number
-  iva_percent: number
+  iva_percent: string
   client: string
   description: string
   payment_method: string
@@ -28,6 +28,8 @@ type TransactionFormValues = {
 };
 
 type TransactionType = 'income' | 'expense'
+
+type IVAType = '0.00' | '4.00' | '10.00' | '21.00'
 
 interface TransactionFormProps {
   close: () => void
@@ -39,6 +41,12 @@ const TRANSACTION_TYPES: { id: TransactionType; labelKey: string; Icon: React.FC
   { id: 'expense', labelKey: 'type.expense', Icon: TrendingDownIcon, activeColor: 'text-red-500 dark:text-red-400' },
 ]
 
+const IVA_OPTIONS: {id: IVAType; labelKey: string}[] =  [
+  {id: "0.00", labelKey: 'iva.none'},
+  {id: "4.00", labelKey: 'iva.superreduced'},
+  {id: "10.00", labelKey: 'iva.reduced'},
+  {id: "21.00", labelKey: 'iva.general'},
+]
 //Styles
 const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
   bg-gray-50 dark:bg-[#0f1b35] text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500
@@ -63,7 +71,7 @@ export function TransactionForm({ close, transactionEdit }: TransactionFormProps
       name: transactionEdit?.name || '',
       total_amount: transactionEdit?.total_amount,
       date: transactionEdit?.date || '',
-      iva_percent: transactionEdit?.iva_percent ?? 0,
+      iva_percent: transactionEdit?.iva_percent.toString() ?? "0.00",
       description: transactionEdit?.description || '',
       client: transactionEdit?.client || '',
       payment_method: transactionEdit?.payment_method || 'card',
@@ -204,10 +212,9 @@ export function TransactionForm({ close, transactionEdit }: TransactionFormProps
               <select
                 {...register("iva_percent", { setValueAs: (v) => v === "" ? undefined : parseFloat(v) })}
                 className={inputCls}>
-                <option value="0.00">{t('iva.none')}</option>
-                <option value="4.00">{t('iva.superreduced')}</option>
-                <option value="10.00">{t('iva.reduced')}</option>
-                <option value="21.00">{t('iva.general')}</option>
+              {IVA_OPTIONS.map(({ id, labelKey }) => (
+                <option value={id}>{t(labelKey)}</option>
+              ))}
               </select>
             </div>
             <div>
