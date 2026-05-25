@@ -38,7 +38,7 @@
   "reason3_description": "Tus ideas nos ayudan a mejorar FiNext cada día",
   "finext_team":"Equipo FiNext",
   "finext_team_desc":"Este proyecto se encuentra actualmente en desarrollo activo. Agradecemos sinceramente cualquier tipo de comentario, sugerencia o informe de errores que nos ayude a mejorar la experiencia y seguir creando mejores funcionalidades para todos. Gracias por formar parte de este camino.",
-
+  "comming_soon":"Pronto",
   "errors": {
     "nameRequired": "El nombre es obligatorio",
     "nameTooLong": "El nombre no puede superar los 40 caracteres",
