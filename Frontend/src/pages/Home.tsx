@@ -295,8 +295,16 @@ function Home() {
       </div>
       {/* --- COINTAINER 4 (VIDEO) --- */}
       <div className="flex items-center justify-center mx-5 sm:py-20 py-15">
-        <iframe src="https://www.youtube.com/embed/Xr032EhUDPw"  className="flex justify-center items-center w-full aspect-video bg-linear-to-br from-[#70A1FF] to-[#1E4CA3] md:rounded-4xl rounded-xl max-w-[1280px]">
-        </iframe>
+        {/* <iframe src="https://www.youtube.com/embed/Xr032EhUDPw"  className="flex justify-center items-center w-full aspect-video bg-linear-to-br from-[#70A1FF] to-[#1E4CA3] md:rounded-4xl rounded-xl max-w-[1280px]">
+        </iframe> */}
+          <video
+              loop
+              playsInline
+              controls
+              poster="/img/FiNext_Miniatura.png"
+            className="w-full aspect-video object-cover md:rounded-4xl rounded-xl max-w-[1280px]">
+            <source src="/vid/FiNext_Promo_video.mp4" type="video/mp4" />
+          </video>
       </div>
       {/* --- CONTAINER 5 (INFO) --- */}
       <div id="icons_text" className="flex flex-col justify-center items-center text-black dark:text-dark-text mx-4 sm:py-20 py-20">
