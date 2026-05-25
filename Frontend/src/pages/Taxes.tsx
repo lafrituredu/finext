@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import InfoIcon from '/src/assets/icons/Info.svg?react'
 import { ToggleContainer } from '../components/materials/ToggleContainer';
 import { ToggleOption } from '../components/materials/ToggleOption';
+import { useNavigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 function Taxes() {
     const { bills, setBills, refetchBills } = useBills() as BillsContextType;
@@ -23,9 +25,25 @@ function Taxes() {
     const todayMonth = today.getMonth();
     const { t } = useTranslation("taxes");
     const { t: tUtils } = useTranslation("utils");
-
+    const navigate = useNavigate();
+    const [loading,setLoading] = useState(true);
     useEffect(() => {
         
+        const checkToken = async () => {
+            try {
+                //Obtenemos el rol del usuario para ver si es particular y hacemos redirect
+                const user = await getCurrentUser();
+                if (user.rol === "particular") {
+                    navigate('/dashboard',{ replace: true });
+                }
+            } catch (error) {
+                console.error(error)
+            } finally{
+                setLoading(false)
+            }
+        };
+
+        checkToken();
     },[]);
     
     useEffect(() => {
@@ -109,7 +127,7 @@ const months = ["january","february","march","april","may","june","july","august
 
   return (
     <>
-    
+        {!loading ?
         <div className='p-6 sm:p-10 inter'>
             <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6'>
                 <p className='mont_semibold text-4xl'>{t('taxes')}</p>
@@ -141,11 +159,11 @@ const months = ["january","february","march","april","may","june","july","august
             </div>
 
             <div className='inter *:inter w-full h-full border border-[#0000001a] rounded-2xl py-5 px-8 flex flex-col gap-5'>
-                {quarter != 0 ? <p>{t('quarter')} {quarter} -  {tUtils(`months.${months[(quarter-1)*3]}`).slice(0,3)}-{tUtils(`months.${months[quarter*3-1]}`).slice(0,3)} {today.getFullYear()}</p> : <p>Anual</p>}
+                {quarter != 0 ? <p>{t('quarter')} {quarter} -  {tUtils(`months.${months[(quarter-1)*3]}`).slice(0,3)}-{tUtils(`months.${months[quarter*3-1]}`).slice(0,3)} {today.getFullYear()}</p> : <p>{t('quarters.yearly')}</p>}
                 <div>
                     <p className='text-xl mb-2'>{t('base.title')}</p>
                     <div className='flex lg:flex-row flex-col gap-6 *:px-4 *:py-3 *:w-full *:flex *:justify-between *:rounded-2xl'>
-                        <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E9E8F0] border'><span>{t('base.total_incomes')}</span> <span>{incomes}€</span></div>
+                        <div className='dark:bg-green-200 dark:border-green-800 dark:text-black bg-green-50 border-[#E9E8F0] border'><span>{t('base.total_incomes')}</span> <span>{incomes.toFixed(2)}€</span></div>
                         <div className='dark:bg-red-200  dark:border-red-800 dark:text-black bg-red-50 border-[#E9E8F0] border'><span>{t('base.total_outcomes')}</span> <span>{expenses}€</span></div>
                         <div className='dark:bg-blue-200  dark:border-blue-800 dark:text-black bg-blue-50 border-[#E2E8F0] border'><span>{t('base.bi')}</span> <span>{baseIRPF}€</span></div>
                     </div>
@@ -188,6 +206,11 @@ const months = ["january","february","march","april","may","june","july","august
                 </div>
             }
         </div>
+        :
+            <div className="w-full h-screen flex items-center justify-center bg-white">
+                <div className="w-10 h-10 border-4 border-gray-300 border-t-primary rounded-full animate-spin"></div>
+            </div>
+        }
     </>
   )
 }

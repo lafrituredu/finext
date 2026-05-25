@@ -15,6 +15,7 @@
     "name": "Name",
     "targetAmount": "Target amount",
     "currentAmount": "Current amount",
+    "quantity": "Amount",
     "startDate": "Start date",
     "endDate": "End date",
     "completed": "Completed"
@@ -51,6 +52,14 @@
     "updateGoal": "Update",
     "deleteGoal": "Delete",
     "cancel": "Cancel"
+  },
+
+  "errors": {
+    "invalidChars": "Characters are not valid",
+    "required": "This field is required",
+    "higherThan0": "Must be greater than 0",
+    "dateHasToBeFuture": "Must be a future date",
+    "dateHasToBePastStartDate": "Must be later than the start date"
   },
 
   "form": {

@@ -7,6 +7,7 @@ import { contribute, type Goal } from "../../api/GoalService"
 
 import React from "react";
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next";
 
 export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goal }) {
   const [categories, setCategories] = useState<Category[]>([])
@@ -15,7 +16,7 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
 
   const [GoalName, setGoalName] = useState<string>(goalEdit?.name || '')
   const [GoalAmount, setGoalAmount] = useState<number>(0)
-
+  const { t } = useTranslation('goals'); 
   const {
     register,
     handleSubmit,
@@ -79,7 +80,7 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
           <div className="flex items-center justify-between mb-1">
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-gray-100">
               <MoneyBagIcon className="w-7 h-7" />
-              {goalEdit == null ? 'Añadir Meta' : 'Editar Meta'}
+              {t('buttons.updateGoal')} {t('goal')}
             </h2>
             {/* Close X */}
             <button
@@ -96,9 +97,9 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
 
           {/* Name */}
           <div>
-            <label className={labelCls}>Nombre *</label>
+            <label className={labelCls}>{t('labels.name')} *</label>
             <input
-              {...register("name", { required: "El nombre es obligatorio" })}
+              {...register("name", { required: t('errors.required') })}
               type="text"
               placeholder="Ej. Factura cliente"
               value={GoalName}
@@ -116,81 +117,18 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
           {
             goalEdit != null &&
             <div>
-              <label className={labelCls}>Cantidad</label>
+              <label className={labelCls}>{t('labels.quantity')}</label>
               <input
-              {...register("current_amount", { required: "Introducir la cantidad es obligatorio", max: { value: goalEdit.target_amount - goalEdit.current_amount , message: `la cantidad a aportar no puede ser superior a ${goalEdit.target_amount - goalEdit.current_amount}`} })}
+              {...register("current_amount", { required: t('errors.required'), max: { value: goalEdit.target_amount - goalEdit.current_amount , message: `la cantidad a aportar no puede ser superior a ${goalEdit.target_amount - goalEdit.current_amount}`} })}
                 type="number"
                 placeholder="0.00"
+                min={0}
                 className={inputCls}
                 onChange={(e) => setGoalAmount(parseFloat(e.target.value))}
               />
               {errors.current_amount && <p className="mt-1 text-xs text-red-400">{errors.current_amount.message}</p>}
-              {goalEdit != null && <p className={`${labelCls} text-xs mt-1`}>Restante: {goalEdit.target_amount - goalEdit.current_amount}, Aportado: {goalEdit?.current_amount}</p>}
             </div>
           }
-          
-          {goalEdit == null && (
-            <>
-              {/* Target Amount */}
-              <div>
-                <label className={labelCls}>Cantidad objetivo *</label>
-                <input
-                  {...register("target_amount", {
-                    required: "La cantidad objetivo es obligatoria",
-                    min: { value: 1, message: "Debe ser mayor que 0" }
-                  })}
-                  type="number"
-                  placeholder="Ej. 1000"
-                  className={inputCls}
-                />
-                {errors.target_amount && (
-                  <p className="mt-1 text-xs text-red-400">
-                    {errors.target_amount.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Start Date */}
-              <div>
-                <label className={labelCls}>Fecha inicio *</label>
-                <input
-                  {...register("start_date", {
-                    required: "La fecha de inicio es obligatoria"
-                  })}
-                  type="date"
-                  className={inputCls}
-                />
-                {errors.start_date && (
-                  <p className="mt-1 text-xs text-red-400">
-                    {errors.start_date.message}
-                  </p>
-                )}
-              </div>
-
-              {/* End Date */}
-              <div>
-                <label className={labelCls}>Fecha fin *</label>
-                <input
-                  {...register("end_date", {
-                    required: "La fecha de fin es obligatoria",
-                    validate: (value, formValues) => {
-                      return (
-                        new Date(value) > new Date(formValues.start_date) ||
-                        "La fecha fin debe ser posterior a la de inicio"
-                      );
-                    }
-                  })}
-                  type="date"
-                  className={inputCls}
-                />
-                {errors.end_date && (
-                  <p className="mt-1 text-xs text-red-400">
-                    {errors.end_date.message}
-                  </p>
-                )}
-              </div>
-            </>
-          )}
 
           {/* Submit */}
           <div className="flex flex-col sm:flex-row gap-3 pt-8">
@@ -204,7 +142,7 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
                 cursor-pointer
               "
             >
-              {goalEdit == null ? '✓ Crear meta' : '✓ Actualizar'}
+              {t('buttons.updateGoal')}
             </button>
             <button
               type="button"
@@ -218,9 +156,9 @@ export function GoalAmountForm({ close, goalEdit }: { close: any, goalEdit?: Goa
                 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]
                 transition-all duration-150 ease-in-out
                 cursor-pointer
-              "
+              " 
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
 
