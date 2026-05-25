@@ -176,20 +176,36 @@ class BillController extends Controller
         return response()->json($bill, 200);
     }
 
-    public function delete($id)
+    public function delete(Request $request,int $id)
     {
+        // $bill = Bill::find($id);
+
+        // if (!$bill) {
+        //     return response()->json(['message' => 'Bill not found'], 404);
+        // }
+
+        // //Primero borro las transacciones asociadas a la bill
+        // Transaction::where('bill_id', $bill->id)->delete();
+        // //Despues borro la bill
+        // $bill->delete();
+        
+
+        // return response()->json(['message' => 'Bill deleted successfully'], 200);
+        
+        $user = $request->user();
         $bill = Bill::find($id);
 
         if (!$bill) {
             return response()->json(['message' => 'Bill not found'], 404);
         }
 
-        //Primero borro las transacciones asociadas a la bill
-        Transaction::where('bill_id', $bill->id)->delete();
-        //Despues borro la bill
-        $bill->delete();
-        
-
-        return response()->json(['message' => 'Bill deleted successfully'], 200);
+        if ($user->id === $bill->user_id) {
+            //Primero borro las transacciones asociadas a la bill
+            Transaction::where('bill_id', $bill->id)->delete();
+            //Despues borro la bill
+            $bill->delete();
+            return response()->json(['message' => 'Bill removed'], 200);
+        }
+        return response()->json(['message' => 'Unauthorized to remove this Bill'], 401);
     }
 }

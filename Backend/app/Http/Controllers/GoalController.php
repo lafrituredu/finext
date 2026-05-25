@@ -20,7 +20,7 @@ class GoalController extends Controller
 
     public function addContribution(Request $request, int $id){
         $user = $request->user();
-        $goal = Goal::find($id);
+        $goal = Goal::findOrFail($id);
         if ($goal->user_id != $user->id) {
             return 401;
         }
@@ -79,7 +79,7 @@ class GoalController extends Controller
     public function update(Request $request, string $id)
     {
         $user = $request->user();
-        $goal = Goal::find($id);
+        $goal = Goal::findOrFail($id);
 
         if ($user->id != $goal->user_id) {
             return response(['Message' => 'Not authorized'],401);
@@ -109,8 +109,14 @@ class GoalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request,int $id)
     {
-        return Goal::destroy($id);
+        $user = $request->user();
+        $goal = Goal::findOrFail($id);
+        if ($user->id === $goal->user_id) {
+            Goal::destroy($id);
+            return response()->json(['message' => 'Goal removed'], 200);
+        }
+        return response()->json(['message' => 'Unauthorized to remove this goal'], 401);
     }
 }

@@ -61,14 +61,13 @@ class CategoryController extends Controller
     }
 
     public function destroy(Request $request, int $id){
+        $user = $request->user();
         $category = Category::findOrFail($id);
-        if ($request->user()->id === $category->id) {
+        if ($user->id === $category->user_id) {
             Category::destroy($id);
             return response()->json(['message' => 'Category removed'], 200);
-        }else{
-            return response()->json(['message' => 'Unathorized to remove this category'], 401);
         }
-        
+        return response()->json(['message' => 'Unauthorized to remove this category'], 401);
     }
 
 }
