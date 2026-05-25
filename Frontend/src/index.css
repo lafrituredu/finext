@@ -92,3 +92,8 @@ html{
 #everything_one_place {
   scroll-margin-top: 100px;
 }
+
+::selection{
+  background: var(--color-primary);
+  color: var(--color-dark-text);
+}
