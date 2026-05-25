@@ -42,10 +42,10 @@ class CategoryController extends Controller
     public function update(Request $request,$id){
 
         $user = $request->user();
-        $category = Category::find($id);
+        $category = Category::findOrFail($id);
 
         if ($user->id != $category->user_id) {
-            return response('',401);
+            return response('Unauthorized',401);
         }
 
         $data = $request->validate([
@@ -60,8 +60,15 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function destroy($id){
-        return Category::destroy($id);
+    public function destroy(Request $request, int $id){
+        $category = Category::findOrFail($id);
+        if ($request->user()->id === $category->id) {
+            Category::destroy($id);
+            return response()->json(['message' => 'Category removed'], 200);
+        }else{
+            return response()->json(['message' => 'Unathorized to remove this category'], 401);
+        }
+        
     }
 
 }
