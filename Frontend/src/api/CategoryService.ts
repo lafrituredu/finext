@@ -1,4 +1,3 @@
-import { getCurrentUser } from './AuthServices'
 import api from './axiosInstance'
 
 export interface Category {
@@ -40,7 +39,6 @@ export const updateCategory = async(paramName:string,id:number,paramColor?:strin
     if (paramName == undefined || paramName == "") {
         return 500;
     }
-
     const response = await api.put(`/categories/${id}`, {
         name: paramName,
         color: paramColor,

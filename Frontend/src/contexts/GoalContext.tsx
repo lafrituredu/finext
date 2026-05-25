@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getGoals, type Goal } from "../api/GoalService"; 
-const GoalsContext = createContext<any>(null);
+
+
+export type GoalsContextType = {
+  goals: Goal[];
+  setGoals: React.Dispatch<React.SetStateAction<Goal[]>>,
+  refetchGoals: () => Promise<void>
+};
+
+const GoalsContext = createContext<GoalsContextType | any>(null);
 
 export const GoalProvider = ({children} : any) => {
     const [goals, setGoals] = useState<Goal[]>([]);
@@ -25,10 +33,4 @@ export const GoalProvider = ({children} : any) => {
 
 export const useGoals = () => {
   return useContext(GoalsContext);
-};
-
-export type GoalsContextType = {
-  goals: Goal[];
-  setGoals: React.Dispatch<React.SetStateAction<Goal[]>>,
-  refetchGoals: () => Promise<void>
 };

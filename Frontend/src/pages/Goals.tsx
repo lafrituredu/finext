@@ -10,12 +10,12 @@ import  { GoalAmountForm } from "../components/materials/GoalAmountForm"
 import  { GoalForm } from "../components/materials/GoalForm"
 import Confirmation from '../components/materials/Confirmation';
 import { useGoals, type GoalsContextType } from '../contexts/GoalContext';
-import { useTransactions, type TransactionsContextType } from '../contexts/TransactionContext';
+import { useTransactions} from '../contexts/TransactionContext';
 import { useTranslation } from 'react-i18next';
 
 function Goals() {
   const { goals, setGoals, refetchGoals } = useGoals() as GoalsContextType;
-  const { transactions, setTransactions, refetchTransactions } = useTransactions() as TransactionsContextType;
+  const { transactions, setTransactions, refetchTransactions } = useTransactions();
   const [goalEdit,setGoalEdit] = useState<Goal>();
   const [goalDelete,setGoalDelete] = useState<Goal>();
   // const [transactions, setTransactions] = useState<Transaction[]>([])

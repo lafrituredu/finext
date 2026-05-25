@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Loading from '/src/assets/icons/Loading.svg?react'
 import List from '/src/assets/icons/List-icon.svg?react'
@@ -22,8 +22,6 @@ function Categories() {
     const { categories, setCategories, refetchCategories } = useCategories() as CategoriesContextType;
     const [loading, setLoading] = useState(false)
     const [select,setSelected] = useState('squares')
-    const [filter,setFilter] = useState('')
-    const [order,setOrder] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [showCategoryForm, setShowCategoryForm] = useState(false)
     const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
@@ -36,8 +34,6 @@ function Categories() {
     useEffect(() => {
       refetchCategories()
     },[showCategoryForm])
-
-
 
     const handleDelete = async (id: number) => {
       try {
@@ -105,7 +101,7 @@ function Categories() {
               <div className='flex w-full h-full justify-center items-center'>
                 <button
                   onClick={() => setShowCategoryForm(true)}
-                  className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-[60px] h-[60px] p-6 cursor-pointer hover:scale-115 hover:shadow-md'
+                  className='flex flex-col justify-center items-center bg-gray-100 dark:bg-dark-card rounded-2xl ring-2 ring-gray-200 dark:ring-gray-800 text-3xl transition-all w-15 h-15 p-6 cursor-pointer hover:scale-115 hover:shadow-md'
                 >
                   <span>+</span>
                 </button>
@@ -119,7 +115,7 @@ function Categories() {
 
             <div className='grid xl:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-5'>
 
-              {categoriasDefault.map((category, key) =>
+              {categoriasDefault.map(category =>
                 <div key={category.id}>
                   <div className='flex flex-col dark:bg-dark-card rounded-2xl p-4 dark:ring-gray-800 hover:scale-102 transition-transform ease-in-out gap-6 ring-1 ring-gray-200 bg-gray-100'>
 

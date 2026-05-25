@@ -115,13 +115,6 @@ function Taxes() {
         setQuarter(quarter)
     },[])
 
-    // const FILTERS: {id: string; label:string}[] = [
-    //     {id: '1', label: 'T1'},
-    //     {id: '2', label: 'T2'},
-    //     {id: '3', label: 'T3'},
-    //     {id: '4', label: 'T4'},
-    //     {id: '0', label: 'Anual'},
-    // ]
 
 const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 
@@ -131,16 +124,6 @@ const months = ["january","february","march","april","may","june","july","august
         <div className='p-6 sm:p-10 inter'>
             <div className='flex sm:flex-row flex-col justify-between sm:items-center items-left gap-6'>
                 <p className='mont_semibold text-4xl'>{t('taxes')}</p>
-                {/* <button 
-                onClick={(e) => alert()}
-                className=" inter relative w-50 h-10 bg-primary text-white rounded-full overflow-hidden group cursor-pointer shadow-md">
-                <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
-                    New Goal
-                </span>
-                <span className="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-                    Create
-                </span>
-                </button> */}
             </div>
             <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
 
