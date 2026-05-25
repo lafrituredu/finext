@@ -2,10 +2,11 @@ import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
 import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
 import api from "../api/axiosInstance";
+import { animate, stagger } from "animejs";
 
 
 type ContactFormValues = {
@@ -44,24 +45,53 @@ function Contact() {
       }
     }
 
+    //Animaciones 
+    useEffect(() => {
+      animate("#hero > *",{
+          y: ["100px", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: stagger(100)
+      });
+
+      animate('#finext_team',{
+          x: ["-100%", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: 400
+      });
+      animate('#contact_form', {
+          x: ["-150px", "0px"],
+          opacity: [0,1],
+          duration: '1000',
+          delay: 1000
+      });
+
+      animate('#contact_info > *', {
+          opacity: [0,1],
+          delay: stagger(150, {start: 200} ),
+          ease: 'inOut'
+      });
+    }, []);
+
   return (
   <>
     <Navbar/>
     
-    <div className="flex flex-col pt-28 pb-12 sm:pt-45 sm:pb-25 justify-center items-center gap-2 bg-gradient-to-r from-[#7844C9] to-[#3667C8] sm:from-[#7844C9] sm:via-[#3667C8] sm:to-[#5c44c9]">
-      <h2 className="montserrat text-5xl sm:text-center text-white ">{t('hero_title')}</h2>
+    <div id="hero" className="flex flex-col pt-28 pb-12 sm:pt-45 sm:pb-25 justify-center items-center gap-2 bg-gradient-to-r from-[#7844C9] to-[#3667C8] sm:from-[#7844C9] sm:via-[#3667C8] sm:to-[#5c44c9]">
+      <h2 className="montserrat text-5xl sm:text-center text-white text-center">{t('hero_title')}</h2>
       <p className="inter max-w-160 sm:text-center text-dark-text">{t('hero_subtitle')}</p>
     </div>
-    <div className="mx-4 sm:mx-6">
-      <div className="flex items-center justify-center inter text-gray-500 pt-6 sm:pt-10">
+    <div className="mx-4 sm:mx-6 overflow-hidden">
+      <div id="finext_team" className="flex items-center justify-center inter text-gray-500 pt-6 sm:pt-10">
         <div className="flex flex-col items-center justify-center ring-1 ring-gray-200 dark:ring-gray-700 shadow-sm p-4 sm:p-6 rounded-3xl">
           <p className="font-bold text-dark-background dark:text-dark-text">{t('finext_team')}</p>
           <p className="max-w-270 text-center">{t('finext_team_desc')}</p>
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center py-6 sm:py-10">
+      <div  className="flex flex-col justify-center items-center py-6 sm:py-10">
         <div className="flex flex-col lg:flex-row justify-center items-center gap-6 sm:gap-20 w-full">
-          <div className="bg-white dark:bg-dark-card rounded-2xl md:rounded-3xl shadow-sm p-5 md:p-8 ring-1 ring-gray-300 dark:ring-[#1d2344] max-w-160 w-full">
+          <div id="contact_form" className="bg-white dark:bg-dark-card rounded-2xl md:rounded-3xl shadow-sm p-5 md:p-8 ring-1 ring-gray-300 dark:ring-[#1d2344] max-w-160 w-full">
             <h3 className="mont_semibold text-xl md:text-2xl text-black dark:text-white mb-2">
               {t('form_title')}
             </h3>
@@ -154,7 +184,7 @@ function Contact() {
               </button>
             </form>
           </div>
-          <div className="flex flex-col gap-20 w-full max-w-160 lg:w-100 lg:max-w-none">
+          <div id="contact_info" className="flex flex-col gap-20 w-full max-w-160 lg:w-100 lg:max-w-none">
             <div className="flex flex-col items-center justify-center inter hover:scale-104 transition-all ease-in-out gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5H4.5a2.25 2.25 0 00-2.25 2.25m19.5 0-9.75 6.75L2.25 6.75" />
