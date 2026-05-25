@@ -126,12 +126,12 @@ function About() {
                   TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
                 </p>
                   <div className="flex gap-4 justify-center md:justify-start">
-                    <a href="https://github.com/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
+                    <a href="https://github.com/eru9927" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
                       GitHub
                       <GithubIcon className="size-5" />
                     </a>
 
-                    <a href="https://linkedin.com/" target="_blank" className="py-1 px-5 bg-[#0077B5] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#005E93] transition-all duration-200 shadow-md hover:scale-105">
+                    <a href="https://www.linkedin.com/in/eduardo-rubio-chaparro-577811232/" target="_blank" className="py-1 px-5 bg-[#0077B5] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#005E93] transition-all duration-200 shadow-md hover:scale-105">
                       LinkedIn
                       <LinkedinIcon className="size-5 " />
                     </a>
