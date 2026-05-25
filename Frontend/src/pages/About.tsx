@@ -4,9 +4,67 @@ import { useTranslation } from 'react-i18next';
 
 import { NavLink } from "react-router-dom";
 import WrenchIcon from '/src/assets/icons/wrench.svg?react'
+import GithubIcon from '/src/assets/icons/Github.svg?react'
+import LinkedinIcon from '/src/assets/icons/Linkedin.svg?react'
+
+import { useEffect } from "react";
+import { animate, stagger } from "animejs";
 function About() {
   const { t } = useTranslation("about");
+  useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
+          const el = entry.target as HTMLElement;
+
+          if (el.id === "card1") {
+            animate(`#${el.id}`,{
+              translateX: ["300px", "0px"],
+              opacity: [0,1],
+              duration: 1000,
+              easing: "easeOutQuad",
+              delay: 300
+            });
+
+            observer.unobserve(el);
+          }
+
+          if (el.id === "card2") {
+            animate(`#${el.id}`,{
+              translateX: ["-300px", "0px"],
+              opacity: [0,1],
+              duration: 1000,
+              easing: "easeOutQuad",
+              delay: 300
+            });
+
+            observer.unobserve(el);
+          }
+
+          if (el.id === "card3") {
+            animate(`#${el.id}`,{
+              translateX: ["300px", "0px"],
+              opacity: [0,1],
+              duration: 1000,
+              easing: "easeOutQuad",
+              delay: 300
+            });
+
+            observer.unobserve(el);
+          }
+
+        });
+      });
+
+      const card1 = document.getElementById("card1");
+      const card2 = document.getElementById("card2");
+      const card3 = document.getElementById("card3");
+
+      if (card1) observer.observe(card1);
+      if (card2) observer.observe(card2);
+      if (card3) observer.observe(card3);
+  }, []);
   return (
     <>
       <Navbar />
@@ -14,7 +72,7 @@ function About() {
         <h2 className="montserrat text-5xl sm:text-center text-white ">{t('hero_title')}</h2>
         <p className="inter max-w-160 sm:text-center text-dark-text">{t('hero_subtitle')}</p>
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center overflow-hidden">
         <div className="flex flex-col items-center justify-center py-14 max-w-300 text-center">
           <p className="inter text-gray-600 px-4 dark:text-dark-text">FiNext is an financial dashboard built by three developers who believe that understanding your finances shouldn't require a finance degree. We focus on clean data visualization, intuitive UX, and a codebase worth being proud of.</p>
         </div>
@@ -26,7 +84,7 @@ function About() {
         </div>
         <hr className="my-6 border-t border-gray-300 dark:border-gray-700 w-full" />
         {/* CARD 1 */}
-        <div className="w-full max-w-7xl py-10 px-4">
+        <div id="card1" className="w-full max-w-7xl py-10 px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             {/* Avatar */}
             <div className="flex justify-center md:w-1/4">
@@ -48,17 +106,24 @@ function About() {
                 <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
                   TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
                 </p>
-                <div className="flex gap-4 justify-center md:justify-start">
-                  <p>GitHub</p>
-                  <p>LinkedIn</p>
-                </div>
+                  <div className="flex gap-4 justify-center md:justify-start">
+                    <a href="https://github.com/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
+                      GitHub
+                      <GithubIcon className="size-5" />
+                    </a>
+
+                    <a href="https://linkedin.com/" target="_blank" className="py-1 px-5 bg-[#0077B5] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#005E93] transition-all duration-200 shadow-md hover:scale-105">
+                      LinkedIn
+                      <LinkedinIcon className="size-5 " />
+                    </a>
+                  </div>
               </div>
             </div>
           </div>
         </div>
         <hr className="my-6 border-t border-gray-300 dark:border-gray-700 w-full" />
         {/* CARD 2 */}
-        <div className="w-full max-w-7xl py-10 px-4">
+        <div id="card2" className="w-full max-w-7xl py-10 px-4">
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
             {/* Avatar */}
             <div className="flex justify-center md:w-1/4">
@@ -80,17 +145,24 @@ function About() {
                 <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
                   TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
                 </p>
-                <div className="flex gap-4 justify-center md:justify-end">
-                  <p>GitHub</p>
-                  <p>LinkedIn</p>
-                </div>
+                  <div className="flex gap-4 justify-center md:justify-end">
+                    <a href="https://github.com/injerr/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
+                      GitHub
+                      <GithubIcon className="size-5" />
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/jeremy-intriago-6735202b3/" target="_blank" className="py-1 px-5 bg-[#0077B5] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#005E93] transition-all duration-200 shadow-md hover:scale-105">
+                      LinkedIn
+                      <LinkedinIcon className="size-5 " />
+                    </a>
+                  </div>
               </div>
             </div>
           </div>
         </div>
         <hr className="my-6 border-t border-gray-300 dark:border-gray-700 w-full" />
         {/* CARD 3 */}
-        <div className="w-full max-w-7xl py-10 px-4">
+        <div id="card3" className="w-full max-w-7xl py-10 px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             {/* Avatar */}
             <div className="flex justify-center md:w-1/4">
@@ -103,7 +175,7 @@ function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="montserrat text-2xl">
-                    Marc apellidos
+                    Marc Gilavert Orea
                   </p>
                   <p className="inter text-gray-600 dark:text-gray-400">
                     Full Stack Web Developer
@@ -112,10 +184,17 @@ function About() {
                 <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
                   TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
                 </p>
-                <div className="flex gap-4 justify-center md:justify-start">
-                  <p>GitHub</p>
-                  <p>LinkedIn</p>
-                </div>
+                  <div className="flex gap-4 justify-center md:justify-start">
+                    <a href="https://github.com/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
+                      GitHub
+                      <GithubIcon className="size-5" />
+                    </a>
+
+                    <a href="https://linkedin.com/" target="_blank" className="py-1 px-5 bg-[#0077B5] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#005E93] transition-all duration-200 shadow-md hover:scale-105">
+                      LinkedIn
+                      <LinkedinIcon className="size-5 " />
+                    </a>
+                  </div>
               </div>
             </div>
           </div>
