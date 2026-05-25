@@ -12,6 +12,25 @@ import { animate, stagger } from "animejs";
 function About() {
   const { t } = useTranslation("about");
   useEffect(() => {
+      animate("#hero > *",{
+          y: ["100px", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: stagger(100)
+      });
+
+      animate('#whats_finext',{
+          x: ["-100%", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: 400
+      });
+      animate('#devops',{
+          x: ["100%", "0px"],
+          opacity: [0, 1],
+          duration: '1000',
+          delay: 400
+      });
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
@@ -68,17 +87,17 @@ function About() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col pt-28 pb-12 sm:pt-45 sm:pb-25 justify-center items-center gap-2 bg-gradient-to-r from-[#7844C9] to-[#3667C8] sm:from-[#7844C9] sm:via-[#3667C8] sm:to-[#5c44c9]">
+      <div id="hero" className="flex flex-col pt-28 pb-12 sm:pt-45 sm:pb-25 justify-center items-center gap-2 bg-gradient-to-r from-[#7844C9] to-[#3667C8] sm:from-[#7844C9] sm:via-[#3667C8] sm:to-[#5c44c9]">
         <h2 className="montserrat text-5xl sm:text-center text-white ">{t('hero_title')}</h2>
         <p className="inter max-w-160 sm:text-center text-dark-text">{t('hero_subtitle')}</p>
       </div>
       <div className="flex flex-col items-center justify-center overflow-hidden">
-        <div className="flex flex-col items-center justify-center py-14 max-w-300 text-center">
+        <div id="whats_finext" className="flex flex-col items-center justify-center py-14 max-w-300 text-center">
           <p className="inter text-gray-600 px-4 dark:text-dark-text">FiNext is an financial dashboard built by three developers who believe that understanding your finances shouldn't require a finance degree. We focus on clean data visualization, intuitive UX, and a codebase worth being proud of.</p>
         </div>
         {/* Us */}
         <hr className="mb-6 border-t border-gray-300 dark:border-gray-700 w-full" />
-        <div className="flex flex-row justify-center items-center gap-2">
+        <div id="devops" className="flex flex-row justify-center items-center gap-2">
           <WrenchIcon className="w-10 h-10"/>
           <p className="montserrat text-gray-800 dark:text-dark-text text-3xl text-center">FiNext Developers</p>
         </div>
