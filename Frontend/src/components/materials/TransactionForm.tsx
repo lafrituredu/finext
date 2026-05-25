@@ -179,7 +179,7 @@ export function TransactionForm({ close, transactionEdit }: TransactionFormProps
               <label className={labelCls}>{t('fields.amount')} *</label>
               <input
                 type="number"
-                step="0.10"
+                step="0.1"
                 {...register("total_amount", { required: t('errors.amountRequired'), 
                   valueAsNumber: true,
                 min:{

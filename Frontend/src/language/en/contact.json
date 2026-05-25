@@ -36,7 +36,8 @@
   "reason2_description": "Information about plans, pricing, and premium features",
   "reason3_title": "Suggestions",
   "reason3_description": "Your ideas help us improve FiNext every day",
-
+  "finext_team":"FiNext Team",
+  "finext_team_desc":"This project is currently under active development. We truly appreciate all kinds of feedback, suggestions, and bug reports to help us improve the experience and continue building better features for everyone. Thank you for being part of the journey.",
   "errors": {
     "nameRequired": "Name is required",
     "nameTooLong": "Name cannot exceed 40 characters",

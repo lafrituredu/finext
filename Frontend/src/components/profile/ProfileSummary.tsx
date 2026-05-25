@@ -84,7 +84,7 @@ function ProfileSummary({
             type="button"
             disabled={avatarSaving}
             onClick={onAvatarDelete}
-            className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full border border-[#0000001a] dark:border-[#1d2344] text-sm text-red-500 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full border border-[#0000001a] dark:border-[#1d2344] text-sm text-red-500 disabled:opacity-60 cursor-pointer"
           >
             <TrashIcon className="size-4" />
             {t("delete_avatar")}
