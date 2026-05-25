@@ -18,8 +18,10 @@ import ExitIcon from '/src/assets/icons/Exit-icon.svg?react'
 import TaxesIcon from '/src/assets/icons/Taxes-Icon.svg?react'
 import Recurrent from '/src/assets/icons/Recurrent.svg?react'
 import Tag from '/src/assets/icons/Tag.svg?react'
+import ArrowDownDots from '/src/assets/icons/ArrowDownDots.svg?react'
 import LoadingIcon from '/src/assets/icons/Loading.svg?react';
 import { getCurrentUser, logoutUser, type UserProfile } from '../../api/AuthServices'
+import { NavLink } from 'react-router-dom'
 
 interface DashboardSidebar {
   opened?: boolean;
@@ -105,7 +107,7 @@ const menuItems = [{
           label: t('profile'),
           icon: UsersIcon,
           children: [
-          { label: 'Edit', to: '/dashboard/profile' },
+          { label: t('edit'), to: '/dashboard/profile' },
           ]
         }
     ]
@@ -143,6 +145,11 @@ if (user != null && user?.rol != "particular") {
           {/* <div className='fixed'><DarkModeToggle /></div> */}
           <div>
           <div className='lg:flex flex-col items-center justify-center hidden pt-4'>
+            <div className='w-full text-start'>
+              <NavLink to={"/"}>
+                <ArrowDownDots className='rotate-90 text-slate-400 hover:text-slate-950 transition-all ease-in-out duration-300 dark:hover:text-primary w-fit'/>
+              </NavLink>
+            </div>
             {avatarUrl ? (
               <img
                 src={avatarUrl}

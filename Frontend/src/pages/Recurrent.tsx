@@ -21,14 +21,15 @@ import CardIcon from '/src/assets/icons/Credit-card.svg?react';
 import CoinIcon from '/src/assets/icons/Coin.svg?react';
 import BankIcon from '/src/assets/icons/Bank.svg?react';
 import LoadingIcon from '/src/assets/icons/Loading.svg?react';
+import { useRecurrentTransactions, type RecurrentTransactionsContextType } from '../contexts/RecurrentTransactionContext';
 
 let recurrentTransactionsCache: RecurrentTransaction[] | null = null;
 let recurrentTransactionsRequest: Promise<RecurrentTransaction[]> | null = null;
 
 function Recurrent() {
   const { t } = useTranslation("recurrent");
-  const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>(recurrentTransactionsCache ?? []);
-  const [loading, setLoading] = useState(recurrentTransactionsCache === null);
+  // const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>(recurrentTransactionsCache ?? []);
+  const { recurrentTransactions,setRecurrentTransactions, refetchRecurrentTransactions} = useRecurrentTransactions() as RecurrentTransactionsContextType;
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [select, setSelected] = useState('total');
@@ -36,34 +37,6 @@ function Recurrent() {
   const [recurrentToEdit, setRecurrentToEdit] = useState<RecurrentTransaction | null>(null);
   const [recurrentToDelete, setRecurrentToDelete] = useState<RecurrentTransaction | null>(null);
   const [generatingId, setGeneratingId] = useState<number | null>(null);
-
-  const fetchRecurrentTransactions = (showSkeleton = false) => {
-    if (showSkeleton) {
-      setLoading(true);
-    }
-    setError(null);
-    recurrentTransactionsRequest ??= getRecurrentTransactions();
-    recurrentTransactionsRequest
-      .then(data => {
-        recurrentTransactionsCache = data;
-        setRecurrentTransactions(data);
-      })
-      .catch(() => setError(t('messages.loadError')))
-      .finally(() => {
-        recurrentTransactionsRequest = null;
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    if (recurrentTransactionsCache) {
-      setRecurrentTransactions(recurrentTransactionsCache);
-      setLoading(false);
-      return;
-    }
-
-    fetchRecurrentTransactions(true);
-  }, []);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -272,13 +245,7 @@ function Recurrent() {
           </div>
         )}
 
-        {loading ? (
-          <div className='flex flex-col justify-center items-center w-full h-[50vh]'>
-            <LoadingIcon className='size-15 animate-spin text-[#999]' />
-          </div>
-        ) : error ? (
-          <p className="text-red-400 text-sm mt-8">{error}</p>
-        ) : recurrentTransactions.length === 0 ? (
+        {recurrentTransactions.length === 0 ? (
           <div className='flex flex-col justify-center items-center inter pt-40'>
             <RecurrentIcon className='w-24 h-24' />
             <p className='text-xl'>{t('no_recurrent')}</p>

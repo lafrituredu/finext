@@ -12,5 +12,6 @@
     "utils":"Utiles",
     "config":"Configuración",
     "profile":"Perfil",
-    "bills":"Facturas"
+    "bills":"Facturas",
+    "edit":"Editar"
 }

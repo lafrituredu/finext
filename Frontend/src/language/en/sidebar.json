@@ -12,5 +12,6 @@
     "utils":"Utils",
     "config":"Config",
     "profile":"Profile",
-    "bills":"Bills"
+    "bills":"Bills",
+    "edit":"Edit"
 }

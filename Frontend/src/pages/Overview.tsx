@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 function Overview() {
 const { t } = useTranslation("overview");
 const { t: tUtils } = useTranslation("utils");
+const { t:tGoals } = useTranslation('goals');
 
 const [select,setSeleceted] = useState<any>('cashflow');
 const { transactions, setTransactions } = useTransactions();
@@ -302,7 +303,7 @@ useEffect(() => {
               const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
               if (key > 1) return;
               return (
-                <div key={key} className='inter w-full border border-[#0000001a] rounded-2xl px-8 py-5 flex flex-col gap-4 dark:bg-dark-card'>
+                <div key={key} className='inter w-full rounded-2xl flex flex-col gap-4 dark:bg-dark-card'>
                   <p className='font-semibold montserrat flex justify-between'>{goal.name}
                   </p>
                   
@@ -314,7 +315,7 @@ useEffect(() => {
                   </div>
 
                   <div className={`${recomendation.bg} p-2`}>
-                    <p>{recomendation.status == 0 ? t('recommendations.onTrack') : recomendation.status == 1 ? t('recommendations.aboveTarget') : t('recommendations.onBelow')}</p>
+                    <p>{recomendation.status == 0 ? tGoals('recommendations.onTrack') : recomendation.status == 1 ? tGoals('recommendations.aboveTarget') : tGoals('recommendations.onBelow')}</p>
                   </div>
                 </div>
               )

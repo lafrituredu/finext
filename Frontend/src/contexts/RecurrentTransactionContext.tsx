@@ -1,7 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getRecurrentTransactions, type RecurrentTransaction } from "../api/RecurrentTransactionService";
 
-const RecurrentTransactionsContext = createContext<any>(null);
+export type RecurrentTransactionsContextType = {
+  recurrentTransactions: RecurrentTransaction[];
+  setRecurrentTransactions: React.Dispatch<React.SetStateAction<RecurrentTransaction[]>>,
+  refetchRecurrentTransactions: () => Promise<void>
+};
+
+
+const RecurrentTransactionsContext = createContext<RecurrentTransactionsContextType | null>(null);
 
 export const RecurrentTransactionsProvider = ({ children }: any) => {
   const [recurrentTransactions, setRecurrentTransactions] = useState<RecurrentTransaction[]>([]);
@@ -27,10 +34,4 @@ export const RecurrentTransactionsProvider = ({ children }: any) => {
 
 export const useRecurrentTransactions = () => {
   return useContext(RecurrentTransactionsContext);
-};
-
-export type RecurrentTransactionsContextType = {
-  recurrentTransactions: RecurrentTransaction[];
-  setRecurrentTransactions: React.Dispatch<React.SetStateAction<RecurrentTransaction[]>>,
-  refetchRecurrentTransactions: () => Promise<void>
 };
