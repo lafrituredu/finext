@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
-import CoinIcon from '/src/assets/icons/Coin.svg?react'
 import api from "../api/axiosInstance";
 import { animate, stagger } from "animejs";
 
