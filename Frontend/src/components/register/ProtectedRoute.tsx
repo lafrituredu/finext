@@ -49,12 +49,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (authState.status === "loading") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-dark-background gap-4">
-        <FiNextIcon className="w-12"/>
-        <div className="flex flex-row gap-2 *:w-2 *:h-2 *:rounded-full *:bg-primary *:animate-pulse">
-          <div className=" delay-100" />
-          <div className=" delay-150" />
-          <div className=" delay-200" />
-        </div>
+        <FiNextIcon className="w-24 animate-pulse"/>
         <div className="hidden">
           <Language/><DarkButton/>
         </div>
