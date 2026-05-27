@@ -1,3 +1,4 @@
+//Library
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
@@ -13,10 +14,13 @@ import loginEN from "./language/en/login.json";
 
 import registerES from "./language/es/register.json";
 import registerEN from "./language/en/register.json";
+
 import verifyEmailES from "./language/es/verifyEmail.json";
 import verifyEmailEN from "./language/en/verifyEmail.json";
+
 import forgotPasswordES from "./language/es/forgotPassword.json";
 import forgotPasswordEN from "./language/en/forgotPassword.json";
+
 import resetPasswordES from "./language/es/resetPassword.json";
 import resetPasswordEN from "./language/en/resetPassword.json";
 
@@ -28,10 +32,13 @@ import error404EN from "./language/en/error404.json";
 
 import footerES from "./language/es/footer.json";
 import footerEN from "./language/en/footer.json";
+
 import legalNoticeES from "./language/es/legalNotice.json";
 import legalNoticeEN from "./language/en/legalNotice.json";
+
 import privacyPolicyES from "./language/es/privacyPolicy.json";
 import privacyPolicyEN from "./language/en/privacyPolicy.json";
+
 import cookiesPolicyES from "./language/es/cookiesPolicy.json";
 import cookiesPolicyEN from "./language/en/cookiesPolicy.json";
 
@@ -83,6 +90,8 @@ import catTransEN from "./language/en/catTrans.json";
 import taxesES from "./language/es/taxes.json";
 import taxesEN from "./language/en/taxes.json";
 
+//Group every avaliable language
+//Every lang contains namespaces
 export const resources = {
   es: {
     common: es,
@@ -148,16 +157,17 @@ export const resources = {
   },
 } as const;
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: "en",
-    fallbackLng: "en",
-    defaultNS: "common",
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+  //Connects i18n with react
+  i18n.use(initReactI18next)
+    //Initialize config
+    .init({
+      resources, //Avaliable lang
+      lng: "en", //Default lang
+      fallbackLng: "en", //Back lang in case default fails
+      defaultNS: "common", //Default namespace
+      interpolation: {
+        escapeValue: false,
+      },
+    });
 
 export default i18n;

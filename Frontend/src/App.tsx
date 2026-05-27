@@ -1,7 +1,9 @@
+//Library
 import "./App.css";
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
+//Components
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import GoogleCallback from "./pages/GoogleCallback";
@@ -27,39 +29,50 @@ import LegalNotice from "./pages/LegalNotice.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import CookiesPolicy from "./pages/CookiesPolicy.tsx";
 
+//Key used at localStorage to save last session activity
 const SESSION_LAST_ACTIVITY_KEY = "session-last-activity";
+//Max inactivity time
 const INACTIVITY_LIMIT_MS = 2 * 60 * 60 * 1000;
 
 function App() {
+  //Redirect hook
   const navigate = useNavigate();
+  //Route obtainer hook
   const location = useLocation();
 
   useEffect(() => {
+    //Check if token exists
     const hasToken = Boolean(localStorage.getItem("token"));
 
+    //No token = Delete activity register
     if (!hasToken) {
       localStorage.removeItem(SESSION_LAST_ACTIVITY_KEY);
       return;
     }
 
+    //Saves the actual date as last activity
     const updateLastActivity = () => {
       localStorage.setItem(SESSION_LAST_ACTIVITY_KEY, String(Date.now()));
     };
 
+    //Function to close session if user excedes the inactivity time
     const logoutIfInactive = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         return;
       }
 
+      //Obtains last activity
       const lastActivity = Number(localStorage.getItem(SESSION_LAST_ACTIVITY_KEY) || 0);
       const now = Date.now();
 
+      //No previous activity exist = Initialize
       if (!lastActivity) {
         updateLastActivity();
         return;
       }
 
+      //Checks if the inactivity time exceds the time limit
       if (now - lastActivity >= INACTIVITY_LIMIT_MS) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -71,8 +84,10 @@ function App() {
       }
     };
 
+    //Initial activity
     updateLastActivity();
 
+    //Events to prevent inactivity
     const activityEvents: Array<keyof WindowEventMap> = [
       "click",
       "keydown",
@@ -81,13 +96,16 @@ function App() {
       "touchstart"
     ];
 
+    //Listen all the defined events and updates activity
     activityEvents.forEach((eventName) => {
       window.addEventListener(eventName, updateLastActivity, { passive: true });
     });
 
+    //Checks inactivity every minute
     const intervalId = window.setInterval(logoutIfInactive, 60 * 1000);
 
     return () => {
+      //Remove listeners
       activityEvents.forEach((eventName) => {
         window.removeEventListener(eventName, updateLastActivity);
       });
@@ -97,6 +115,7 @@ function App() {
 
   return (
     <main className="bg-white dark:bg-[#040919] text-black dark:text-[#D8E0F9]">
+      {/* Public Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Navigate to="/" />} />
@@ -112,6 +131,7 @@ function App() {
         <Route path="/privacidad" element={<PrivacyPolicy />} />
         <Route path="/cookies" element={<CookiesPolicy />} />
 
+        {/* Private Routes -Dashboard- */}
         <Route
           path="/dashboard"
           element={
@@ -120,6 +140,7 @@ function App() {
             </ProtectedRoute>
           }
         >
+          {/* Private SubRoutes -Dashboard- */}
           <Route path="" element={<Overview />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="bills" element={<Bills />} />

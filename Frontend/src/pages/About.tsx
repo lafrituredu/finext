@@ -1,16 +1,22 @@
+//Library
+import { useTranslation } from 'react-i18next';
+import { useEffect } from "react";
+import { animate, stagger } from "animejs";
+
+//Components
 import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
-import { useTranslation } from 'react-i18next';
 
-import { NavLink } from "react-router-dom";
+//Icons
 import WrenchIcon from '/src/assets/icons/wrench.svg?react'
 import GithubIcon from '/src/assets/icons/Github.svg?react'
 import LinkedinIcon from '/src/assets/icons/Linkedin.svg?react'
 
-import { useEffect } from "react";
-import { animate, stagger } from "animejs";
+
 function About() {
   const { t } = useTranslation("about");
+
+  //Animations
   useEffect(() => {
       animate("#hero > *",{
           y: ["100px", "0px"],
@@ -93,7 +99,7 @@ function About() {
       </div>
       <div className="flex flex-col items-center justify-center overflow-hidden">
         <div id="whats_finext" className="flex flex-col items-center justify-center py-14 max-w-300 text-center">
-          <p className="inter text-gray-600 px-4 dark:text-dark-text">FiNext is an financial dashboard built by three developers who believe that understanding your finances shouldn't require a finance degree. We focus on clean data visualization, intuitive UX, and a codebase worth being proud of.</p>
+          <p className="inter text-gray-600 px-4 dark:text-dark-text">{t('description')}</p>
         </div>
         {/* Us */}
         <hr className="mb-6 border-t border-gray-300 dark:border-gray-700 w-full" />
@@ -116,14 +122,14 @@ function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="montserrat text-2xl">
-                    Eduardo Rubio Chaparro
+                    {t('edu.title')}
                   </p>
                   <p className="inter text-gray-600 dark:text-gray-400">
-                    Full Stack Web Developer
+                    {t('edu.sub_title')}
                   </p>
                 </div>
-                <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
-                  TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
+                <p className="inter text-gray-500 dark:text-gray-300">
+                  {t('edu.description')}
                 </p>
                   <div className="flex gap-4 justify-center md:justify-start">
                     <a href="https://github.com/eru9927" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
@@ -155,14 +161,14 @@ function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="montserrat text-2xl">
-                    Jeremy Intriago
+                    {t('jeremy.title')}
                   </p>
                   <p className="inter text-gray-600 dark:text-gray-400">
-                    Full Stack Web Developer
+                    {t('jeremy.sub_title')}
                   </p>
                 </div>
-                <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
-                  TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
+                <p className="inter text-gray-500 dark:text-gray-300">
+                  {t('jeremy.description')}
                 </p>
                   <div className="flex gap-4 justify-center md:justify-end">
                     <a href="https://github.com/injerr/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
@@ -194,14 +200,14 @@ function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="montserrat text-2xl">
-                    Marc Gilavert Orea
+                    {t('marc.title')}
                   </p>
                   <p className="inter text-gray-600 dark:text-gray-400">
-                    Full Stack Web Developer
+                    {t('marc.sub_title')}
                   </p>
                 </div>
-                <p className="inter text-gray-500 dark:text-gray-300">Frontend-focused Full Stack Developer with experience building modern web applications using React, Angular,
-                  TypeScript and Laravel. Strong interest in frontend architecture, user experience and scalable web applications.
+                <p className="inter text-gray-500 dark:text-gray-300">
+                  {t('marc.description')}
                 </p>
                   <div className="flex gap-4 justify-center md:justify-start">
                     <a href="https://github.com/" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">

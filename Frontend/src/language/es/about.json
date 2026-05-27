@@ -1,41 +1,20 @@
 {
   "hero_title": "Sobre Nosotros",
   "hero_subtitle": "Conócenos un poco mejor",
-  "lets_go": "Vamos!",
-  "intro_title": "La forma más sencilla de entender y gestionar tu dinero.",
-  "intro_description": "FiNext nace para ayudarte a tomar el control completo de tus finanzas personales. Con herramientas intuitivas y análisis detallados, podrás visualizar tus ingresos, gastos y ahorros de manera clara y eficiente.",
-  "control_title": "Toma el control de tus ingresos y gastos",
-  "control_description": "Organiza tus finanzas con categorías personalizadas, establece metas de ahorro con seguimiento visual y consulta tu resumen financiero con ingresos, gastos y cash flow en tiempo real:",
-  "control_bullet1": "Categoriza automáticamente tus transacciones y personaliza grupos de gastos",
-  "control_bullet2": "Define objetivos financieros con barras de progreso y alertas de cumplimiento",
-  "control_bullet3": "Visualiza tu dashboard completo con balance mensual actualizado",
-  "control_bullet4": "Accede a informes detallados y gráficos interactivos de tu situación financiera",
-  "category_title": "Categorías",
-  "category_item1": "Alimentación",
-  "category_item2": "Transporte",
-  "category_item3": "Ocio",
-  "category_item4": "Salud",
-  "category_item5": "Vivienda",
-  "category_item6": "Educación",
-  "category_item7": "Servicios",
-  "goals_title": "Metas Financieras",
-  "goal1_name": "Vacaciones 2026",
-  "goal1_progress": "1.400€ / 1.800€",
-  "goal1_message": "Necesitas ahorrar 200€/mes. ¡Vas genial!",
-  "goal2_name": "Coche nuevo",
-  "goal2_progress": "3.200€ / 8.000€",
-  "goal2_message": "Ahorra 400€/mes para llegar a tu meta.",
-  "summary_title": "Resumen",
-  "summary_incomes": "Ingresos",
-  "summary_cashflow": "Cash Flow",
-  "summary_outcome": "Gastos",
-  "summary_date": "marzo 2026",
-  "made_for_title": "Hecho para tu forma de gestionar el dinero",
-  "made_for_description": "Diseñamos FiNext pensando en ti. Una plataforma adaptable a tu estilo de vida que simplifica la gestión financiera sin complicaciones técnicas.",
-  "feature1_title": "Todo dividido bajo una sola plataforma",
-  "feature1_description": "Organiza tus finanzas con categorías, grupos y servicios personalizados en un único espacio",
-  "feature2_title": "Gestionar tu dinero nunca ha sido tan fácil",
-  "feature2_description": "Interfaz intuitiva diseñada para que cualquiera pueda usarla sin esfuerzo",
-  "feature3_title": "Reportes y análisis personalizados",
-  "feature3_description": "Genera informes detallados y visualiza tendencias para tomar mejores decisiones financieras"
+  "description" : "FiNext es un panel de control financiero creado por tres desarrolladores que creen que entender tus finanzas no debería requerir un título en finanzas. Nos centramos en una visualización de datos clara, una experiencia de usuario intuitiva y un código del que podemos estar orgullosos.",
+  "edu":{
+    "title":"Eduardo Rubio Chaparro",
+    "sub_title":"Full Stack Web Developer",
+    "description": "Desarrollador Full Stack especializado en frontend, con experiencia en la creación de aplicaciones web modernas utilizando React, Angular, TypeScript y Laravel. Gran interés en la arquitectura frontend, la experiencia de usuario y las aplicaciones web escalables."
+  },
+  "jeremy":{
+    "title":"",
+    "sub_title":"",
+    "description": ""
+  },
+  "marc":{
+    "title":"",
+    "sub_title":"",
+    "description": ""
+  }
 }

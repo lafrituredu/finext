@@ -1,9 +1,15 @@
+//Library
+import { useTranslation } from 'react-i18next';
+import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { animate, stagger } from 'animejs';
+import dayjs from "dayjs";
+
+//Components
 import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
-import Sponsors from '../components/Sponsors'
 
-import { useTranslation } from 'react-i18next';
-
+//Icons
 import SentimentStressedIcon from '/src/assets/icons/Sentiment-stressed-icon.svg?react'
 import Heart from '/src/assets/icons/Heart.svg?react'
 import MoneyBag from '/src/assets/icons/Money-bag.svg?react'
@@ -16,113 +22,109 @@ import KpiStatsDown from '/src/assets/icons/Kpi-stats-down.svg?react'
 import PDFIcon from '/src/assets/icons/PDF-Icon.svg?react'
 import ArrowDownDotsIcon from '/src/assets/icons/ArrowDownDots.svg?react'
 
-import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { animate, stagger } from 'animejs';
-import dayjs from "dayjs";
-
 function Home() {
   const { t } = useTranslation("home");
   const { t:ct } = useTranslation("utils");
   const [PDFanimation,setPDFanimation] = useState(false);
 
-    useEffect(() => {
-      animate("#HeroLeft > *",{
-          x: ["-100px", "0px"],
-          opacity: [0, 1],
-          duration: '1000',
-          delay: stagger(100)
+  useEffect(() => {
+    animate("#HeroLeft > *",{
+        x: ["-100px", "0px"],
+        opacity: [0, 1],
+        duration: '1000',
+        delay: stagger(100)
+    });
+
+    animate('#arrowDownIcon',{
+        y: ["-50px", "0px"],
+        opacity: [0, 1],
+        duration: '1500'
+    });
+    animate('#hr_arrow_left', {
+        x: ["-150px", "0px"],
+        duration: '1000'
+    });
+    animate('#hr_arrow_right', {
+        x: ["150px", "0px"],
+        duration: '1000'
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const el = entry.target as HTMLElement;
+
+        if (el.id === "everything_one_place") {
+          animate(`#${el.id}`,{
+            y: ["150px", "0px"],
+            duration: 1000,
+            easing: "easeOutQuad"
+          });
+
+          observer.unobserve(el);
+        }
+        
+        if (el.id === "everything_one_place_text") {
+          animate('#everything_one_place_text',{
+            y: ["150px", "0px"],
+            duration: 1000,
+            easing: "easeOutQuad"
+          });
+
+          observer.unobserve(el);
+        }
+
+        if (el.id === "cards_hero") {
+          animate('#cards_hero > *',{
+            y: ["250px", "0px"],
+            opacity: [0, 1],
+            duration: 1000,
+            delay: stagger(200),
+            easing: "easeOutQuad"
+          });
+
+          observer.unobserve(el);
+        }
+
+        if (el.id === "icons_text") {
+          animate('#icons_text > *',{
+            opacity: [0,1],
+            duration: 1500,
+            easing: "easeOutQuad",
+            delay: stagger(400)
+          });
+
+          observer.unobserve(el);
+        }
+
+        if (el.id === "built_for_you") {
+          animate('#built_for_you > *', {
+            y: ["150px", "0px"],
+            opacity: [0,1],
+            duration: 1000,
+            easing: "easeOutQuad"
+          });
+
+          observer.unobserve(el);
+        }
       });
+    });
 
-      animate('#arrowDownIcon',{
-          y: ["-50px", "0px"],
-          opacity: [0, 1],
-          duration: '1500'
-      });
-      animate('#hr_arrow_left', {
-          x: ["-150px", "0px"],
-          duration: '1000'
-      });
-      animate('#hr_arrow_right', {
-          x: ["150px", "0px"],
-          duration: '1000'
-      });
+    const everything = document.getElementById("everything_one_place");
+    const everything_text = document.getElementById("everything_one_place_text");
+    const icons_text = document.getElementById("icons_text");
+    const cards = document.getElementById("cards_hero");
+    const built_for_you = document.getElementById("built_for_you");
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+    if (everything) observer.observe(everything);
+    if (cards) observer.observe(cards);
+    if (everything_text) observer.observe(everything_text);
+    if (icons_text) observer.observe(icons_text);
+    if (built_for_you) observer.observe(built_for_you);
 
-          const el = entry.target as HTMLElement;
+  }, []);
 
-          if (el.id === "everything_one_place") {
-            animate(`#${el.id}`,{
-              y: ["150px", "0px"],
-              duration: 1000,
-              easing: "easeOutQuad"
-            });
-
-            observer.unobserve(el);
-          }
-          
-          if (el.id === "everything_one_place_text") {
-            animate('#everything_one_place_text',{
-              y: ["150px", "0px"],
-              duration: 1000,
-              easing: "easeOutQuad"
-            });
-
-            observer.unobserve(el);
-          }
-
-          if (el.id === "cards_hero") {
-            animate('#cards_hero > *',{
-              y: ["250px", "0px"],
-              opacity: [0, 1],
-              duration: 1000,
-              delay: stagger(200),
-              easing: "easeOutQuad"
-            });
-
-            observer.unobserve(el);
-          }
-
-          if (el.id === "icons_text") {
-            animate('#icons_text > *',{
-              opacity: [0,1],
-              duration: 1500,
-              easing: "easeOutQuad",
-              delay: stagger(400)
-            });
-
-            observer.unobserve(el);
-          }
-
-          if (el.id === "built_for_you") {
-            animate('#built_for_you > *', {
-              y: ["150px", "0px"],
-              opacity: [0,1],
-              duration: 1000,
-              easing: "easeOutQuad"
-            });
-
-            observer.unobserve(el);
-          }
-        });
-      });
-
-      const everything = document.getElementById("everything_one_place");
-      const everything_text = document.getElementById("everything_one_place_text");
-      const icons_text = document.getElementById("icons_text");
-      const cards = document.getElementById("cards_hero");
-      const built_for_you = document.getElementById("built_for_you");
-
-      if (everything) observer.observe(everything);
-      if (cards) observer.observe(cards);
-      if (everything_text) observer.observe(everything_text);
-      if (icons_text) observer.observe(icons_text);
-      if (built_for_you) observer.observe(built_for_you);
-
-    }, []);
   return (
     <>
       <Navbar/>
@@ -295,8 +297,6 @@ function Home() {
       </div>
       {/* --- COINTAINER 4 (VIDEO) --- */}
       <div className="flex items-center justify-center mx-5 sm:py-20 py-15">
-        {/* <iframe src="https://www.youtube.com/embed/Xr032EhUDPw"  className="flex justify-center items-center w-full aspect-video bg-linear-to-br from-[#70A1FF] to-[#1E4CA3] md:rounded-4xl rounded-xl max-w-[1280px]">
-        </iframe> */}
           <video
               loop
               playsInline

@@ -1,13 +1,15 @@
-import Navbar from "../components/layout/Navbar"
-import Footer from "../components/layout/Footer"
+//Library
 import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-
 import api from "../api/axiosInstance";
 import { animate, stagger } from "animejs";
 
+//Components
+import Navbar from "../components/layout/Navbar"
+import Footer from "../components/layout/Footer"
 
+//Types
 type ContactFormValues = {
   name: string
   email: string
@@ -16,12 +18,12 @@ type ContactFormValues = {
 };
 
 function Contact() {
+  //Variables
   const { t } = useTranslation("contact");
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // React Hook Form gestiona los valores y valida el formulario antes de enviarlo.
-  // La API volvera a validar en Laravel, asi que esta capa es solo ayuda para la vista.
+  //React hook forms manage the values and validate the form before sending it
   const {register, handleSubmit, setValue, formState: { errors, isValid }} = useForm<ContactFormValues>({
     mode: "onChange",
     defaultValues: {
@@ -32,10 +34,9 @@ function Contact() {
     }
   })
 
-  // Envia el formulario a POST /api/contact. El backend no crea registros:
-  // valida los datos y manda una respuesta automatica usando Mailtrap.
+  //Sends the form as POST to /api/contact. Validate the data and sends and automatic response using "Mailtrap" 
     const onSubmit = async (data: ContactFormValues) => {
-      if (isSubmitting) return // Evita dobles envios si el usuario pulsa varias veces.
+      if (isSubmitting) return // Prevent multiple POSTS
       setIsSubmitting(true)
       try {
         await api.post<{ message: string }>('/contact', data);
@@ -44,7 +45,7 @@ function Contact() {
       }
     }
 
-    //Animaciones 
+    //Animations 
     useEffect(() => {
       animate("#hero > *",{
           y: ["100px", "0px"],
