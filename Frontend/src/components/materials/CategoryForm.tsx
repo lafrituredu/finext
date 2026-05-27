@@ -30,6 +30,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
       }else{
         createCategory(data.name,data.color?.toString());
       }
+      
       close()
     } catch (error) {
       console.error(error)
@@ -73,10 +74,10 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
             <label className={labelCls}>{t('form.labels.name')} *</label>
             <input
               {...register("name", {
-                required: "El nombre es obligatorio",
+                required: t('form.errors.required'),
                 pattern: {
                   value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/,
-                  message: "Nombre no valido."//t('errors.nameInvalidChars')
+                  message: t('form.errors.invalidChars')
                 },
                   validate: (value) => {
                     const exists = categories.some(c => 
@@ -84,7 +85,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
                       c.id !== categoryEdit?.id
                     );
 
-                    return exists ? "Ya existe una categoría con ese nombre" : true;
+                    return exists ? t('form.errors.categoryExists') : true;
                   }
               })}
               className={inputCls}
@@ -98,7 +99,7 @@ export function CategoryForm({ close, categories, categoryEdit }: {close:any,cat
             <input
               type="color"
               {...register("color", {
-                required: "Obligatorio"
+                required: t('form.errors.required')
               })}
               className={`border border-gray-300 w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50`}
             />

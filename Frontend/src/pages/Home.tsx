@@ -27,6 +27,7 @@ function Home() {
   const { t:ct } = useTranslation("utils");
   const [PDFanimation,setPDFanimation] = useState(false);
 
+  // Animations
   useEffect(() => {
     animate("#HeroLeft > *",{
         x: ["-100px", "0px"],

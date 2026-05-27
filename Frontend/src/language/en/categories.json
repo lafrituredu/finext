@@ -52,6 +52,11 @@
     "labels": {
       "color": "Color",
       "name": "Name"
+    },
+    "errors": {
+      "invalidChars": "Those Characters are not valid",
+      "required": "This field is required",
+      "categoryExists": "Category already exists"
     }
   },
   "order": {

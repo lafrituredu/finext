@@ -27,71 +27,9 @@ function Taxes() {
     const { t: tUtils } = useTranslation("utils");
     const navigate = useNavigate();
     const [loading,setLoading] = useState(true);
-    useEffect(() => {
-        
-        const checkToken = async () => {
-            try {
-                //Obtenemos el rol del usuario para ver si es particular y hacemos redirect
-                const user = await getCurrentUser();
-                if (user.rol === "particular") {
-                    navigate('/dashboard',{ replace: true });
-                }
-            } catch (error) {
-                console.error(error)
-            } finally{
-                setLoading(false)
-            }
-        };
-
-        checkToken();
-    },[]);
-    
-    useEffect(() => {
-        let min = (quarter-1)*3;
-        let max = quarter*3;
-        if (quarter === 0) {
-            min = 0;
-            max = 12;
-            setCuota(3600)
-        }else{
-            setCuota(900)
-        }
-        let incomesTotal = 0;
-        let expensesTotal = 0;
-        let collectedVatTotal = 0;
-        let inputVatTotal = 0;
-
-        bills.forEach((bill) => {
-            const date = new Date(bill.date);
-
-            if (date.getMonth() < min || date.getMonth() >= max) return;
-            if (date.getFullYear() !== new Date().getFullYear()) return;
-
-            const total = Number(bill.total_amount);
-            const vat = Number(bill.iva_percent) / 100;
-
-            if (bill.type === "emitida") {
-                incomesTotal += total;
-                collectedVatTotal += total * vat;
-            } else {
-                expensesTotal += total;
-                inputVatTotal += total * vat;
-            }
-        });
-
-        let base_irpf = (incomesTotal-collectedVatTotal) - expensesTotal; 
-        let _irpf = base_irpf*(irpf/100); 
-
-        setIncomes(incomesTotal);
-        setExpenses(expensesTotal);
-        setCollectedVat(collectedVatTotal);
-        setInputVat(inputVatTotal);
-        setBaseIRPF(base_irpf);
-        setPayIRPF(_irpf);
-
-    },[bills,quarter])
 
     useEffect(() =>{
+        // Get the irpf if the user haves if he doesnt then we will show an alert
         async function getIrpf() {
             let _irpf = await getCurrentUser().then(value => {return value?.autonomo?.irpf});
             if (_irpf == null) {
@@ -114,9 +52,78 @@ function Taxes() {
         }
         setQuarter(quarter)
     },[])
+    // This functions checks if the user rol is particular and redirects him
+    useEffect(() => {
+        
+        const checkToken = async () => {
+            try {
+                //Obtenemos el rol del usuario para ver si es particular y hacemos redirect
+                const user = await getCurrentUser();
+                if (user.rol === "particular") {
+                    navigate('/dashboard',{ replace: true });
+                }
+            } catch (error) {
+                console.error(error)
+            } finally{
+                setLoading(false)
+            }
+        };
+
+        checkToken();
+    },[]);
+    
+    // This useEffect changes when the filter of quarters does and takes all the bills of the period
+    useEffect(() => {
+        let min = (quarter-1)*3;
+        let max = quarter*3;
+        if (quarter === 0) {
+            min = 0;
+            max = 12;
+            setCuota(3600)
+        }else{
+            setCuota(900)
+        }
+
+        // Set the vars we will change and use for setting consts
+        let incomesTotal = 0;
+        let expensesTotal = 0;
+        let collectedVatTotal = 0;
+        let inputVatTotal = 0;
+
+        bills.forEach((bill) => {
+            const date = new Date(bill.date);
+
+            // comproves month & year
+            if (date.getMonth() < min || date.getMonth() >= max) return;
+            if (date.getFullYear() !== new Date().getFullYear()) return;
+
+            const total = Number(bill.total_amount);
+            const vat = Number(bill.iva_percent) / 100;
+
+            if (bill.type === "emitida") {
+                incomesTotal += total;
+                collectedVatTotal += total * vat;
+            } else {
+                expensesTotal += total;
+                inputVatTotal += total * vat;
+            }
+        });
+
+        let base_irpf = (incomesTotal-collectedVatTotal) - expensesTotal; 
+        let _irpf = base_irpf*(irpf/100); 
+
+        // Setting incomes taxes, etc...
+        setIncomes(incomesTotal);
+        setExpenses(expensesTotal);
+        setCollectedVat(collectedVatTotal);
+        setInputVat(inputVatTotal);
+        setBaseIRPF(base_irpf);
+        setPayIRPF(_irpf);
+
+    },[bills,quarter])
 
 
-const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+    const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
 
   return (
     <>

@@ -41,6 +41,7 @@ export const getRecomendation = (goal:Goal,cashflow:number) => {
 
     const months = (end.getFullYear() - now.getFullYear()) * 12 + (end.getMonth() - now.getMonth());
     
+    // eviting infiniting
     const goalMonthly = months != 0 ? difference / months : difference;
 
     if (goalMonthly*1.15 > cashflow*percent) {

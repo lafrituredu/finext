@@ -31,10 +31,12 @@ function Categories() {
     const { t } = useTranslation("categories");
     const { t:ct } = useTranslation("catTrans")
 
+    // makes a refetch of the categories every time the showform value changes 
     useEffect(() => {
       refetchCategories()
     },[showCategoryForm])
 
+    //Deletes the category 
     const handleDelete = async (id: number) => {
       try {
         await deleteCategory(id)

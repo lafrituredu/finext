@@ -30,6 +30,7 @@ function Goals() {
     refetchTransactions()
   },[showGoalAmountForm,goalDelete,showGoalForm]);
   
+  // Calculates the cashflow (this is used for the recommendation)
   function calculateCashflow(){
     const incomes = transactions
         .filter(t => t.type === 'income' && new Date(t.date).getMonth() == new Date().getMonth())
@@ -59,7 +60,9 @@ function Goals() {
           <hr className="-mx-6 sm:-mx-10 my-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
           <div className='w-full grid md:grid-cols-2 grid-cols-1 gap-15'>
             {goals?.map( (goal,key) => 
-            { const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
+            { 
+              //Here I get some parameters I will use for showing the info 
+              const recomendation = getRecomendation(goal,parseInt(calculateCashflow()));
               const diffDays = Math.floor( (new Date(goal.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) )
               const progress = (goal.current_amount / goal.target_amount * 100).toFixed(2);
               return (

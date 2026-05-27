@@ -18,11 +18,12 @@ class GoalController extends Controller
         return response()->json($goals,200);
     }
 
+    //function for addding contributions to the goal amount
     public function addContribution(Request $request, int $id){
         $user = $request->user();
         $goal = Goal::findOrFail($id);
         if ($goal->user_id != $user->id) {
-            return 401;
+            return response()->json(['message' => 'Unauthorized'],401);
         }
         $data = $request->validate([
             'contribution' => 'required|numeric'

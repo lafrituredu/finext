@@ -134,12 +134,17 @@ const configLastThreeMonths: {options: ApexOptions, series: any} = {
     }
     ],
 };
+
+//This functions returns a boolean if the date of a transaction if from the current month and current year
 const isCurrent = (t: Transaction): boolean => {
     return new Date(t.date).getMonth() == new Date().getMonth() && new Date(t.date).getFullYear() == new Date().getFullYear();
 }
+
+//This functions returns a boolean if the date of a transaction if from the current year
 const isCurrentYear = (t: Transaction): boolean => {
     return new Date(t.date).getFullYear() == new Date().getFullYear();
 }
+
 
 function calculateIncomes(){
     return transactions
