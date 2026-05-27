@@ -8,6 +8,8 @@ type Props = {
 };
 
 const RegisterHero: React.FC<Props> = ({ step, role, t }) => {
+  // Right side panel for desktop register.
+  // It shows the current step and hides step 3 for particular users.
   return (
     <div
       className="lg:flex hidden lg:w-[55%] bg-cover bg-center bg-no-repeat relative rounded-r-3xl"

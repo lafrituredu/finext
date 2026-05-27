@@ -29,6 +29,7 @@ function ProfileSummary({
   onDeleteAccountClick
 }: ProfileSummaryProps) {
   const { t } = useTranslation("profile");
+  // Use avatar_url from the API. If it does not exist, use avatar.
   const avatarUrl = user?.avatar_url || user?.avatar;
 
   return (
@@ -39,6 +40,7 @@ function ProfileSummary({
       </p>
 
       <div className="flex items-center gap-4 mb-6">
+        {/* Show the avatar image or the first letter of the user name. */}
         <div className="size-16 rounded-full bg-[#84A2EB66] text-primary flex items-center justify-center mont_semibold text-2xl uppercase overflow-hidden shrink-0">
           {avatarUrl ? (
             <img
@@ -61,6 +63,7 @@ function ProfileSummary({
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
+        {/* Upload a new avatar file. */}
         <label className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full bg-primary text-white text-sm cursor-pointer shadow-md disabled:opacity-60">
           <PencilIcon className="size-4" />
           {avatarSaving ? t("avatar_saving") : t("change_avatar")}
@@ -80,6 +83,7 @@ function ProfileSummary({
         </label>
 
         {avatarUrl && (
+          // Delete avatar button is shown only when the user has an avatar.
           <button
             type="button"
             disabled={avatarSaving}
@@ -93,6 +97,7 @@ function ProfileSummary({
       </div>
 
       <div className="space-y-4">
+        {/* Short account data. */}
         <div>
           <p className="text-sm text-[#7B7B7B] dark:text-dark-text">
             {t("role")}
@@ -122,6 +127,7 @@ function ProfileSummary({
       </div>
 
       <div className="mt-7 pt-5 border-t border-[#0000001a] dark:border-[#1d2344]">
+        {/* Dangerous action: delete the full account. */}
         <p className="montserrat text-sm font-semibold text-[#7B7B7B] dark:text-dark-text">
           {t("danger_zone")}
         </p>

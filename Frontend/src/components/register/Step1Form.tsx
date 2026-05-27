@@ -24,9 +24,11 @@ const Step1Form: React.FC<Props> = ({
   isStep1Complete,
   t
 }) => {
+  // Step 1 asks for account login data.
+  // It also shows if email, username, and passwords are valid.
   return (
     <>
-      {/* Username */}
+      {/* Username field with availability status. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("username_label")}
@@ -57,7 +59,7 @@ const Step1Form: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Email */}
+      {/* Email field with availability status. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("email_label")}
@@ -88,9 +90,9 @@ const Step1Form: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Passwords */}
+      {/* Password and confirm password fields. */}
       <div className="mb-2 flex gap-3">
-        {/* Password */}
+        {/* Main password. */}
         <div className="flex-1">
           <label className="text-sm text-gray-600 dark:text-gray-400 inter">
             {t("password_label")}
@@ -112,7 +114,7 @@ const Step1Form: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Confirm Password */}
+        {/* Repeated password. It must match the first one. */}
         <div className="flex-1">
           <label className="text-sm text-gray-600 dark:text-gray-400 inter">
             {t("confirm_password_label")}
@@ -148,7 +150,7 @@ const Step1Form: React.FC<Props> = ({
         {t("password_requirements")}
       </p>
 
-      {/* Button */}
+      {/* Go to the next step after validation. */}
       <button
         type="button"
         onClick={nextStep}

@@ -16,9 +16,11 @@ const errorClass = "mt-1 text-xs text-red-500";
 
 const sanitizeFullNameInput = (value: string) => value.replace(/\d/g, "");
 
+// Keep only characters that can be used in a phone number.
 const sanitizePhoneInput = (value: string) =>
   value.replace(/[^\d+\s().-]/g, "").replace(/(?!^)\+/g, "");
 
+// Tax numbers can have a maximum of two decimals.
 const hasMaxTwoDecimals = (value: string) => /^\d+(\.\d{1,2})?$/.test(value);
 
 type ProfileFormProps = {
@@ -47,6 +49,7 @@ function ProfileForm({
   onFieldChange
 }: ProfileFormProps) {
   const { t } = useTranslation("profile");
+  // Autonomo users have extra tax fields.
   const isAutonomo = form.rol === "autonomo";
   const civilStateOptions = [
     { value: "soltero", label: t("civil_single") },
@@ -57,6 +60,7 @@ function ProfileForm({
     { value: "pareja_de_hecho", label: t("civil_partner") }
   ];
   const fullNameField = register("full_name", {
+    // Full name is required and cannot contain numbers.
     required: t("validation.full_name_required"),
     minLength: {
       value: 3,
@@ -70,6 +74,7 @@ function ProfileForm({
       !hasNumbers(value) || t("validation.full_name_no_numbers")
   });
   const phoneField = register("phone_number", {
+    // Phone number is required and must have a valid format.
     required: t("validation.phone_required"),
     validate: (value) =>
       isValidPhoneNumber(value) ||
@@ -96,12 +101,14 @@ function ProfileForm({
       </div>
 
       {message && (
+        // Success message after saving profile changes.
         <div className="mb-5 rounded-xl border border-green-500/40 bg-green-500/10 px-4 py-3 text-green-500">
           {message}
         </div>
       )}
 
       {error && (
+        // Error message from validation or backend.
         <div className="mb-5 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-500">
           {error}
         </div>
@@ -126,6 +133,7 @@ function ProfileForm({
         <label className={labelClass}>
           {t("username")}
           <div className="relative">
+            {/* Username is locked and cannot be changed here. */}
             <input
               className={`${inputClass} pr-11 bg-[#ECEFF4] text-[#6B7280] border-[#D7DBE4] cursor-not-allowed select-none dark:bg-[#091126] dark:text-[#7F8AA9] dark:border-[#1d2344]`}
               readOnly
@@ -145,6 +153,7 @@ function ProfileForm({
         <label className={labelClass}>
           {t("email")}
           <div className="relative">
+            {/* Email is locked because it is used for login and verification. */}
             <input
               className={`${inputClass} pr-11 bg-[#ECEFF4] text-[#6B7280] border-[#D7DBE4] cursor-not-allowed select-none dark:bg-[#091126] dark:text-[#7F8AA9] dark:border-[#1d2344]`}
               value={user?.email ?? ""}
@@ -189,6 +198,7 @@ function ProfileForm({
       </div>
 
       {isAutonomo && (
+        // Tax section is only shown for autonomo users.
         <div className="mt-8 pt-7 border-t border-[#0000001a] dark:border-[#1d2344]">
           <p className="montserrat font-semibold">{t("tax_info")}</p>
           <p className="text-[#7B7B7B] dark:text-dark-text mb-5">

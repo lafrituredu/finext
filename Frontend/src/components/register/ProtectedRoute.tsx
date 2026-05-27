@@ -18,13 +18,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        // Al refrescar una ruta privada no nos fiamos solo de localStorage:
-        // preguntamos a /me para confirmar que el token existe y pertenece a un usuario.
+        // When a private route is refreshed, do not trust only localStorage.
+        // Ask /me to check that the token exists and belongs to a user.
         const response = await api.get("/me");
         const user = response.data;
 
-        // El backend puede reconocer el token pero bloquear el acceso si el email
-        // aun no esta verificado. En ese caso se envia a la pantalla de verificacion.
+        // The backend can know the token but the email can still be unverified.
+        // In that case, send the user to the verification page.
         if (!user?.email_verified_at) {
           setAuthState({
             status: "unverified",
@@ -35,8 +35,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
         setAuthState({ status: "authenticated" });
       } catch (error) {
-        // Si /me falla, el token ya no sirve. Se elimina para no dejar una
-        // sesion rota en el navegador.
+        // If /me fails, the token is not valid anymore.
+        // Remove it so the browser does not keep a broken session.
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setAuthState({ status: "unauthenticated" });

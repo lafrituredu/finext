@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Create the signed email verification URL used in verification emails.
         VerifyEmail::createUrlUsing(function (object $notifiable) {
             return URL::temporarySignedRoute(
                 'verification.verify',
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
+        // Create the password reset URL that opens the React reset page.
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
 

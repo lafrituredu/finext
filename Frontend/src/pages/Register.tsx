@@ -35,6 +35,7 @@ const Register: React.FC = () => {
   const googleEmail = searchParams.get("email") || "";
   const googleFullName = searchParams.get("full_name") || "";
   const googleUsername = searchParams.get("username") || "";
+  // Google setup means the user came from Google but still needs to finish the form.
   const isGoogleSetup = Boolean(googleSetupToken);
 
   const [step, setStep] = useState(1);
@@ -73,6 +74,7 @@ const Register: React.FC = () => {
   });
 
   useEffect(() => {
+    // Close custom dropdowns when the user clicks outside them.
     const handleClickOutside = (event: MouseEvent) => {
       if (
         rolDropdownRef.current &&
@@ -96,6 +98,7 @@ const Register: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // If the user already has a token, go to the dashboard.
     if (localStorage.getItem("token")) {
       navigate("/dashboard");
     }
@@ -106,8 +109,8 @@ const Register: React.FC = () => {
       return;
     }
 
-    // Cuando Google devuelve un usuario nuevo, Laravel no lo registra completo
-    // todavia. Rellena email/nombre/username y obliga a terminar el formulario.
+    // When Google returns a new user, Laravel does not finish the register yet.
+    // Fill email, name, and username, then ask the user for the missing data.
     setFormData((current) => ({
       ...current,
       email: googleEmail || current.email,
@@ -127,6 +130,7 @@ const Register: React.FC = () => {
       | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
       | { target: { name: string; value: string } }
   ) => {
+    // Update one form field.
     const { name, value } = e.target;
 
     setFormData((current) => ({
@@ -137,6 +141,7 @@ const Register: React.FC = () => {
     setError("");
 
     if (name === "email" || name === "username") {
+      // If email or username changes, check availability again later.
       setAvailability((current) => ({
         ...current,
         [name]: null
@@ -145,12 +150,13 @@ const Register: React.FC = () => {
   };
 
   const checkAvailability = async () => {
+    // Ask the backend if email and username are already used.
     setCheckingAvailability(true);
     setError("");
 
     try {
-      // Antes de pasar al siguiente paso se pregunta al backend si email y username
-      // ya existen en la tabla users. Asi el usuario no rellena todo para fallar al final.
+      // Check email and username before going to the next step.
+      // This avoids filling the full form and failing at the end.
       const [emailData, usernameData] = await Promise.all([
         checkEmail(formData.email),
         checkUsername(formData.username)
@@ -181,6 +187,7 @@ const Register: React.FC = () => {
   };
 
   const nextStep = async () => {
+    // Validate step 1 and then go to step 2.
     const validationError = validateStep1(formData);
     if (validationError) {
       setError(validationError);
@@ -199,6 +206,7 @@ const Register: React.FC = () => {
   };
 
   const nextToStep3 = () => {
+    // Validate personal data before finishing or going to tax data.
     const validationError = validateStep2(formData);
     if (validationError) {
       setError(validationError);
@@ -206,23 +214,24 @@ const Register: React.FC = () => {
     }
 
     if (formData.rol === "autonomo") {
-      // Los autonomos necesitan un tercer paso con datos fiscales que se guardan
-      // en la tabla autonomos relacionada con users.
+      // Autonomo users need a third step with tax data.
       setError("");
       setStep(3);
       return;
     }
 
-    // Los particulares no tienen datos fiscales, asi que el registro se envia ya.
+    // Particular users do not need tax data, so register now.
     void handleSubmit();
   };
 
   const prevStep = () => {
+    // Go back one step, but never below step 1.
     setStep((current) => Math.max(1, current - 1));
     setError("");
   };
 
   const handleBackOrLogin = () => {
+    // In Google setup, back means return to login.
     if (isGoogleSetup) {
       navigate("/login");
       return;
@@ -242,11 +251,12 @@ const Register: React.FC = () => {
 
   const handleGoogleRegister = () => {
     setError("");
-    // Igual que en login, el flujo OAuth empieza redirigiendo al endpoint Laravel.
+    // Google OAuth starts by sending the browser to Laravel.
     window.location.assign(getGoogleAuthUrl());
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
+    // Final submit for normal register and Google setup register.
     e?.preventDefault();
     setLoading(true);
     setError("");
@@ -270,14 +280,14 @@ const Register: React.FC = () => {
     }
 
     try {
-      // buildRegisterPayload quita confirmPassword y prepara los nombres de campos
-      // que espera AuthController::register.
+      // Build the data names expected by AuthController::register.
       const dataToSend = buildRegisterPayload(formData);
       const locale = i18n.language.startsWith("es") ? "es" : "en";
       const data = await registerUser({ ...dataToSend, locale });
 
-      // El backend devuelve token tambien tras registrar. Para registro normal
-      // se conserva mientras el usuario verifica email; para Google entra directo.
+      // The backend can return a token after register.
+      // Normal register still goes to email verification.
+      // Google setup goes directly to the dashboard.
       if (data.token && data.user?.username) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", data.user.username);
@@ -321,6 +331,7 @@ const Register: React.FC = () => {
     Boolean(formData.empresa);
 
   const getRoleLabel = (role: string) => {
+    // Convert role values to translated labels.
     switch (role) {
       case "autonomo":
         return t("role_autonomo");
@@ -331,6 +342,7 @@ const Register: React.FC = () => {
   };
 
   const getEstadoCivilLabel = (estado: string) => {
+    // Convert civil state values to translated labels.
     switch (estado) {
       case "casado":
         return t("estado_civil_casado");

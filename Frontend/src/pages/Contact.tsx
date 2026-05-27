@@ -1,15 +1,15 @@
-//Library
+// Libraries.
 import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import { animate, stagger } from "animejs";
 
-//Components
+// Components.
 import Navbar from "../components/layout/Navbar"
 import Footer from "../components/layout/Footer"
 
-//Types
+// Types.
 type ContactFormValues = {
   name: string
   email: string
@@ -18,12 +18,12 @@ type ContactFormValues = {
 };
 
 function Contact() {
-  //Variables
+  // Translation helper.
   const { t } = useTranslation("contact");
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  //React hook forms manage the values and validate the form before sending it
+  // React Hook Form stores the values and validates them before submit.
   const {register, handleSubmit, setValue, formState: { errors, isValid }} = useForm<ContactFormValues>({
     mode: "onChange",
     defaultValues: {
@@ -34,7 +34,8 @@ function Contact() {
     }
   })
 
-  //Sends the form as POST to /api/contact. Validate the data and sends and automatic response using "Mailtrap" 
+    // Send the contact form to the backend.
+    // The backend validates it and sends an automatic email using Mailtrap.
     const onSubmit = async (data: ContactFormValues) => {
       if (isSubmitting) return // Prevent multiple POSTS
       setIsSubmitting(true)
@@ -45,7 +46,7 @@ function Contact() {
       }
     }
 
-    //Animations 
+    // Start page animations when the component is loaded.
     useEffect(() => {
       animate("#hero > *",{
           y: ["100px", "0px"],

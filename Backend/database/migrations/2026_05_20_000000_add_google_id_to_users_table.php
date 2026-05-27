@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            // Store the Google user id.
+            // It is nullable because normal email/password users do not have it.
             $table->string('google_id')->nullable()->unique();
         });
     }
@@ -22,6 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            // Remove the unique index before removing the column.
             $table->dropUnique(['google_id']);
             $table->dropColumn('google_id');
         });

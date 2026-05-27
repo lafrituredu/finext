@@ -36,10 +36,13 @@ const Step3Form: React.FC<Props> = ({
   loading,
   t
 }) => {
+  // Step 3 is only for autonomo users.
+  // It asks for tax and company data.
   const maxBirthdate = new Date().toISOString().split("T")[0];
 
   return (
     <>
+      {/* DNI or NIE input. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("dni_label")}
@@ -53,6 +56,7 @@ const Step3Form: React.FC<Props> = ({
         />
       </div>
 
+      {/* Birth date cannot be in the future. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("birthdate_label")}
@@ -67,6 +71,7 @@ const Step3Form: React.FC<Props> = ({
         />
       </div>
 
+      {/* Company name input. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("empresa_label")}
@@ -80,6 +85,7 @@ const Step3Form: React.FC<Props> = ({
         />
       </div>
 
+      {/* Civil state custom selector. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("estado_civil_label")}
@@ -137,6 +143,7 @@ const Step3Form: React.FC<Props> = ({
       </div>
 
       <div className="flex gap-3">
+        {/* Return to personal data. */}
         <button
           type="button"
           onClick={prevStep}
@@ -145,6 +152,7 @@ const Step3Form: React.FC<Props> = ({
           {t("back")}
         </button>
 
+        {/* Send the full register form. */}
         <button
           type="submit"
           disabled={loading}

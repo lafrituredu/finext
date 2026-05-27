@@ -10,6 +10,7 @@ const GoogleCallback: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [error, setError] = useState("");
 
+  // Values sent by Laravel after Google OAuth finishes.
   const token = useMemo(() => searchParams.get("token") || "", [searchParams]);
   const googleSetupToken = useMemo(
     () => searchParams.get("google_setup_token") || "",
@@ -31,13 +32,14 @@ const GoogleCallback: React.FC = () => {
   const googleError = useMemo(() => searchParams.get("error") || "", [searchParams]);
 
   useEffect(() => {
+    // If Laravel returned an error, show it and stop.
     if (googleError) {
       setError(googleError);
       return;
     }
 
-    // Si el backend no encuentra usuario completo, devuelve google_setup_token.
-    // Se manda a Register para completar telefono, rol y datos fiscales si toca.
+    // If the backend does not find a complete user, it returns google_setup_token.
+    // Send the user to Register to finish missing data.
     if (googleSetupToken) {
       const params = new URLSearchParams({
         google_setup_token: googleSetupToken,
@@ -50,13 +52,14 @@ const GoogleCallback: React.FC = () => {
       return;
     }
 
+    // A complete Google login must include token and username.
     if (!token || !username) {
       setError("No se ha podido iniciar sesion con Google.");
       return;
     }
 
-    // Usuario Google ya existente o completado: se guarda el token Sanctum
-    // recibido del backend y se entra en el dashboard.
+    // Existing or complete Google user:
+    // save the Sanctum token and go to the dashboard.
     localStorage.setItem("token", token);
     localStorage.setItem("user", username);
     window.history.replaceState({}, document.title, "/auth/google/callback");

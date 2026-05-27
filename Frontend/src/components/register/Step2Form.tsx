@@ -39,8 +39,10 @@ const Step2Form: React.FC<Props> = ({
   loading,
   t
 }) => {
+  // Step 2 asks for personal data and the account role.
   return (
     <>
+      {/* Full name input. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("full_name_label")}
@@ -54,6 +56,7 @@ const Step2Form: React.FC<Props> = ({
         />
       </div>
 
+      {/* Phone number input. */}
       <div className="mb-5">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("phone_label")}
@@ -67,6 +70,7 @@ const Step2Form: React.FC<Props> = ({
         />
       </div>
 
+      {/* Role selector. Particular users finish here, autonomo users go to step 3. */}
       <div className="mb-6">
         <label className="text-sm text-gray-600 dark:text-gray-400 inter">
           {t("role_label")}
@@ -123,6 +127,7 @@ const Step2Form: React.FC<Props> = ({
       </div>
 
       <div className="flex gap-3">
+        {/* Go back to the previous register step. */}
         <button
           type="button"
           onClick={prevStep}
@@ -131,6 +136,7 @@ const Step2Form: React.FC<Props> = ({
           {t("back")}
         </button>
 
+        {/* Continue to tax data or submit the register form. */}
         <button
           type="button"
           onClick={nextStep}

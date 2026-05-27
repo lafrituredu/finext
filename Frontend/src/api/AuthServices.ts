@@ -1,6 +1,7 @@
 import api, { API_BASE_URL } from './axiosInstance'
 
 export interface AuthResponse {
+  // Common response returned by auth endpoints.
   user?: {
     username: string
     [key: string]: unknown
@@ -14,6 +15,7 @@ export interface AuthResponse {
 }
 
 export interface AutonomoProfile {
+  // Extra tax data for autonomo users.
   dni?: string | null
   dni_set?: boolean
   birth_date?: string | null
@@ -24,6 +26,7 @@ export interface AutonomoProfile {
 }
 
 export interface UserProfile {
+  // Main user data used by the profile page and protected views.
   id: number
   username: string
   full_name: string
@@ -43,6 +46,7 @@ export interface CurrentUserRoleResponse {
 }
 
 export interface UpdateUserProfilePayload {
+  // Data that can be changed from the profile form.
   username: string
   full_name: string
   phone_number?: string
@@ -53,8 +57,8 @@ export interface UpdateUserProfilePayload {
   irpf?: string
 }
 
-// LOGIN: envia credenciales al backend. Si son validas, Laravel devuelve
-// el usuario y un token Sanctum que la vista guardara en localStorage.
+// LOGIN: send email and password to the backend.
+// If they are correct, Laravel returns the user and a Sanctum token.
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/login', {
     email,
@@ -64,8 +68,8 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
   return response.data
 }
 
-// REGISTER: recibe el payload ya preparado desde la vista. El backend decide
-// si crea solo User o tambien Autonomo segun el campo rol.
+// REGISTER: send the prepared register data to the backend.
+// The backend creates User and maybe Autonomo depending on rol.
 export const registerUser = async (data: {
   email: string
   password: string
@@ -87,6 +91,7 @@ export const registerUser = async (data: {
 }
 
 export const resendVerificationEmail = async (email: string, locale?: 'en' | 'es'): Promise<AuthResponse> => {
+  // Ask the backend to send the email verification message again.
   const response = await api.post<AuthResponse>('/email/verification-notification', {
     email,
     locale,
@@ -96,6 +101,7 @@ export const resendVerificationEmail = async (email: string, locale?: 'en' | 'es
 }
 
 export const sendPasswordResetEmail = async (email: string, locale?: 'en' | 'es'): Promise<AuthResponse> => {
+  // Ask the backend to send a password reset email.
   const response = await api.post<AuthResponse>('/forgot-password', {
     email,
     locale,
@@ -110,22 +116,25 @@ export const resetUserPassword = async (data: {
   password: string
   password_confirmation: string
 }): Promise<AuthResponse> => {
+  // Send the reset token and the new password to the backend.
   const response = await api.post<AuthResponse>('/reset-password', data)
 
   return response.data
 }
 
 export const getGoogleAuthUrl = (): string =>
+  // This URL starts the Google OAuth flow in Laravel.
   `${API_BASE_URL.replace(/\/$/, '')}/auth/google/redirect`
 
-// GET CURRENT USER: endpoint protegido. Sirve para cargar perfil y tambien
-// para comprobar si el token actual sigue siendo valido.
+// GET CURRENT USER: protected endpoint.
+// It loads the profile and checks that the current token still works.
 export const getCurrentUser = async (): Promise<UserProfile> => {
   const response = await api.get<UserProfile>('/me');
   return response.data;
 };
 
 export const getCurrentUserRole = async (): Promise<UserRole> => {
+  // Get only the user role when the frontend does not need the full profile.
   const response = await api.get<CurrentUserRoleResponse>('/me/role');
   return response.data.rol;
 };
@@ -133,11 +142,13 @@ export const getCurrentUserRole = async (): Promise<UserRole> => {
 export const updateCurrentUser = async (
   data: UpdateUserProfilePayload
 ): Promise<UserProfile> => {
+  // Save profile changes for the logged user.
   const response = await api.put<UserProfile>('/me', data);
   return response.data;
 };
 
 export const uploadCurrentUserAvatar = async (avatar: File): Promise<UserProfile> => {
+  // Upload avatar as multipart form data.
   const formData = new FormData();
   formData.append('avatar', avatar);
 
@@ -151,17 +162,20 @@ export const uploadCurrentUserAvatar = async (avatar: File): Promise<UserProfile
 };
 
 export const deleteCurrentUserAvatar = async (): Promise<UserProfile> => {
+  // Delete the current avatar from the backend.
   const response = await api.delete<UserProfile>('/me/avatar');
   return response.data;
 };
 
 export const deleteCurrentUserAccount = async (): Promise<AuthResponse> => {
+  // Delete the logged user account.
   const response = await api.delete<AuthResponse>('/me');
   return response.data;
 };
 
 
 export const logoutUser = async (): Promise<void> => {
+  // Close the backend session token and clean local data.
   await api.post('/logout');
   localStorage.removeItem("token");
   localStorage.removeItem("user");
@@ -169,13 +183,13 @@ export const logoutUser = async (): Promise<void> => {
   
 };
 
-//validacion previa al registro para avisar antes de enviar todo el formulario.
+// Before register, check if the email is free.
 export const checkEmail = async (email: string) => {
   const response = await api.get(`/check-email?email=${email}`)
   return response.data
 }
 
-//validacion previa al registro para evitar usernames duplicados.
+// Before register, check if the username is free.
 export const checkUsername = async (username: string) => {
   const response = await api.get(`/check-username?username=${username}`)
   return response.data
