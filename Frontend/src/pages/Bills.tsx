@@ -29,7 +29,8 @@ function Bills() {
 
   //Bills
   const { bills, setBills, refetchBills } = useBills() as BillsContextType
-  const [billsPaid, setBillsPaid] = useState<Record<number, number | null>>({})
+  //Saves how much money has been paid at every bill - KEY: number - VALUE: number or null
+  const [billsPaid, setBillsPaid] = useState<Record<number, number | null>>({}) //Record is Key = Value
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showBillForm, setShowBillForm] = useState(false)
@@ -61,30 +62,36 @@ function Bills() {
   for (let i = 0; i < 12; i++) {
     months.push(i)
   }
-  
+
+  //Recive the active filter and get the label to print it
   const activeFilterLabel = FILTERS.find(
     filter => filter.id === activeFilter
   )?.label
 
+  //Obtains the transactions related to the bills
   const fetchBillTransactions = async (bills: Bill[]) => {
     const results: Record<number, number | null> = {}
     await Promise.all(
       bills.map(async (bill) => {
         try {
+          //Obtain transactions from the bill
           const transactions = await getTransactionsByBill(bill.id)
+
           if (transactions.length === 0) {
-            results[bill.id] = null
+            results[bill.id] = null //Key = id Value = null
           } else {
-            results[bill.id] = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0)
+            results[bill.id] = transactions.reduce((sum, t) => sum + Number(t.total_amount), 0) //Key = id Value = total amount
           }
         } catch {
           results[bill.id] = null
         }
       })
     )
-    setBillsPaid(results)
+    setBillsPaid(results) //Saves the results at billsPaid
+    console.log(results)
   }
 
+  //Filters
   const sortedBills = useMemo (()=>{
     const filtered = bills.filter(bill => {
       const date = dayjs(bill.date)
@@ -117,12 +124,12 @@ function Bills() {
   }, [bills])
 
   const handleDelete = async (id: number) => {
-    if (isSubmitting) return
+    if (isSubmitting) return //Prevent multiple POST's
     setIsSubmitting(true)
 
     try {
-      await deleteBill(id)
-      setBills(prev => prev.filter(b => b.id !== id))
+      await deleteBill(id) //Delete bill
+      setBills(prev => prev.filter(b => b.id !== id)) //Refetch
       setBillToDelete(null)
     } catch{
       setError(t('error.delete'))
@@ -133,6 +140,7 @@ function Bills() {
 
   return (
     <>
+      {/* --- Bill form --- */}
       {showBillForm  && (<BillForm close={() => setShowBillForm(false)} billEdit={billToEdit ?? undefined} />)}
       {/* --- Confirmacion eliminar --- */}
       {billToDelete && (
@@ -176,7 +184,7 @@ function Bills() {
               ))}
             </div>
             
-            {/* Filtro por mes y año */}
+            {/* Filters by month and year */}
             <div className='flex items-center gap-2'>
               <select
                 value={selectedMonth}
@@ -201,6 +209,7 @@ function Bills() {
               </select>
             </div>
           </div>
+          {/* Filters by order */}
           <div className='pb-6 md:pb-0'>
             <button onClick={() =>setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
@@ -232,10 +241,6 @@ function Bills() {
             <p className='text-xl'>{t('no_bills')}</p>
           </div>
         )}
-
-        {/* Carflex items-center gap-2 px-4 py-2 rounded-full bg-[#EFEFEF] dark:bg-dark-card
-              border border-[#0000001a] dark:border-[#1d2344] hover:bg-white dark:hover:bg-[#1a2957]
-              transition-all duration-200 inter text-sm font-medium select-none cursor-pointer */}
         {!loading && !error && bills.length > 0 && (
         <>  
           <div className='grid gird-cols-1 xl:grid-cols-2 gap-4'>

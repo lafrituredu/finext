@@ -1,8 +1,10 @@
+//Library
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next'
-
-import { createBill, updateBill, type Bill } from "../../api/BillService"
 import { useForm, useFieldArray } from "react-hook-form"
+
+//Context & Service
+import { createBill, updateBill, type Bill } from "../../api/BillService"
 import { useCategories, type CategoriesContextType } from '../../contexts/CategoryContext'
 import { useTransactions } from '../../contexts/TransactionContext'
 
@@ -11,6 +13,7 @@ import TrendingUpIcon from "/src/assets/icons/Trending-up.svg?react"
 import TrendingDownIcon from "/src/assets/icons/Trending-down.svg?react"
 import MoneyBagIcon from "/src/assets/icons/Money-bag.svg?react"
 
+//Types
 type BillFormValues = {
   id: number
   name: string
@@ -42,7 +45,13 @@ const IVA_OPTIONS: {id: IVAType; labelKey: string}[] =  [
   {id: "21.00", labelKey: 'fields.iva.options.general'},
 ]
 
-export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
+//Interface
+interface BillFormProps {
+  close: () => void
+  billEdit?: Bill
+}
+
+export function BillForm({ close, billEdit }: BillFormProps) {
   const { t } = useTranslation("billsform")
   const { t:ct } = useTranslation("catTrans")
 
@@ -52,14 +61,15 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const { categories } = useCategories() as CategoriesContextType
   const { transactions, refetchTransactions } = useTransactions()
 
+  //Check if the "billEdit" has installments
   const [isInstallment, setIsInstallment] = useState<boolean>(billEdit?.plazos != null && billEdit.plazos > 0)
 
   const {
     register,
     handleSubmit,
-    setValue,
+    setValue, //changes values manually
     control,
-    watch,
+    watch, //listen changes real time
     formState: { errors }
   } = useForm<BillFormValues>({
     defaultValues: {
@@ -77,30 +87,45 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
     }
   })
 
+  //useFieldArray -> Manage inputs dynamic arrays
+  //fields= render array - append= add installment - remove= remove installment - replace= reeplace all
   const { fields, append, remove, replace } = useFieldArray({
-    control,
-    name: 'installments'
+    control, //connects useFieldArray with the current form state
+    name: 'installments' //name of the array field
   })
 
+  //Load installments
   useEffect(() => {
+    //If we are editing:
     if (billEdit?.id) {
+      //Search associated transactions
       const billTransactions = transactions.filter(t => t.bill_id === billEdit.id)
+      //If transactions of that bill exists:
       if (billTransactions.length > 0) {
+        //Replace "installments" array with the news installments
         replace(billTransactions.map(t => ({
-          amount: t.total_amount,
-          date: t.date
+          amount: t.total_amount, //Get the transaction amount
+          date: t.date  //Get the transaction date
         })))
       }
     }
   }, [billEdit, transactions])
 
+  //Listen for installments changes
   const watchedInstallments = watch('installments') ?? []
+
+  //Calculate all the installments
   const totalInstallments = watchedInstallments.reduce(
     (sum, inst) => sum + (parseFloat(inst.amount as string) || 0), 0
   )
-  
+
+  //Listen for total_amount changes
   const watchedAmount = watch('total_amount') ?? 0
+
+  //Cash left to cover
   const remaining = (watchedAmount || 0) - totalInstallments
+
+  //Check if the total was surpassed
   const isOverBudget = remaining < 0
 
   const onSubmit = async (data: BillFormValues) => {
@@ -111,8 +136,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
       const payload = {
         ...dataWithoutId,
         type: billType,
-        plazos: isInstallment ? data.installments.length : null,
-        installments: isInstallment ? data.installments : []
+        plazos: isInstallment ? data.installments.length : null, //plazos = installments length or null
+        installments: isInstallment ? data.installments : [] //installments = installments or empty array
       }
       if (billEdit != null) {
         await updateBill(payload, billEdit.id)
@@ -129,12 +154,15 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   }
 
   useEffect(() => {
-    setValue("type", billType);
+    //Update type
+    setValue("type", billType); //Everytime billType changes, the form type also changes
     if (billEdit) {
-      setValue("id", billEdit.id)
-      setValue("category_id", billEdit.category_id ?? undefined)
+      setValue("id", billEdit.id) //Detect id for the edit
+      setValue("category_id", billEdit.category_id ?? undefined) //Detect category for the edit
     }
   }, [billType, setValue, billEdit])
+
+  //Styles
 
   const inputCls = `w-full rounded-xl border border-gray-200 dark:border-gray-700
     bg-gray-50 dark:bg-[#0f1b35]
@@ -147,6 +175,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
   const labelCls = `block text-xs font-semibold uppercase tracking-wide
     text-gray-500 dark:text-gray-400 mb-1`;
 
+  //Pattern
   const namePattern = /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/
 
   return (
@@ -224,7 +253,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
               <label className={labelCls}>{t('fields.amount.label')} *</label>
               <input
                 type="number"
-                step="0.10"
+                step="0.01"
                 {...register("total_amount", {
                   required: t('fields.amount.required'),
                   valueAsNumber: true,
@@ -339,7 +368,8 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                       ? t('installments.status.covered')
                       : isOverBudget
                         ? `${t('installments.status.excess')} ${Math.abs(remaining).toFixed(2)} €`
-                        : `${t('installments.status.remaining')} ${remaining.toFixed(2)} €`}
+                        : `${t('installments.status.remaining')} ${remaining.toFixed(2)} €`
+                    }
                   </span>
                 </div>
 
@@ -351,7 +381,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                       </span>
                       <input
                         type="number"
-                        step="0.10"
+                        step="0.01"
                         min="0"
                         placeholder={t('installments.amount_placeholder')}
                         {...register(`installments.${index}.amount`, {
@@ -370,7 +400,7 @@ export function BillForm({ close, billEdit }: { close: any, billEdit?: Bill }) {
                         <button
                           type="button"
                           onClick={() => remove(index)}
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-150">
+                          className="flex-shrink-0 cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-150">
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />

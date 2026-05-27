@@ -1,8 +1,11 @@
+//Library
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
+//Service
 import { type Bill } from '../../api/BillService'
 
+//Icons
 import ReceiptIcon from '/src/assets/icons/Receipt.svg?react'
 import ProfileIcon from '/src/assets/icons/Profile-icon.svg?react'
 import CardIcon from '/src/assets/icons/Credit-card.svg?react'
@@ -14,8 +17,8 @@ import MoveUpIcon from '/src/assets/icons/Move-up.svg?react'
 import TagIcon from '/src/assets/icons/Tag.svg?react'
 import PencilIcon from '/src/assets/icons/Pencil.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
-import { useState } from 'react'
 
+//Interface
 interface BillCardProps {
     bill: Bill
     billPaid: number | null
@@ -23,6 +26,7 @@ interface BillCardProps {
     onDelete: () => void
 }
 
+//Calculate total without iva
 function calculateBaseAmount(amount: number, ivaPercent: number): number {
 return amount * (1 - ivaPercent / 100)
 }
@@ -31,7 +35,9 @@ export default function BillCard({ bill, billPaid, onEdit, onDelete }: BillCardP
     const { t } = useTranslation("bills")
     const { t:ct } = useTranslation("catTrans")
 
+    //isPending if the installments are LOWER than the total amount introduced
     const isPending = billPaid !== null && billPaid < Number(bill.total_amount)
+    //isHigher if the installments are HIGHER than the total amount introduced
     const isHigher = billPaid !== null && billPaid > Number(bill.total_amount)
 
     return ( 

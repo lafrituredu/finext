@@ -50,6 +50,7 @@ function Transactions() {
     {id: 'expenses', label: t('type.expenses')}
   ]
   
+  //Recive the active filter and get the label to print it
   const activeFilterLabel = FILTERS.find(
     filter => filter.id === activeFilter
   )?.label
@@ -123,10 +124,6 @@ function Transactions() {
             {t('create')}
           </span>
         </button>
-        {/* <button onClick={()=> {setShowTransactionForm(true); setTransactionToEdit(null);}}
-          className='inter bg-primary w-50 h-10 rounded-full cursor-pointer hover:scale-104 transition-all ease-in-out duration-150'>
-          <span className='text-white'>{t('new_transaction')}</span>
-        </button> */}
       </div>
       <hr className="-mx-6 sm:-mx-10 mt-6 border-t border-gray-100 dark:border-gray-900 shadow-sm" />
       {/* Body */}

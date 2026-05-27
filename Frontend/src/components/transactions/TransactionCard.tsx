@@ -1,6 +1,11 @@
+//Library
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
+
+//Transaction
 import { type Transaction } from '../../api/TransactionService'
+
+//Icons
 import Trending_up from '/src/assets/icons/Trending-up.svg?react'
 import Trending_down from '/src/assets/icons/Trending-down.svg?react'
 import TrashcanIcon from '/src/assets/icons/Trashcan.svg?react'
@@ -10,12 +15,14 @@ import CardIcon from '/src/assets/icons/Credit-card.svg?react'
 import CoinIcon from '/src/assets/icons/Coin.svg?react'
 import BankIcon from '/src/assets/icons/Bank.svg?react'
 
+//Interface
 interface TransactionCardProps {
     transaction: Transaction
     onEdit: () => void   
     onDelete: () => void
 }
 
+//Function to calculate the transaction without the IVA
 function calculateAmountWithoutIVA(amount: number, ivaPercent: number) {
   return amount * (1 - ivaPercent / 100)
 }
@@ -24,7 +31,7 @@ export default function TransactionCard({ transaction, onEdit, onDelete }: Trans
 const { t } = useTranslation("transactions")
 const { t:ct } = useTranslation("catTrans")
 return (
-    <div key={transaction.id} className= {`flex flex-col ${transaction.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#1d2344]
+<div key={transaction.id} className= {`flex flex-col ${transaction.bill_id != null ? "bg-gray-100 ring-gray-200" : "bg-white ring-gray-200"} dark:bg-dark-card rounded-2xl p-4 ring-1 dark:ring-[#1d2344]
     hover:scale-102 transition-transform ease-in-out w-full h-full`}>
     <div className='flex flex-row justify-between items-center w-full pb-6'>
     <div className='flex flex-row items-center truncate gap-2'>
