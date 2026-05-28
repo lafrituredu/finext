@@ -132,7 +132,7 @@ function About() {
                   {t('edu.description')}
                 </p>
                   <div className="flex gap-4 justify-center md:justify-start">
-                    <a href="https://github.com/eru9927" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
+                    <a href="https://github.com/lafrituredu" target="_blank" className="py-1 px-5 bg-[#24292F] text-white cursor-pointer flex gap-2 items-center rounded-xl  hover:bg-[#1B1F23] transition-all duration-200 shadow-md hover:scale-105">
                       GitHub
                       <GithubIcon className="size-5" />
                     </a>
