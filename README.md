@@ -1,8 +1,8 @@
-# Finext
+<div align="center">
+  <img src="Frontend/public/img/FiNext.png" alt="Finext" width="200" />
+</div>
 
-> Financial management web app for freelancers and small businesses.
-
-## About
+## What is Finext?
 
 **Finext** is a web platform built to help individuals, freelancers, and financial managers take full control of their finances in a simple and intelligent way. Users can track income and expenses, monitor their cash flow, set financial goals, and get a clear picture of their financial situation.
 
