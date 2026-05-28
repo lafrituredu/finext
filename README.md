@@ -147,7 +147,7 @@ npm run dev
 Final course project developed by:
 
 - **Eduardo Rubio**
-- **Marc Gilavert**
 - **Jeremy Intriago**
+- **Marc Gilavert**
 
 School: INS Provençana · Tutor: Isabel Miralves · Submitted: May 2026
